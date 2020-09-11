@@ -16,10 +16,10 @@ library(varhandle)
 library(purrr)
 library(stringi)
 
-data <- phread("data")
+data <- fread("data") # CSV currently, should become BED ? 
 
 ##calculate methylation specificty here to report in the glm summary
-  ### methylated reads / total reads
+### methylated reads / total reads
 
 ##Remove methylated reads
 
@@ -53,7 +53,10 @@ save(gaussian_glm, file = "2020_Gaussian_batch1.rda")
 r2_gaussian= 1-(gaussian_glm$deviance/gaussian_glm$null.deviance)
 r2_gaussian #  reprot in summary
 
+
+# refactor into separate function
 ##Bland-Altman plot
+#
 png("2020_BA_gaussian.png", height = 6, width = 6, units = "in", res = 300)
 BA <- bland.altman.plot(gaussian_glm$data[,1], gaussian_glm$resid, conf.int = .95, col.points = gaussian_glm$data[,2], pch = 19, graph.sys = "ggplot2")
 

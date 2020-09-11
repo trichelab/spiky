@@ -12,8 +12,23 @@ library(doParallel)
 library(strict)
 library(tools)
 
-data <- phread("data")
+data <- fread("data") # needs to be more specific -- BED, BAM, CRAM? 
+# e.g. suppose we have a wrapper function getFileType(bedOrBamOrCram) 
+# further suppose that we call another function, say, getRangesFromFile(ibid)
+# then we don't have to give a damn whether the input is bed, bam, or cram
+# all we have to know is the number of counts for each contig and its sequence
 
+# for example see CRAMtest.R against SCRAP runs
+
+# in a 10X BAM this would have the edit-corrected UMI in a tag called "UB"
+# the raw UMI barcode is in a tag "UR", its quality in a tag "UY", 
+# and the same is true for the cell barcode (CB, CR, CY, as above)
+#
+# there's no particular reason not to adopt this strategy given its ubiquity; 
+# we are even starting to use it for plate-based scRNA/scATAC/SCRAP merging.
+# but in the case of the spike-ins, all of the below are available either from
+# the BED/BAM/CRAM itself, or from annotations of the contigs in the reference
+#
 data_melt <- melt(data,
                   id.vars = c("GC", "UMI", "fragment_len", "CpG", "pos", "chr"),
                   measure.vars = "read_count")

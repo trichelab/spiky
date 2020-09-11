@@ -11,13 +11,15 @@ library(tools)
 library(strict)
 
 ##Will need a function that replaces the following line in bedtools
-### Calculates overlap with hg38 300bp windows
+### Calculates overlap with hg38 300bp windows # this is a GenomicRanges tweak
 
 #bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
-
+#
+# BED file as input 
 main <- function(filename) {
   
   data <- read.table(filename, sep ="\t",  header = FALSE, stringsAsFactors = FALSE)
+
   colnames(data) <- c("frag_chr", "frag_start", "frag_end",file_path_sans_ext(basename(filename)),"chr","start","end","overlap")
   
   data$frag_chr <- NULL
