@@ -1,6 +1,6 @@
 #' Bland-Altman plot for cfMeDIP spike standards 
 #'
-#' @param   fit             a model fit, from fitSpikeGlm
+#' @param   fit             a model fit, from model_glm_pmol
 #' 
 #' @return                  a ggplot2 object
 #'
@@ -9,7 +9,7 @@
 #' @import  scales
 #' 
 #' @export 
-spikeBlandAltmanPlot <- function(fit, ...) {
+spike_bland_altman_plot <- function(fit, ...) {
 
   BA <- bland.altman.plot(fit$x[,1], 
                           fit$resid, 

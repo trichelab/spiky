@@ -6,8 +6,8 @@
 # this is just a count, can fix for submission; CRAM counts are tougher 
 
 # big mess
-# not until we clean this up 
-bin_fmol <- function(...) {
+# don't use until we clean this up 
+bin_pmol <- function(...) {
   do.call(main, args(...)) 
 } 
 

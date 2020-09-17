@@ -34,13 +34,9 @@ model_glm_pmol <- function(x, concentration=NULL, ...) {
   ##Gaussian model
   fit <- glm(formula = conc ~ read_count + fraglen + GC + CpG_3, 
              data = x, family = gaussian)
-
-
-  ##Calculating Gaussian r2
   r2_gaussian= 1 - (fit$deviance / fit$null.deviance)
   attr(fit, "r2_gaussian") <- r2_gaussian #  reprot in summary
-  summary(fit) ##save summary
-
+  attr(fit, "data") <- x
   return(fit) 
 }
 
@@ -68,4 +64,3 @@ model_glm_pmol <- function(x, concentration=NULL, ...) {
   return(res)
 
 }
-
