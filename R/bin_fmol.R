@@ -1,26 +1,26 @@
-#Load libraries
-library(plyr)
-library(dplyr)
-library(ggplot2)
-library(reshape2)
-library(stringr)
-library(forcats)
-library(purrr)
-library(stringi)
-library(tools)
-library(strict)
-
 ##Will need a function that replaces the following line in bedtools
 ### Calculates overlap with hg38 300bp windows # this is a GenomicRanges tweak
 
 #bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
-#
-# BED file as input 
-main <- function(filename) {
-  
-  data <- read.table(filename, sep ="\t",  header = FALSE, stringsAsFactors = FALSE)
 
-  colnames(data) <- c("frag_chr", "frag_start", "frag_end",file_path_sans_ext(basename(filename)),"chr","start","end","overlap")
+# this is just a count, can fix for submission; CRAM counts are tougher 
+
+# big mess
+# not until we clean this up 
+bin_fmol <- function(...) {
+  do.call(main, args(...)) 
+} 
+
+# BED file as input 
+.main <- function(filename) {
+  
+  data <- read.table(filename, sep ="\t",  
+                     header = FALSE, 
+                     stringsAsFactors = FALSE)
+
+  colnames(data) <- c("frag_chr", "frag_start", "frag_end",
+                      file_path_sans_ext(basename(filename)),
+                      "chr","start","end","overlap")
   
   data$frag_chr <- NULL
   data$frag_start <- NULL
@@ -67,12 +67,14 @@ main <- function(filename) {
   write.table(data_agg, quote = FALSE, row.names = FALSE, sep = "\t", file =  paste0("/cluster/projects/hoffmangroup/data_samanthawilson/2020_Batch3_DT/", file_path_sans_ext(basename(filename)),"_aggbywindow.bed"))
 }
 
-args <-
-  if (length(commandArgs(TRUE))
-      || commandArgs()[length(commandArgs())] == "--args") {
-    as.list(commandArgs(TRUE))
+if (FALSE) {
+  
+  # this is kind of a dot-args situation -- use those
+  args <- if (length(commandArgs(TRUE)) || 
+              commandArgs()[length(commandArgs())] == "--args") {
+    return(as.list(commandArgs(TRUE)))
   } else {
-    list()
+    return(list()) 
   }
+} 
 
-do.call(main, args)
