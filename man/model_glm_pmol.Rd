@@ -24,3 +24,9 @@ a BAM/CRAM with spike contigs named as frag_grp (len_CpGs_GC) in the index
            somewhere we find the number of CpGs as an integer
 }
 }
+\examples{
+
+data(spike_read_counts)
+fit <- model_glm_pmol(spike_read_counts) 
+
+}

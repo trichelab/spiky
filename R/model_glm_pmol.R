@@ -12,6 +12,11 @@
 #'                apparently column 2 is fragment length as a character 
 #'                somewhere we find the number of CpGs as an integer
 #'
+#' @examples 
+#' 
+#' data(spike_read_counts)
+#' fit <- model_glm_pmol(spike_read_counts) 
+#' 
 #' @import reshape2
 #' 
 #' @export

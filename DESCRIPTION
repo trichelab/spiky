@@ -2,7 +2,7 @@ Package: spiky
 Type: Package
 Title: Spike-in calibration for cell-free MeDIP
 Description: Standardized model generation for cfMeDIP spike-in controls
-Version: 0.1.3
+Version: 0.1.7
 Date: 2020-09-17
 Authors@R: c(person("Samantha", "Wilson", role=c("aut")), 
              person("Jordan", "Veldboom", role=c("aut", "cre"), 

@@ -9,11 +9,18 @@ predict_pmol(fit, x = NULL)
 \arguments{
 \item{fit}{result of model_glm_pmol}
 
-\item{x}{the data}
+\item{x}{the data / new data}
 }
 \value{
-predictions
+x, but with predictions
 }
 \description{
 this seems to just wrap output from bin_pmol and model_glm_pmol... ?
+}
+\examples{
+
+data(spike_read_counts)
+fit <- model_glm_pmol(spike_read_counts) 
+pred <- predict_pmol(fit) 
+
 }

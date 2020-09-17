@@ -4,10 +4,10 @@
 \alias{spike_bland_altman_plot}
 \title{Bland-Altman plot for cfMeDIP spike standards}
 \usage{
-spike_bland_altman_plot(fit, ...)
+spike_bland_altman_plot(fit)
 }
 \arguments{
-\item{fit}{a model fit, from model_glm_pmol}
+\item{fit}{a model fit, from predict_pmol (?)}
 }
 \value{
 \preformatted{             a ggplot2 object
@@ -15,4 +15,11 @@ spike_bland_altman_plot(fit, ...)
 }
 \description{
 Bland-Altman plot for cfMeDIP spike standards
+}
+\examples{
+
+data(spike_read_counts)
+fit <- model_glm_pmol(spike_read_counts) 
+spike_bland_altman_plot(fit) 
+
 }
