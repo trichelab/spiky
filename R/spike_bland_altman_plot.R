@@ -19,27 +19,29 @@ spike_bland_altman_plot <- function(fit) {
 
   if (!is.data.frame(fit$x)) fit$x <- attr(fit, "data") 
   if (!"pred_conc" %in% names(fit$x)) fit$x <- predict_pmol(fit) 
-  fit$x$fragment_len <- as.factor(fit$x$fragment_len)
+  fit$x$fraglen <- as.factor(paste0(fit$x$fraglen, "bp"))
   
   BA <- bland.altman.plot(fit$x$pred_conc,
                           fit$resid, 
                           conf.int = .95, 
-                          col.points = fit$x[,2], 
+                          col.points = fit$x$fraglen, 
                           pch = 19, 
                           graph.sys = "ggplot2")
 
-  # what is fit$x[,8] ? ##This is the fragment length variable
   BA + 
-    aes(color = fit$x$fragment_len) +  # ? 
-    theme_bw() +
-    scale_color_manual(values = c("black", "darkgrey", "navy")) +
+    aes(color = fit$x$fraglen) + 
+    theme_bw(base_line_size = 0.25) +
+    scale_color_manual(values = c("80bp" = "black", 
+                                  "160bp" = "darkgray",
+                                  "320bp" = "navy")) +
     theme(legend.title = element_blank(), 
           legend.position = "right", 
           legend.text = element_text(size = 14), 
           axis.title.y = element_text(size = 20), 
           axis.text.x  = element_text(size = 16),
           axis.text.y = element_text(vjust = 0.5, size = 16), 
-          axis.title.x = element_text(size = 20)) +
+          axis.title.x = element_text(size = 20),
+          panel.grid.minor.x = element_blank()) +
     xlab("Mean of measurements (picomoles)") +
     ylab("Difference (picomoles)")
 
