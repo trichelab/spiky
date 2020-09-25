@@ -1,16 +1,16 @@
+[![Spiky](vignettes/spiky-small.png)](https://github.com/trichelab/spiky)
+
 # spiky
 
-[![Spiky](vignettes/spiky-small.png)]
-
-[![Build Status](https://travis-ci.org/yourgithub/spiky.png?branch=master)](https://travis-ci.org/yourgithub/spiky)  [![codecov](https://codecov.io/gh/yourgithub/spiky/branch/master/graph/badge.svg)](https://codecov.io/gh/yourgithub/spiky)
+[![Build Status](https://travis-ci.org/trichelab/spiky.png?branch=master)](https://travis-ci.org/trichelab/spiky)  [![codecov](https://codecov.io/gh/trichelab/spiky/branch/master/graph/badge.svg)](https://codecov.io/gh/trichelab/spiky)
 
 # Spike-ins for everyone 
 
-This is a rather lightly edited README from skeletor which will be updated soon.
+This is a lightly edited README from skeletor which will be updated soon.
 
 ### Travis
 
-Now you can go to [Travis](https://travis-ci.org/profile/yourgithub) and turn on continuous integration for your new package. You may need to click the "Sync account" button to get your new package to show up in the list.
+Now you can go to [Travis](https://travis-ci.org/profile/trichelab) and turn on continuous integration for your new package. You may need to click the "Sync account" button to get your new package to show up in the list.
 
 If you have a codecov.io account, running your tests on Travis will trigger the code coverage job. No additional configuration is necessary
 
