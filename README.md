@@ -1,13 +1,12 @@
 # spiky
 
+[![Spiky](vignettes/spiky-small.png)]
+
 [![Build Status](https://travis-ci.org/yourgithub/spiky.png?branch=master)](https://travis-ci.org/yourgithub/spiky)  [![codecov](https://codecov.io/gh/yourgithub/spiky/branch/master/graph/badge.svg)](https://codecov.io/gh/yourgithub/spiky)
 
+# Spike-ins for everyone 
 
-[![Spiky](vignettes/spiky-small.png)
-
-## Spike-ins for everyone 
-
-This is a rather lightly edited README from skeletor.
+This is a rather lightly edited README from skeletor which will be updated soon.
 
 ### Travis
 
