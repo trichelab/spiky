@@ -26,16 +26,11 @@ To meet the need for a reference control in cell-free methylated DNA immunopreci
 * Adjust molar amount and bin the fragments into genomic windows used in analyses
 
 # Installation
-First, you will need to install and load the devtools package.
-```{r eval=FALSE}
-install.packages("devtools")
-
-library(devtools)
-```
-
-You can then install the spiky package from github.
+Install the spiky package from github.
 ```{r eval = FALSE}
-install_github("trichelab/spiky")
+install.packages("remotes")
+install.packages("BiocManager")
+BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
 
 library(spiky)
 ```
@@ -47,16 +42,23 @@ For each combination of parameters, we designed two distinct sequences. One to b
 This calculation is done by the 'calculate_methylation' function.
 
 ### Input: spikein_data
-  * BAM, CRAM, BED file
-  * Columns: chrom/contig, position start, position end, read counts, fragment length, G+C content, CpG fraction
+  * BAM or BED file
+  * Columns:
+    * chrom/contig: string 
+    * position start: numeric
+    * position end: numeric
+    * read counts: integer
+    * fragment length (bp): integer
+    * G+C content [0-1]: numeric
+    * CpG number: Integer
   
 ### Output: methylation specificity
-  * Number ranging 0 -1 specifiy the percent of sequences that are methylated after cfMeDIP-seq has been performed
+  * Number ranging 0-1 specifiy the percent of sequences that are methylated after cfMeDIP-seq has been performed
 
 ### Example
 ```{r eval=FALSE}
 ## Load in deduplicated sequences aligned to the spike-in controls
-spikein_data <- fread("spikein_data.bed")
+spikein_data_all <- fread('2019_synfrag0.01_spikeincellline_dedup_lowconc.csv')
 
 ##Calculate methylation specificity
 methylation_specificty <- calculate_methylation(spikein_data)
@@ -66,9 +68,16 @@ methylation_specificty <- calculate_methylation(spikein_data)
 For each batch of samples, the coefficients used in the Gaussian generalizaed linear model will differ. The 'model_glm_pmol' will calculate these coefficients and output the model to be used to calculate molar amount (picomoles) on the user's DNA sequences of interest. We assume that all DNA sequences of interest are methylated after undergoeing cfMeDIP-seq. As such, we build the Gaussian generalized linear model on only the methylated spike-in control fragments. A generated Bland-Altman plot will visualize how well the model performs.
 
 ### Input: spikein_data
-  * BAM, CRAM, BED file
-  * Columns: chrom/contig, position start, position end, read counts, fragment length, G+C content, CpG fraction
+  * BAM or BED file
   * We remove fragments from the unmethylated sequences
+  * Columns:
+    * chrom/contig: string 
+    * position start: numeric
+    * position end: numeric
+    * read counts: integer
+    * fragment length (bp): integer
+    * G+C content [0-1]: numeric
+    * CpG number: Integer
 
 ### Output: 
   * Gaussian generalized linear model with coefficients specific to samples used in input data; .rda file
@@ -77,12 +86,15 @@ For each batch of samples, the coefficients used in the Gaussian generalizaed li
 
 ### Example
 ```{r eval=FALSE}
-## Build the Gaussian generalized linear model on the spike-in control data
-gaussian_glm <- model_glm_pmol(spikein_data)
-summary(gaussian_glm)
+## reshape the data so that 'id' is the sample
+spikein_data <- load('dedup.rda')
+spikein_data_melt <- melt(spikein_data, measure.vars = c('sample1','sample2'))
+colnames(spikein_data_melt) <- c("frag_grp", "id", "read")
 
-## Make the Bland-Altman plot to visualize the model's performance on the data
-blandaltman_gaussian_glm(spikein_data)
+## Build the Gaussian generalized linear model on the spike-in control data
+# Generate bland altman plot to visualize the model's performance on the data
+gaussian_glm <- model_glm_pmol(spikein_data_melt)
+summary(gaussian_glm)
 ```
 
 An example of a Bland-Altman plot generated from spike-in control data.
@@ -92,20 +104,39 @@ An example of a Bland-Altman plot generated from spike-in control data.
 For the samples in which the Gaussian generalized linear model was built, we will calculate the molar amount (picomoles) for each DNA sequence of interest.
 
 ### Input: sample_data
-  * BAM, CRAM, BED file; UMI deduplicated
-  * Columns: chrom/contig, position start, position end, read counts, fragment length, G+C content, CpG fraction
+  * BAM or BED file; UMI deduplicated
+  * Columns:
+    * chrom/contig: string 
+    * position start: numeric
+    * position end: numeric
+    * read counts: integer
+    * fragment length (bp): integer
+    * G+C content [0-1]: numeric
+    * CpG number: Integer
+  * .rda file with the coefficients for the Gaussian generalized linear model
   
 ### Output: sample_pmol_data
   * BED file
-  * Columns: chrom, position start, position end, read counts, fragment length, G+C content, CpG fraction, pmol
+  * Columns: 
+    * chrom: string
+    * position start: numeric
+    * position end: numeric
+    * read counts: integer
+    * fragment length (bp): integer
+    * G+C content [0-1]: numeric
+    * CpG number: integer 
+    * pmol: numeric
   
 ### Example
 ```{r eval=FALSE}
 ## Load in deduplicated sequences aligned to the human reference geome
-sample_data <- fread("sample_data.bed")
+sample_data <- load("testGR.rda")
+sample_data <- as.data.frame(sample_data)
+sample_data$read_count <- sample_data$score
+sample_data$fraglen <- sample_data$width
 
 ## Calculate molar amount (picomoles)
-sample_data_pmol <- predict_pmol(sample_data)
+sample_data_pmol <- predict_pmol(gaussian_glm, sample_data)
 ```
 
 # Adjusting molar amount to binned genomic windows
@@ -113,15 +144,30 @@ For our analyses, we binned the genome into 300 bp non-overlapping windows. We t
 
 ### Input: sample_pmol_data
   * BED file from the 'predict_pmol' function
-  * Columns: chrom/contig, position start, position end, read counts, fragment length, G+C content, CpG fraction, pmol
+   * Columns: 
+    * chrom: string
+    * position start: numeric
+    * position end: numeric
+    * read counts: integer
+    * fragment length (bp): integer
+    * G+C content [0-1]: numeric
+    * CpG number: integer 
+    * pmol: numeric
   
 ### Output: sample_binned_data
   * BED file
-  * Columns: chrom, position start, position end, window, read counts, fragment length, G+C content, CpG fraction, pmol
+   * Columns: 
+    * chrom: string
+    * position start: numeric
+    * position end: numeric
+    * fragment length (bp): integer
+    * G+C content [0-1]: numeric
+    * CpG number: integer 
+    * pmol: numeric
   
 ### Example
 ```{r eval=FALSE}
-sample_binned_data <- binned_pmol(sample_pmol_data)
+sample_binned_data <- bin_pmol(sample_pmol_data)
 ```
 
 
