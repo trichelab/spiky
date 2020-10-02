@@ -27,7 +27,7 @@ model_glm_pmol <- function(x, concentration=NULL, ...) {
     stop("Input data must have columns frag_grp, id, and read_count")
   } 
 
-  x <- .addFragInfo(x, "frag_grp")
+  x <- add_frag_info(x, "frag_grp") # now exported
   x$conc <- .getConcFromFraglen(x$fraglen) # added above 
   # Adjust for the 0.01ng dilution
   x$conc <- x$conc*0.9
@@ -43,29 +43,4 @@ model_glm_pmol <- function(x, concentration=NULL, ...) {
   attr(fit, "r2_gaussian") <- r2_gaussian #  reprot in summary
   attr(fit, "data") <- x
   return(fit) 
-}
-
-
-# helper function
-.addFragInfo <- function(x, frag_grp="frag_grp") { 
-
-  frag_grp_parse <- data.frame(do.call(rbind, strsplit(x[, frag_grp], "_")))
-  names(frag_grp_parse) <- c("fraglen", "CpG", "GC")
-  for (i in names(frag_grp_parse)) x[, i] <- as.integer(frag_grp_parse[, i])
-  return(x) 
-
-}
-
-
-# helper function
-.getConcFromFraglen <- function(fraglen, concs = NULL) {
-  
-  if (is.null(concs)) concs <- c("80" = 0.004, "160" = 0.002, "320" = 0.001)
-  res <- concs[as.character(fraglen)]
-
-  # essentially the fallthrough from ifelse
-  res[is.na(res)] <- concs[length(concs)]
-
-  return(res)
-
 }

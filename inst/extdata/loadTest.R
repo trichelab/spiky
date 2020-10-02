@@ -5,8 +5,11 @@
 # 6547 is one sample
 # 6548 is another 
 #
-testfile <- "2020_Human0.01_test.csv.gz"
+testfile <- system.file("extdata","2020_Human0.01_test.csv.gz",package="spiky")
 test <- read.table(testfile, sep=" ", head=T) # bit mysterious, see above
 # really only need UMI, pos, seq, read_count for each subject/UMI combo
 testGR <- parse_spike_UMI(test$UMI, pos=test$pos, seqs=test$seq) 
+# how can we make it so that spiky:::.addFragInfo() works on this? 
+# at present, .addFragInfo needs a `frag_grp` column, and test.csv lacks one
+message("Ideally, we would like to have frag_grp information in testGR")
 save(testGR, file="../../data/testGR.rda") 
