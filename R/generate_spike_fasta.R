@@ -16,7 +16,7 @@
 #' @param x         a CRAM file, hopefully with an index
 #' @param fasta     the filename for the resulting FASTA ("spikes.fa")
 #' 
-#' @return          a DNAStringSet with renamed contigs, as exported to `fasta` 
+#' @return          invisibly, a DNAStringSet as exported to `fasta` 
 #'
 #' @seealso         rename_contigs
 #' 
@@ -38,7 +38,7 @@ generate_spike_fasta <- function(x, fasta="spike_contigs.fa") {
   names(contigs) <- cram_contigs
   writeXStringSet(contigs, fasta)
   message("Wrote ", fasta) 
-  return(contigs)
+  invisible(contigs)
    
 } 
 
