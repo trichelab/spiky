@@ -15,7 +15,6 @@
 #' 
 #' @param x         a CRAM file, hopefully with an index
 #' @param fasta     the filename for the resulting FASTA ("spikes.fa")
-#' @param spike     a DataFrame where spike$sequence is a DNAStringSet (spike)
 #' 
 #' @return          a DNAStringSet with renamed contigs, as exported to `fasta` 
 #'
@@ -25,14 +24,16 @@
 #' @import          Rsamtools 
 #' 
 #' @export
-generate_spike_fasta <- function(x, fasta="spike_contigs.fa", spike=NULL) { 
+generate_spike_fasta <- function(x, fasta="spike_contigs.fa") { 
 
   cram <- x 
   if (!is(cram, "BamFile")) cram <- BamFile(cram) 
   hdr <- scanBamHeader(cram) 
   cram_contigs <- names(hdr$targets)
-  if (is.null(spike)) data(spike, package="spiky") 
-  newspikes <- rename_spikes(x, spike=spike)
+  
+  data(spike, package="spiky") 
+  newspikes <- rename_spikes(cram, spike=spike)
+
   contigs <- newspike[cram_contigs, "sequence"]
   names(contigs) <- cram_contigs
   writeXStringSet(contigs, fasta) 
