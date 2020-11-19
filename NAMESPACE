@@ -2,6 +2,8 @@
 
 export(add_frag_info)
 export(bam_to_bins)
+export(generate_spike_fasta)
+export(methylation_specificity)
 export(model_glm_pmol)
 export(parse_spike_UMI)
 export(predict_pmol)

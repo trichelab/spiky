@@ -14,6 +14,8 @@
 # big mess
 # don't use until we clean this up 
 bin_pmol <- function(...) {
+
+  stop("this ain't done") 
   do.call(main, args(...)) 
 } 
 
