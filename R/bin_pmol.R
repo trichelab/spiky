@@ -1,7 +1,13 @@
-##Will need a function that replaces the following line in bedtools
+#' This function replaces the following line in bedtools:
+#' 
+#' bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
+#' 
+#' Which translates to "Write the original A and B entries,
+#' plus the number of base pairs of overlap between the two features".
+#' 
+#' Which translates to 
 ### Calculates overlap with hg38 300bp windows # this is a GenomicRanges tweak
 
-#bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
 
 # this is just a count, can fix for submission; CRAM counts are tougher 
 
