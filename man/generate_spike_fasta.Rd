@@ -30,5 +30,9 @@ At the moment, CRAM support in Rsamtools only exists in the GitHub branch:
 
 BiocManager::install("Bioconductor/Rsamtools@cram")
 
-Using other versions of Rsamtools will yield an error.
+Using other versions of Rsamtools will yield an error on CRAM files.
+}
+\seealso{
+\preformatted{    rename_contigs
+}
 }

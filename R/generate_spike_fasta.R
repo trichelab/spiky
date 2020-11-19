@@ -11,39 +11,32 @@
 #' 
 #' BiocManager::install("Bioconductor/Rsamtools@cram") 
 #'
-#' Using other versions of Rsamtools will yield an error. 
+#' Using other versions of Rsamtools will yield an error on CRAM files.
 #' 
 #' @param x         a CRAM file, hopefully with an index
 #' @param fasta     the filename for the resulting FASTA ("spikes.fa")
 #' @param spike     a DataFrame where spike$sequence is a DNAStringSet (spike)
 #' 
 #' @return          a DNAStringSet with renamed contigs, as exported to `fasta` 
+#'
+#' @seealso         rename_contigs
 #' 
-#' @import Biostrings 
-#' @import Rsamtools 
+#' @import          Biostrings 
+#' @import          Rsamtools 
 #' 
 #' @export
 generate_spike_fasta <- function(x, fasta="spike_contigs.fa", spike=NULL) { 
 
   cram <- BamFile(x) 
   hdr <- scanBamHeader(cram) 
-  if (is.null(spike)) data(spike, package="spiky") 
   cram_contigs <- names(hdr$targets)
-  true_contigs <- .get_base_name(cram_contigs)
-  names(true_contigs) <- cram_contigs 
-
-  orphans <- names(which(!true_contigs %in% rownames(spike)))
-  if (!is.null(orphans)) {
-    message("Orphan contigs found:")
-    message(paste(orphans, collapse=", ")) 
-    message("Only a subset of sequences will be represented in ", fasta)
-  }
-
-  contigs <- spike[true_contigs, "sequence"]
-  names(contigs) <- names(true_contigs)
+  if (is.null(spike)) data(spike, package="spiky") 
+  newspikes <- rename_spikes(x, spike=spike)
+  contigs <- newspike[cram_contigs, "sequence"]
+  names(contigs) <- cram_contigs
   writeXStringSet(contigs, fasta) 
   return(contigs)
-    
+   
 } 
 
 
