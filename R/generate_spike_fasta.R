@@ -27,7 +27,8 @@
 #' @export
 generate_spike_fasta <- function(x, fasta="spike_contigs.fa", spike=NULL) { 
 
-  cram <- BamFile(x) 
+  cram <- x 
+  if (!is(cram, "BamFile")) cram <- BamFile(cram) 
   hdr <- scanBamHeader(cram) 
   cram_contigs <- names(hdr$targets)
   if (is.null(spike)) data(spike, package="spiky") 
