@@ -34,7 +34,7 @@ generate_spike_fasta <- function(x, fasta="spike_contigs.fa") {
   data(spike, package="spiky") 
   newspikes <- rename_spikes(cram, spike=spike)
 
-  contigs <- newspike[cram_contigs, "sequence"]
+  contigs <- newspikes[cram_contigs, "sequence"]
   names(contigs) <- cram_contigs
   writeXStringSet(contigs, fasta) 
   return(contigs)
