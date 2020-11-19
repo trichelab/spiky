@@ -5,7 +5,12 @@
 #' Which translates to "Write the original A and B entries,
 #' plus the number of base pairs of overlap between the two features".
 #' 
-#' Which translates to 
+#' Which translates to using disjoin and countOverlaps, see below. 
+#' 
+#' 
+#' 
+#' 
+
 ### Calculates overlap with hg38 300bp windows # this is a GenomicRanges tweak
 
 
@@ -16,7 +21,9 @@
 bin_pmol <- function(...) {
 
   stop("this ain't done") 
-  do.call(main, args(...)) 
+  do.call(main, args(...))
+
+
 } 
 
 # BED file as input 

@@ -13,5 +13,5 @@ bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
 Which translates to "Write the original A and B entries,
 plus the number of base pairs of overlap between the two features".
 
-Which translates to
+Which translates to using disjoin and countOverlaps, see below.
 }

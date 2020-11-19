@@ -15,7 +15,8 @@
 #' @export
 rename_spikes <- function(x, spike) { 
 
-  cram <- BamFile(x) 
+  cram <- x 
+  if (!is(cram, "BamFile")) cram <- BamFile(cram) 
   hdr <- scanBamHeader(cram) 
   cram_contigs <- names(hdr$targets)
   true_contigs <- .get_base_name(cram_contigs)
