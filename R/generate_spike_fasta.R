@@ -36,7 +36,8 @@ generate_spike_fasta <- function(x, fasta="spike_contigs.fa") {
 
   contigs <- newspikes[cram_contigs, "sequence"]
   names(contigs) <- cram_contigs
-  writeXStringSet(contigs, fasta) 
+  writeXStringSet(contigs, fasta)
+  message("Wrote ", fasta) 
   return(contigs)
    
 } 
