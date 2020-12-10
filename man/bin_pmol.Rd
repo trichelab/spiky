@@ -4,7 +4,16 @@
 \alias{bin_pmol}
 \title{This function replaces the following line in bedtools:}
 \usage{
-bin_pmol(...)
+bin_pmol(x, bins = NULL)
+}
+\arguments{
+\item{x}{a BED/BAM/CRAM file, GRanges of fragments, or GAlignmentPairs}
+
+\item{bins}{the bins to overlap (generated if not provided; see Details)}
+}
+\value{
+\preformatted{ a GRanges with coverage by each fragment in each bin
+}
 }
 \description{
 bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed

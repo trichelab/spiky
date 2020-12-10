@@ -4,7 +4,7 @@
 \alias{bam_to_bins}
 \title{create a tiled representation of a genome from the BAM/CRAM file}
 \usage{
-bam_to_bins(x, width = 300, param = NULL, which = IRangesList())
+bam_to_bins(x, width = 300, param = NULL, which = IRangesList(), ...)
 }
 \arguments{
 \item{x}{a BAM or CRAM filename (or a BamFile object)}
@@ -14,6 +14,8 @@ bam_to_bins(x, width = 300, param = NULL, which = IRangesList())
 \item{param}{optional ScanBamParam (whence we attempt to extract \code{which})}
 
 \item{which}{an optional GRanges restricting the bins to certain locations}
+
+\item{...}{additional arguments to pass on to seqinfo_from_header}
 }
 \value{
 \preformatted{   a GRangesList with y-base-pair-wide bins tiled across it
@@ -34,4 +36,7 @@ In order to have bins, we need to know how long the chromosomes are.
 In order to have a BAM or CRAM file, we need to have those same lengths.
 This function takes advantage of all of the above to create binned ranges.
 Note that a very recent branch of Rsamtools is required for CRAM file bins.
+}
+\seealso{
+seqinfo_from_header
 }

@@ -7,9 +7,55 @@
 #' 
 #' Which translates to using disjoin and countOverlaps, see below. 
 #' 
+#' @param x     a BED/BAM/CRAM file, GRanges of fragments, or GAlignmentPairs
+#' @param bins  the bins to overlap (generated if not provided; see Details)
+#' 
+#' @return      a GRanges with coverage by each fragment in each bin
+#' 
+#' @import Rsamtools 
+#' @import rtracklayer
+#' @import GenomicAlignments 
+#' 
+#' @export
+bin_pmol <- function(x, bins=NULL) { 
+
+  if (is(x, "GAlignmentPairs")) {
+    message("Got a GAlignmentPairs to work with")
+  } else if (is(x, "GAlignments")) { 
+    message("Got a GAlignments to work with")
+  } else if (is(x, "GRanges")) { 
+    message("Got a GRanges to work with")
+  } else if (file.exists(x)) { 
+    message("Got some sort of a file to work with")
+  } else {
+    stop("Not sure what to do with x") 
+  }
+
+  stop("Not quite done yet") 
+
+}
+
+
+#' union-intersect-overlap for things with values
+#' 
+#' like it says on the tin: pretend to do `bedtools -wao -a A -b B`
+#' this should be preceded by B <- bam_to_bins(bam) to work as expected. 
+#' 
+#' @param   A   the ranges spanned by fragments (see Details) 
+#' @param   B   the bins (typically 300bp wide) to tally in (see Details) 
+#' 
+#' @return      a GRanges with disjoint ranges and counts of A in each B 
 #' 
 #' 
-#' 
+bedtools_wao_imitation <- function(A, B) { 
+
+  ABC <- disjoin(c(A, B))
+  olA <- findOverlaps(ABC, A) 
+  olB <- findOverlaps(ABC, B) 
+  stop("not done yet") 
+
+}  
+
 
 ### Calculates overlap with hg38 300bp windows # this is a GenomicRanges tweak
 
@@ -18,10 +64,13 @@
 
 # big mess
 # don't use until we clean this up 
-bin_pmol <- function(...) {
+bin_pmol_old <- function(...) {
 
   stop("this ain't done") 
+  
+
   do.call(main, args(...))
+
 
 
 } 

@@ -4,17 +4,17 @@
 \alias{generate_spike_fasta}
 \title{for CRAM files, a FASTA reference is required to decode; this builds that}
 \usage{
-generate_spike_fasta(x, fasta = "spike_contigs.fa", spike = NULL)
+generate_spike_fasta(x, assembly = NULL, fasta = "spike_contigs.fa")
 }
 \arguments{
 \item{x}{a CRAM file, hopefully with an index}
 
-\item{fasta}{the filename for the resulting FASTA ("spikes.fa")}
+\item{assembly}{optional BSgenome or seqinfo with reference contigs (NULL)}
 
-\item{spike}{a DataFrame where spike$sequence is a DNAStringSet (spike)}
+\item{fasta}{the filename for the resulting FASTA ("spikes.fa")}
 }
 \value{
-\preformatted{     a DNAStringSet with renamed contigs, as exported to `fasta` 
+\preformatted{     invisibly, a DNAStringSet as exported to `fasta` 
 }
 }
 \description{
@@ -31,6 +31,11 @@ At the moment, CRAM support in Rsamtools only exists in the GitHub branch:
 BiocManager::install("Bioconductor/Rsamtools@cram")
 
 Using other versions of Rsamtools will yield an error on CRAM files.
+
+Note that for merged genomic + spike reference BAMs/CRAMs, this function
+will only attempt to generate a FASTA for the spike contigs, not reference.
+If your reference contigs are screwed up, talk to your sequencing people,
+and keep better track of the FASTA reference against which you compress!
 }
 \seealso{
 \preformatted{    rename_contigs

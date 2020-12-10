@@ -18,19 +18,20 @@
 #' @param width   the width of the bins to tile (default is 300) 
 #' @param param   optional ScanBamParam (whence we attempt to extract `which`)
 #' @param which   an optional GRanges restricting the bins to certain locations 
+#' @param ...     additional arguments to pass on to seqinfo_from_header
 #' 
 #' @return        a GRangesList with y-base-pair-wide bins tiled across it
 #'
+#' @seealso seqinfo_from_header
+#' 
 #' @import GenomicRanges
 #' @import GenomeInfoDb
 #' @import Rsamtools 
 #' 
 #' @export
-bam_to_bins <- function(x, width=300, param=NULL, which=IRangesList()) { 
+bam_to_bins <- function(x, width=300, param=NULL, which=IRangesList(), ...) { 
  
-  if (!is(x, "BamFile")) x <- BamFile(x)
-  chrs <- scanBamHeader(x)$targets
-  gr <- as(data.frame(chrom=names(chrs), start=1, end=chrs), "GRanges")
+  gr <- seqinfo_from_header(x, ret="gr", ...)
   if (!is.null(param)) which <- bamWhich(param) 
   if (length(which) > 0) gr <- subsetByOverlaps(gr, which)
   .renameBins(sort(unlist(tile(gr, width=width))), width=width)

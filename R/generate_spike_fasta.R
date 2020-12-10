@@ -13,8 +13,14 @@
 #'
 #' Using other versions of Rsamtools will yield an error on CRAM files.
 #' 
+#' Note that for merged genomic + spike reference BAMs/CRAMs, this function 
+#' will only attempt to generate a FASTA for the spike contigs, not reference.
+#' If your reference contigs are screwed up, talk to your sequencing people, 
+#' and keep better track of the FASTA reference against which you compress!
+#' 
 #' @param x         a CRAM file, hopefully with an index
 #' @param fasta     the filename for the resulting FASTA ("spikes.fa")
+#' @param assembly  optional BSgenome or seqinfo with reference contigs (NULL)
 #' 
 #' @return          invisibly, a DNAStringSet as exported to `fasta` 
 #'
@@ -24,13 +30,20 @@
 #' @import          Rsamtools 
 #' 
 #' @export
-generate_spike_fasta <- function(x, fasta="spike_contigs.fa") { 
+generate_spike_fasta <- function(x, assembly=NULL , fasta="spike_contigs.fa") { 
 
   cram <- x 
   if (!is(cram, "BamFile")) cram <- BamFile(cram) 
   hdr <- scanBamHeader(cram) 
   cram_contigs <- names(hdr$targets)
+ 
+  if (!is.null(assembly)) {
+    cram_contigs <- setdiff(cram_contigs, seqlevels(assembly))
+  }
   
+  # are there spikes in it? 
+  if (length(cram_contigs) == 0) stop("No spike contigs found in ", x, "!")
+
   data(spike, package="spiky") 
   newspikes <- rename_spikes(cram, spike=spike)
 
