@@ -19,7 +19,7 @@ rename_spikes <- function(x, spike) {
   if (!is(cram, "BamFile")) cram <- BamFile(cram) 
   hdr <- scanBamHeader(cram) 
   cram_contigs <- names(hdr$targets)
-  true_contigs <- .get_base_name(cram_contigs)
+  true_contigs <- get_base_name(cram_contigs)
   names(true_contigs) <- cram_contigs 
   
   orphans <- names(which(!true_contigs %in% rownames(spike)))
@@ -35,11 +35,3 @@ rename_spikes <- function(x, spike) {
   return(newspikes) 
 
 } 
-
-
-# helper fn 
-.get_base_name <- function(contig_names, sep="_") {
-
-  sapply(lapply(strsplit(contig_names, sep), `[`, 1:3), paste, collapse=sep)
-
-}
