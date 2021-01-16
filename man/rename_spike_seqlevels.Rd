@@ -4,20 +4,22 @@
 \alias{rename_spike_seqlevels}
 \title{for spike-in contigs in GRanges, match to standardized spike seqlevels}
 \usage{
-rename_spike_seqlevels(x, spike)
+rename_spike_seqlevels(x, spike = NULL)
 }
 \arguments{
-\item{x}{something with seqlevels}
+\item{x}{something with seqlevels (GRanges, GAlignments, Seqinfo...)}
 
-\item{spike}{a DataFrame where spike$sequence is a DNAStringSet}
+\item{spike}{a DataFrame where spike$sequence is a DNAStringSet (or NULL)}
 }
 \value{
-\preformatted{     x, but with standardized spike seqlevels
+\preformatted{     x, but with standardized spike seqlevels and genomes
 }
 }
 \description{
 This function is essentially the opposite of rename_spikes, except that
 it works well on GRanges/GAlignments from or for merged genome+spike BAMs.
+If spike contigs are found, it will assign genome='spike' to those, while
+changing the seqlevels to standardized names that match rownames(spike).
 }
 \seealso{
 \preformatted{    rename_spikes

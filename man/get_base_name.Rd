@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_base_name.R
 \name{get_base_name}
 \alias{get_base_name}
-\title{refactored out of rename_spikes and rename_seqlevels}
+\title{refactored out of rename_spikes and rename_spike_seqlevels}
 \usage{
 get_base_name(contig_names, sep = "_")
 }
@@ -17,7 +17,7 @@ get_base_name(contig_names, sep = "_")
 }
 \description{
 A common task between generate_spike_fasta, rename_spikes, and
-rename_seqlevels is to determine what the largest common subset of
+rename_spike_seqlevels is to determine what the largest common subset of
 characters between existing contig names and stored standardized contigs
 might be. This function eases that task.
 }

@@ -1,55 +1,75 @@
-#' This function replaces the following line in bedtools:
+#' Binned estimation of picomoles of DNA present in cfMeDIP assays
+#' 
+#' This task was originally handled by the following: 
 #' 
 #' bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
 #' 
-#' Which translates to "Write the original A and B entries,
+#' The preceding translates to "Write the original A and B entries,
 #' plus the number of base pairs of overlap between the two features".
+#' This is essentially the same as a findOverlaps result (a Hits object),
+#' but with a score consisting of the base pairs overlapped for each hit.
 #' 
-#' Which translates to using disjoin and countOverlaps, see below. 
+#' I wrote the `scan_spiked_bam` function to deal with this, and also count 
+#' the number of reads that aligned to the spike-in contigs. (You're welcome.)
+#' Turning the preceding per-file results into a matrix then feeds `bin_pmol`.
 #' 
-#' @param x     a BED/BAM/CRAM file, GRanges of fragments, or GAlignmentPairs
+#' @param x     a BAM or CRAM file (the latter requires a bioc-devel fork)
 #' @param bins  the bins to overlap (generated if not provided; see Details)
+#' @param width width of the bins (default 300bp) to be generated if bins=NULL
+#' @param mapq  minimum MAPQ value to be counted in coverage estimates (20)
+#' @param ...   additional arguments (e.g. `mapq`) for computing coverage
+#'
+#' @return      a GRanges with average read coverage across 
+#'
+#' @details
+#' It turns out that the fastest way to do this in Bioconductor, at least when 
+#' x is a BAM or CRAM file, is to use the `bamsignals` package. For GRanges or
+#' BED files, we are mostly stuck with the usual disjoin/overlap loop, but this
+#' can be partly automated with bam_to_bin/bed_to_bin (using seqinfo) or just 
+#' seqinfo_from_header(x). Regardless, if you want to look at a subset of bins 
+#' (as opposed to all contigs or standard chromosomes), it's best to provide 
+#' your own `bins` GRanges. Similarly, if you want to tally a LOT of BAM/CRAM
+#' files over specific regions, it is a good idea to generate `bins` once, then
+#' pass it in, although bamsignals has a convenience function that makes it
+#' less important to do so (at least for speed considerations). 
 #' 
-#' @return      a GRanges with coverage by each fragment in each bin
-#' 
+#' @seealso seqinfo_from_header
+#' @seealso scan_spiked_bam
+#'
 #' @import Rsamtools 
 #' @import rtracklayer
-#' @import GenomicAlignments 
+#' @import GenomeInfoDb
 #' 
 #' @export
-bin_pmol <- function(x, bins=NULL) { 
+bin_pmol <- function(x, bins=NULL, width=300, mapq=20, ...) { 
 
-  if (is(x, "GAlignmentPairs")) {
-    message("Got a GAlignmentPairs to work with")
-  } else if (is(x, "GAlignments")) { 
-    message("Got a GAlignments to work with")
-  } else if (is(x, "GRanges")) { 
-    message("Got a GRanges to work with")
-  } else if (file.exists(x)) { 
-    message("Got some sort of a file to work with")
-  } else {
-    stop("Not sure what to do with x") 
-  }
+  stopifnot(file.exists(x))
+  res <- scan_spiked_bam(x, bins=bins, binwidth=300L, binwidth=width, ...)
+  message("Computed genomic and spike coverage.")
+  browser()
 
-  stop("Not quite done yet") 
+  # finish this modeling (call .bin_pmol_old or some such) 
+  stop("This function needs to be finished") 
+
+  # make any necessary fixes here
+  return(res)
 
 }
 
 
-#' union-intersect-overlap for things with values
-#' 
-#' like it says on the tin: pretend to do `bedtools -wao -a A -b B`
-#' this should be preceded by B <- bam_to_bins(bam) to work as expected. 
-#' 
-#' @param   A   the ranges spanned by fragments (see Details) 
-#' @param   B   the bins (typically 300bp wide) to tally in (see Details) 
-#' 
-#' @return      a GRanges with disjoint ranges and counts of A in each B 
-#' 
-#' 
-bedtools_wao_imitation <- function(A, B) { 
+# helper fn
+.bin_pmol_bam <- function(bam, bins=NULL, std=TRUE, ...) { 
 
-  ABC <- disjoin(c(A, B))
+  if (is.null(bins)) bins <- seqinfo_from_header(bam, std=std, ret="gr")
+   
+
+}  
+
+
+# helper fn
+.bin_pmol_gr <- function(gr, bins, std=TRUE) { 
+
+  ABC <- disjoin(c(gr, bins))
   olA <- findOverlaps(ABC, A) 
   olB <- findOverlaps(ABC, B) 
   stop("not done yet") 
