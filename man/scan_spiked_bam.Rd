@@ -10,6 +10,10 @@ scan_spiked_bam(
   binwidth = 300L,
   bins = NULL,
   spike = NULL,
+  how = c("max", "mean"),
+  dupe = FALSE,
+  paired = TRUE,
+  standard = TRUE,
   ...
 )
 }
@@ -24,7 +28,15 @@ scan_spiked_bam(
 
 \item{spike}{the spike-in references, if not using the defaults (NULL)}
 
-\item{...}{additional arguments to pass to ScanBamParam()}
+\item{how}{how to record spike read coverage (max or mean)? (max)}
+
+\item{dupe}{unique (FALSE), duplicte (TRUE), or all (NA) reads? (FALSE)}
+
+\item{paired}{restrict coverage to that from properly paired reads? (TRUE)}
+
+\item{standard}{restrict non-spike contigs to "standard" chromosomes? (TRUE)}
+
+\item{...}{additional arguments to pass to scanBamFlag()}
 }
 \value{
 \preformatted{     base-level read pair coverage on chroms + spikes in the BAM

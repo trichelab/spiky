@@ -5,7 +5,11 @@
 #' @param binwidth  width of the bins for chromosomal tiling (300) 
 #' @param bins      a pre-tiled GRanges for binning coverage (NULL)
 #' @param spike     the spike-in references, if not using the defaults (NULL) 
-#' @param ...       additional arguments to pass to ScanBamParam() 
+#' @param how       how to record spike read coverage (max or mean)? (max)
+#' @param dupe      unique (FALSE), duplicte (TRUE), or all (NA) reads? (FALSE)
+#' @param paired    restrict coverage to that from properly paired reads? (TRUE)
+#' @param standard  restrict non-spike contigs to "standard" chromosomes? (TRUE)
+#' @param ...       additional arguments to pass to scanBamFlag() 
 #' 
 #' @return          base-level read pair coverage on chroms + spikes in the BAM
 #' 
@@ -24,7 +28,7 @@
 #' @import          Rsamtools
 #' 
 #' @export
-scan_spiked_bam <- function(bam, mapq=20, binwidth=300L, bins=NULL, spike=NULL, ...) { 
+scan_spiked_bam <- function(bam, mapq=20, binwidth=300L, bins=NULL, spike=NULL, how=c("max", "mean"), dupe=FALSE, paired=TRUE, standard=TRUE, ...) { 
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
@@ -37,48 +41,34 @@ scan_spiked_bam <- function(bam, mapq=20, binwidth=300L, bins=NULL, spike=NULL, 
     stop(bam, " doesn't appear to have any spike-ins among its contigs.")
   }
 
-  # currently we drop nonstandard contigs for this process
-  standard_chroms <- seqlevels(keepStandardChromosomes(si))
-  orig_spike_contigs <- subset(seqlevels(si), genome(si) == "spike")
-  merged_contigs <- sortSeqlevels(si[c(standard_chroms, orig_spike_contigs)])
-  gr <- as(merged_contigs, "GRanges")
-
-  # use standardized element names, but keep the seqlevels found in the BAM:
-  names(gr) <- as.character(seqnames(rename_spike_seqlevels(gr, spike=spike)))
-  bp <- ScanBamParam(which=gr, ...)
-  bamMapqFilter(bp) <- mapq
+  # properly indexed
   bf <- BamFile(bam)
 
-  # the fact I have to include like this suggests optimization is called for
-  message("Tabulating read pair coverage (may take a while)...", appendLF=FALSE)
-  system.time(cvg <- coverage(bf, param=bp)[seqlevels(gr)])
-  message("Done.") 
+  # get a GRanges corresponding to our contig selections for the BAM/CRAM file
+  gr <- get_merged_gr(si=si, standard=standard) # scanBam positive selections
 
-  # welp, here's your unbinned coverage -- may be easiest to just bin the Rles?
-  if (is.null(bins)) { 
-    std <- seqinfo(gr)[standard_chroms]
-    message("Tiling ", binwidth, "bp bins across the genome...", appendLF=FALSE)
-    system.time(bins <- tileGenome(std, tilewidth=binwidth, 
-                                   cut.last.tile.in.chrom=TRUE))
-    message("Done.") 
-  }
+  # tabulate spike coverage onto this subset of the filter GRanges from above
+  spike_gr <- subset(gr, genome(gr)[as(seqnames(gr), "character")] == "spike")
+
+  # create appropriate filters for coverage tabulation
+  fl <- scanBamFlag(isDuplicate=dupe, isPaired=paired, isProperPair=paired, ...)
+  bp <- ScanBamParam(flag=fl, which=gr)
+  bamMapqFilter(bp) <- mapq
+
+  # assess coverage on contigs we care about (bin the Rles later)
+  covg <- get_spiked_coverage(bf=bf, bp=bp, gr=gr)
+
+  # bins for coverage
+  if (is.null(bins)) bins <- tile_bins(gr=gr, binwidth=binwidth)
 
   # genomic coverage is averaged across each bin
-  message("Binning genomic coverage...", appendLF=FALSE)
-  system.time(binned <- binnedAverage(bins, numvar=cvg[seqlevels(bins)], 
-                                      varname="coverage"))
-  binned <- split(binned, seqnames(binned))
-  message("Done.") 
- 
-  # spikes get summarized as median coverage across each spike
-  message("Summarizing spike-in counts...", appendLF=FALSE)
-  system.time(spiked <- sapply(cvg[orig_spike_contigs], median))
-  names(spiked) <- get_base_name(names(spiked))
-  message("Done.") 
+  binned <- get_binned_coverage(bins, covg)
 
-  # toss them into a list along with a QC of max bin covg per chrom 
-  maxcovg <- sapply(binned, function(x) max(x$coverage))
-  res <- list(genomic=binned, spikes=spiked, maxcovg=maxcovg)
+  # spikes get summarized as max or mean across each
+  spiked <- get_spike_depth(covg, spike_gr, how=how, spike=spike) 
+    
+  # toss them into a list of summary results
+  res <- GRangesList(genomic=binned, spikes=spiked) # redundant mcols :-( 
   return(res)
 
 } 
