@@ -50,16 +50,14 @@ library(spiky)
     
 ### Output: The output contains objects that will be used downstream in the analysis, including
   * genomic - A GRanges object showing the genomic coverage of the BAM reads
-  * spikes - A named list containing the number of reads for each spike
-  * maxcovg - A named list containing the max number of reads at a single index for each chromosome
+  * spikes - A GRanges object showing the coverage of the spikes.
   
 ```{r}
 #This line takes a couple minutes to run.
 #Find the full path on your machine to "example.spike.bam" in spiky/inst/extdata
-#bam_file_path <- system.file("extdata", "example.spike.bam", package = "spiky")
+bam_file_path <- system.file("extdata", "chrom_21_22_with_spikes.bam", package = "spiky")
 data(spike)
-bam_info <- scan_spiked_bam("/Users/lauren.harmon/Desktop/Rotation_Tim_Triche/spiky/spikyBAM/chrom_21_22_with_spikes.bam",spike=spike)  
-#bam_info <- scan_spiked_bam(bam_file_path)
+bam_info <- scan_spiked_bam(bam_file_path,spike=spike)  
 ```
 
 # Methylation specificity
@@ -67,33 +65,24 @@ For each combination of parameters, we designed two distinct spike-in sequences.
 
 This calculation is done by the 'methylation_specificity' function.
 
-### Input: A named list containing the number of reads for each spike-in
-  * bam_info$spike as produced in the previous step
+### Input: The output of the 'scan_spiked_bam' function
+  * bam_info as produced in the previous step
   
-### Output: methylation specificity
+### Output: methylation specificity mean and median
   * Number ranging 0-1 for the percent of sequences that are methylated after cfMeDIP-seq has been performed
 
 ### Example
 ```{r eval=FALSE}
 ##Calculate methylation specificity
-methyl_spec <- methylation_specificity(bam_info$spikes)
+methyl_spec <- methylation_specificity(bam_info)
 print(methyl_spec)
 ```
 
 # Obtaining model that will predict the molar amount on DNA sequence of interest
 For each batch of samples, the coefficients used in the Gaussian generalized linear model will differ. The 'model_glm_pmol' will calculate these coefficients and output the model to be used to calculate molar amount (picomoles) on the user's DNA sequences of interest. We assume that all DNA sequences of interest are methylated after undergoing cfMeDIP-seq. As such, we build the Gaussian generalized linear model on only the methylated spike-in control fragments. A generated Bland-Altman plot will visualize how well the model performs.
 
-### Input: spikein_data
-  * BAM or BED file
-  * We remove fragments from the unmethylated sequences
-  * Columns:
-    * chrom/contig: string 
-    * position start: numeric
-    * position end: numeric
-    * read counts: integer
-    * fragment length (bp): integer
-    * G+C content [0-1]: numeric
-    * CpG number: Integer
+### Input: The output of the 'scan_spiked_bam' function
+  * bam_info as produced in the previous step
 
 ### Output: 
   * Gaussian generalized linear model with coefficients specific to samples used in input data; .rda file
@@ -102,16 +91,8 @@ For each batch of samples, the coefficients used in the Gaussian generalized lin
 
 ### Example
 ```{r eval=FALSE}
-## reshape the data so that 'id' is the sample
-dedup_path <- system.file("data", "dedup.rda", package = "spiky")
-load(dedup_path)
-colnames(dedup) <- c("frag_grp","sample1","sample2")
-spikein_data_melt <- melt(dedup, measure.vars = c('sample1','sample2'))
-colnames(spikein_data_melt) <- c("frag_grp", "id", "read_count")
-
 ## Build the Gaussian generalized linear model on the spike-in control data
-# Generate bland altman plot to visualize the model's performance on the data
-gaussian_glm <- model_glm_pmol(spikein_data)
+gaussian_glm <- model_glm_pmol(covg_to_df(bam_info))
 summary(gaussian_glm)
 ```
 
