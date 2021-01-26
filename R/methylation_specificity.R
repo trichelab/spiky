@@ -10,9 +10,4 @@ methylation_specificity <- function(ssb_res, ...) {
   meth_spec <- list("mean" = mean(methreads/totalreads), 
                     "median" = median(methreads/totalreads))
   return(meth_spec)
-  # data("spike")
-  # methylated_spikes <- rownames(spike[spike$methylated == 1,])
-  # sum(spike_data[methylated_spikes])
-  # methyl_spec <- sum(spike_data[methylated_spikes]) / (sum(spike_data))
-  # return(methyl_spec)
 }
