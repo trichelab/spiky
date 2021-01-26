@@ -3,6 +3,7 @@
 export(add_frag_info)
 export(bam_to_bins)
 export(bin_pmol)
+export(covg_to_df)
 export(find_spike_contigs)
 export(generate_spike_fasta)
 export(get_base_name)
