@@ -35,11 +35,7 @@ BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
 library(spiky)
 ```
 
-
-# Methylation specificity
-For each combination of parameters, we designed two distinct sequences. One to be methylated and one to be unmethylated. The allows assess to assess non-specific binding of the monoclonal antobody on a sample-by-sample basis. To calculate methylation specificity we take the number of methylated reads divided by the total number of reads. It is our reccomendation that if methylation specificity is <0.98, then the sample should be flagged or removed from analysis as the cfMeDIP performed inadequetely. 
-
-This calculation is done by the 'calculate_methylation' function.
+# Process the BAM file
 
 ### Input: spikein_data
   * BAM or BED file
@@ -51,21 +47,41 @@ This calculation is done by the 'calculate_methylation' function.
     * fragment length (bp): integer
     * G+C content [0-1]: numeric
     * CpG number: Integer
+    
+### Output: The output contains objects that will be used downstream in the analysis, including
+  * genomic - A GRanges object showing the genomic coverage of the BAM reads
+  * spikes - A named list containing the number of reads for each spike
+  * maxcovg - A named list containing the max number of reads at a single index for each chromosome
+  
+```{r}
+#This line takes a couple minutes to run.
+#Find the full path on your machine to "example.spike.bam" in spiky/inst/extdata
+#bam_file_path <- system.file("extdata", "example.spike.bam", package = "spiky")
+data(spike)
+bam_info <- scan_spiked_bam("/Users/lauren.harmon/Desktop/Rotation_Tim_Triche/spiky/spikyBAM/chrom_21_22_with_spikes.bam",spike=spike)  
+#bam_info <- scan_spiked_bam(bam_file_path)
+```
+
+# Methylation specificity
+For each combination of parameters, we designed two distinct spike-in sequences. One to be methylated and one to be unmethylated. The allows us to assess non-specific binding of the monoclonal antibody on a sample-by-sample basis. To calculate methylation specificity we take the number of methylated reads divided by the total number of reads. It is our recommendation that if methylation specificity is <0.98, then the sample should be flagged or removed from analysis as the cfMeDIP performed inadequately. 
+
+This calculation is done by the 'methylation_specificity' function.
+
+### Input: A named list containing the number of reads for each spike-in
+  * bam_info$spike as produced in the previous step
   
 ### Output: methylation specificity
-  * Number ranging 0-1 specifiy the percent of sequences that are methylated after cfMeDIP-seq has been performed
+  * Number ranging 0-1 for the percent of sequences that are methylated after cfMeDIP-seq has been performed
 
 ### Example
 ```{r eval=FALSE}
-## Load in deduplicated sequences aligned to the spike-in controls
-spikein_data_all <- fread('2019_synfrag0.01_spikeincellline_dedup_lowconc.csv')
-
 ##Calculate methylation specificity
-methylation_specificty <- calculate_methylation(spikein_data)
+methyl_spec <- methylation_specificity(bam_info$spikes)
+print(methyl_spec)
 ```
 
 # Obtaining model that will predict the molar amount on DNA sequence of interest
-For each batch of samples, the coefficients used in the Gaussian generalizaed linear model will differ. The 'model_glm_pmol' will calculate these coefficients and output the model to be used to calculate molar amount (picomoles) on the user's DNA sequences of interest. We assume that all DNA sequences of interest are methylated after undergoeing cfMeDIP-seq. As such, we build the Gaussian generalized linear model on only the methylated spike-in control fragments. A generated Bland-Altman plot will visualize how well the model performs.
+For each batch of samples, the coefficients used in the Gaussian generalized linear model will differ. The 'model_glm_pmol' will calculate these coefficients and output the model to be used to calculate molar amount (picomoles) on the user's DNA sequences of interest. We assume that all DNA sequences of interest are methylated after undergoing cfMeDIP-seq. As such, we build the Gaussian generalized linear model on only the methylated spike-in control fragments. A generated Bland-Altman plot will visualize how well the model performs.
 
 ### Input: spikein_data
   * BAM or BED file
@@ -87,13 +103,15 @@ For each batch of samples, the coefficients used in the Gaussian generalizaed li
 ### Example
 ```{r eval=FALSE}
 ## reshape the data so that 'id' is the sample
-spikein_data <- load('dedup.rda')
-spikein_data_melt <- melt(spikein_data, measure.vars = c('sample1','sample2'))
-colnames(spikein_data_melt) <- c("frag_grp", "id", "read")
+dedup_path <- system.file("data", "dedup.rda", package = "spiky")
+load(dedup_path)
+colnames(dedup) <- c("frag_grp","sample1","sample2")
+spikein_data_melt <- melt(dedup, measure.vars = c('sample1','sample2'))
+colnames(spikein_data_melt) <- c("frag_grp", "id", "read_count")
 
 ## Build the Gaussian generalized linear model on the spike-in control data
 # Generate bland altman plot to visualize the model's performance on the data
-gaussian_glm <- model_glm_pmol(spikein_data_melt)
+gaussian_glm <- model_glm_pmol(spikein_data)
 summary(gaussian_glm)
 ```
 
@@ -129,18 +147,25 @@ For the samples in which the Gaussian generalized linear model was built, we wil
   
 ### Example
 ```{r eval=FALSE}
-## Load in deduplicated sequences aligned to the human reference geome
-sample_data <- load("testGR.rda")
-sample_data <- as.data.frame(sample_data)
+## Load in deduplicated sequences aligned to the human reference genome
+testGR_path <- system.file("data", "testGR.rda", package = "spiky")
+load(testGR_path)
+sample_data <- as.data.frame(testGR)
 sample_data$read_count <- sample_data$score
 sample_data$fraglen <- sample_data$width
+library(stringr)
+sample_data$GC <- (str_count(sample_data$seq,"G") + str_count(sample_data$seq,"G")) /
+ length(sample_data$seq)
+sample_data$CpG_3 <- str_count(sample_data$seq,"CG")^(1/3)
+                          
 
 ## Calculate molar amount (picomoles)
 sample_data_pmol <- predict_pmol(gaussian_glm, sample_data)
+
 ```
 
 # Adjusting molar amount to binned genomic windows
-For our analyses, we binned the genome into 300 bp non-overlapping windows. We then look overlap between fragments in our data with each of the 300 bp genomic windows. We adjust the molar amount (picomoles) by a multipier. This multipier is the proportion of overlap between our fragment and the 300 bp window. This is done for every fragment in our sample.
+For our analyses, we binned the genome into 300 bp non-overlapping windows. We then look overlap between fragments in our data with each of the 300 bp genomic windows. We adjust the molar amount (picomoles) by a multiplier. This multiplier is the proportion of overlap between our fragment and the 300 bp window. This is done for every fragment in our sample.
 
 ### Input: sample_pmol_data
   * BED file from the 'predict_pmol' function
@@ -167,7 +192,7 @@ For our analyses, we binned the genome into 300 bp non-overlapping windows. We t
   
 ### Example
 ```{r eval=FALSE}
-sample_binned_data <- bin_pmol(sample_pmol_data)
+sample_binned_data <- bin_pmol(sample_data_pmol)
 ```
 
 
