@@ -13,23 +13,10 @@
 #' @export 
 add_frag_info <- function(x, frag_grp="frag_grp") { 
 
-  frag_grp_parse <- data.frame(do.call(rbind, strsplit(x[, frag_grp], "_")))
+  fg <- gsub("[a-z]+", "", x[, frag_grp], ignore.case=TRUE)
+  frag_grp_parse <- data.frame(do.call(rbind, strsplit(fg, "_")))
   names(frag_grp_parse) <- c("fraglen", "CpG", "GC")
   for (i in names(frag_grp_parse)) x[, i] <- as.integer(frag_grp_parse[, i])
   return(x) 
-
-}
-
-
-# helper function
-.getConcFromFraglen <- function(fraglen, concs = NULL) {
-  
-  if (is.null(concs)) concs <- c("80" = 0.004, "160" = 0.002, "320" = 0.001)
-  res <- concs[as.character(fraglen)]
-
-  # essentially the fallthrough from ifelse
-  res[is.na(res)] <- concs[length(concs)]
-
-  return(res)
 
 }

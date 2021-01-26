@@ -2,21 +2,25 @@
 % Please edit documentation in R/model_glm_pmol.R
 \name{model_glm_pmol}
 \alias{model_glm_pmol}
-\title{Attempts to build a generalized linear model from spike-in standards,
-to correct bias and batch effects in a cell-free MeDIP experiment.}
+\title{Build a generalized linear model from spike-ins to correct bias in cfMeDIP}
 \usage{
-model_glm_pmol(x, concentration = NULL, ...)
+model_glm_pmol(x, conc = NULL, ...)
 }
 \arguments{
 \item{x}{the data, with (at minimum) frag_grp, id, read_count}
+
+\item{conc}{concentration for each spike (will be referenced if NULL)}
+
+\item{...}{other arguments to pass to \code{glm} (e.g. \code{family})}
 }
 \value{
 \preformatted{   the model fit for the data
 }
 }
 \description{
-formerly '2020_model_glm_fmol'.  Note that everything in X can be had from
+formerly '2020_model_glm_fmol'.  Note that everything in x can be had from
 a BAM/CRAM with spike contigs named as frag_grp (len_CpGs_GC) in the index
+FIXME: is reshape2 even used anymore?
 }
 \details{
 \preformatted{  The format of 'data' is important, yet poorly documented
@@ -27,6 +31,9 @@ a BAM/CRAM with spike contigs named as frag_grp (len_CpGs_GC) in the index
 \examples{
 
 data(spike_read_counts)
-fit <- model_glm_pmol(spike_read_counts) 
+fit1 <- model_glm_pmol(spike_read_counts) 
+
+data(ssb_res) # scan_spiked_bam result
+fit2 <- model_glm_pmol(covg_to_df(ssb_res))
 
 }
