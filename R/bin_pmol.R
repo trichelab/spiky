@@ -44,7 +44,7 @@
 bin_pmol <- function(x, bins=NULL, width=300, mapq=20, ...) { 
 
   stopifnot(file.exists(x))
-  res <- scan_spiked_bam(x, bins=bins, binwidth=300L, binwidth=width, ...)
+  res <- scan_spiked_bam(x, bins=bins, binwidth=width, ...)
   message("Computed genomic and spike coverage.")
   browser()
 

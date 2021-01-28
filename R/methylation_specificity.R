@@ -4,8 +4,10 @@
 #' (ideally 98-99%) due to the nature of the assay. 
 #'
 #' @export
-methylation_specificity <- function(x, ...) { 
-
-  stop("unfinished implementation")
-
+methylation_specificity <- function(ssb_res, ...) { 
+  methreads <- covg_to_df(ssb_res, meth=TRUE)$read_count
+  totalreads <- covg_to_df(ssb_res, meth=FALSE)$read_count
+  meth_spec <- list("mean" = mean(methreads/totalreads), 
+                    "median" = median(methreads/totalreads))
+  return(meth_spec)
 }
