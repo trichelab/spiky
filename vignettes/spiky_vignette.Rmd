@@ -53,11 +53,12 @@ library(spiky)
   * spikes - A GRanges object showing the coverage of the spikes.
   
 ```{r}
-#This line takes a couple minutes to run.
-#Find the full path on your machine to "example.spike.bam" in spiky/inst/extdata
-bam_file_path <- system.file("extdata", "chrom_21_22_with_spikes.bam", package = "spiky")
 data(spike)
-bam_info <- scan_spiked_bam(bam_file_path,spike=spike)  
+#Load in your bam file using scan_spiked_bam
+#ssb_res <- scan_spiked_bam("bam/file/path",spike=spike)
+#Example result
+ssb_res_path <- system.file("data", "ssb_res.rda", package = "spiky")
+load(ssb_res_path)
 ```
 
 # Methylation specificity
