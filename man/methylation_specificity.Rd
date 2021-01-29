@@ -4,7 +4,7 @@
 \alias{methylation_specificity}
 \title{compute methylation specificity for spike-in standards}
 \usage{
-methylation_specificity(x, ...)
+methylation_specificity(ssb_res, ...)
 }
 \description{
 In a cfMeDIP experiment, the yield of methylated fragments should be >95\%
