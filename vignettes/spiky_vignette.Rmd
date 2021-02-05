@@ -3,8 +3,8 @@ title: "Spiky: Analysing cfMeDIP-seq data with spike-in controls"
 author: "Samantha L Wilson"
 date: "15/09/2020"
 output: rmarkdown::html_vignette
-bibliography: /Users/samanthawilson/Documents/2020_CtrlProject_Manuscript/2020_spiky_code/references.bib 
-csl: nature.csl
+bibliography: /Users/lauren.harmon/Desktop/Rotation_Tim_Triche/spiky/bibliography/references.bib 
+csl: /Users/lauren.harmon/Desktop/Rotation_Tim_Triche/spiky/bibliography/nature.csl
 link-citations: yes
 vignette: >
   %\VignetteIndexEntry{Spiky: Analysing cfMeDIP-seq data with spike-in controls}
@@ -14,11 +14,12 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
 # Introduction
 
-To meet the need for a reference control in cell-free methylated DNA immunoprecipitation-sequencing (cfMeDIP-seq)[@shen2018sensitive; @shen2019preparation] experiments, we designed spike-in controls and ligated unique molecular indexes (UMI) to adjust for PCR bias, and immunoprecipitation bias caused by the fragment length, G+C content, and CpG density of the DNA fragments that are immunoprecipitated. This enables for absolute quantification of methylated DNA in picomoles, while retaining epigenomic information that allows for sensitive, tissue-specific detection as well as comparable results between different experiments. We designed DNA fragments with 2x3x3x3=54 combinations of methylation status (methylated and unmethylated), fragment length in basepair (bp) (80 bp, 160 bp, 320 bp), G+C content (35%, 50%, 65%), and fraction of CpGs within a fragment (1 CpG/ 80 bp, 1 CpG/ 40 bp, 1 CpG/ 20 bp). Spiky was developed for analyzing DNA methylation of cell-free DNA obtained from cfMeDIP-seq method using reference 'spike-in' controls. This package will:
+To meet the need for a reference control in cell-free methylated DNA immunoprecipitation-sequencing (cfMeDIP-seq)[@shen2018sensitive; @shen2019preparation] experiments, we designed spike-in controls and ligated unique molecular indexes (UMI) to adjust for PCR bias, and immunoprecipitation bias caused by the fragment length, G+C content, and CpG density of the DNA fragments that are immunoprecipitated. This enables absolute quantification of methylated DNA in picomoles, while retaining epigenomic information that allows for sensitive, tissue-specific detection as well as comparable results between different experiments. We designed DNA fragments with 2x3x3x3=54 combinations of methylation status (methylated and unmethylated), fragment length in basepair (bp) (80 bp, 160 bp, 320 bp), G+C content (35%, 50%, 65%), and fraction of CpGs within a fragment (1 CpG/ 80 bp, 1 CpG/ 40 bp, 1 CpG/ 20 bp). Spiky was developed for analyzing DNA methylation of cell-free DNA obtained from cfMeDIP-seq method using reference 'spike-in' controls. This package will:
 
 * Assess methylation specificity in each sample
 * Using the spike-in control data, output a Gaussian generalized linear model to predict molar amount on DNA samples
@@ -32,7 +33,8 @@ install.packages("remotes")
 install.packages("BiocManager")
 BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
 
-library(spiky)
+#library(spiky)
+load_all("./")
 ```
 
 # Process the BAM file
@@ -53,7 +55,8 @@ library(spiky)
   * spikes - A GRanges object showing the coverage of the spikes.
   
 ```{r}
-data(spike)
+spike_path <- system.file("data", "spike.rda", package = "spiky")
+load(spike_path)
 #Load in your bam file using scan_spiked_bam
 #ssb_res <- scan_spiked_bam("bam/file/path",spike=spike)
 #Example result
@@ -67,110 +70,78 @@ For each combination of parameters, we designed two distinct spike-in sequences.
 This calculation is done by the 'methylation_specificity' function.
 
 ### Input: The output of the 'scan_spiked_bam' function
-  * bam_info as produced in the previous step
+  * ssb_res as produced in the previous step
   
 ### Output: methylation specificity mean and median
-  * Number ranging 0-1 for the percent of sequences that are methylated after cfMeDIP-seq has been performed
+  * Mean and median of the percent of methylated sequences for each spike-in after cfMeDIP-seq has been performed
 
 ### Example
 ```{r eval=FALSE}
 ##Calculate methylation specificity
-methyl_spec <- methylation_specificity(bam_info)
+methyl_spec <- methylation_specificity(ssb_res)
 print(methyl_spec)
 ```
 
-# Obtaining model that will predict the molar amount on DNA sequence of interest
+# Fit a Gaussian model to predict the molar amount of DNA sequences
 For each batch of samples, the coefficients used in the Gaussian generalized linear model will differ. The 'model_glm_pmol' will calculate these coefficients and output the model to be used to calculate molar amount (picomoles) on the user's DNA sequences of interest. We assume that all DNA sequences of interest are methylated after undergoing cfMeDIP-seq. As such, we build the Gaussian generalized linear model on only the methylated spike-in control fragments. A generated Bland-Altman plot will visualize how well the model performs.
 
 ### Input: The output of the 'scan_spiked_bam' function
-  * bam_info as produced in the previous step
+  * Example: data(ssb_res)
 
 ### Output: 
   * Gaussian generalized linear model with coefficients specific to samples used in input data; .rda file
-  * Summary of the model; .txt file
-  * Bland-Altman plot; .png file
 
 ### Example
 ```{r eval=FALSE}
 ## Build the Gaussian generalized linear model on the spike-in control data
-gaussian_glm <- model_glm_pmol(covg_to_df(bam_info))
+gaussian_glm <- model_glm_pmol(covg_to_df(ssb_res))
 summary(gaussian_glm)
 ```
-
-An example of a Bland-Altman plot generated from spike-in control data.
-![Bland-Altman plot generated from spike-in control data](./2020_BA_gaussian_fraglen_CpG3_0.01ng.png){width=500}
 
 # Calculating molar amount on DNA sequences of interest
 For the samples in which the Gaussian generalized linear model was built, we will calculate the molar amount (picomoles) for each DNA sequence of interest.
 
-### Input: sample_data
-  * BAM or BED file; UMI deduplicated
-  * Columns:
-    * chrom/contig: string 
-    * position start: numeric
-    * position end: numeric
-    * read counts: integer
-    * fragment length (bp): integer
-    * G+C content [0-1]: numeric
-    * CpG number: Integer
-  * .rda file with the coefficients for the Gaussian generalized linear model
+### Input: The output of the 'scan_spiked_bam' function
+  * Example: data(ssb_res)
   
 ### Output: sample_pmol_data
-  * BED file
+  * Data frame
   * Columns: 
     * chrom: string
-    * position start: numeric
-    * position end: numeric
-    * read counts: integer
+    * bin position start: numeric
+    * bin position end: numeric
+    * read counts: coverage of bin
     * fragment length (bp): integer
     * G+C content [0-1]: numeric
-    * CpG number: integer 
+    * CpG number: numeric 
     * pmol: numeric
   
 ### Example
 ```{r eval=FALSE}
-## Load in deduplicated sequences aligned to the human reference genome
-testGR_path <- system.file("data", "testGR.rda", package = "spiky")
-load(testGR_path)
-sample_data <- as.data.frame(testGR)
-sample_data$read_count <- sample_data$score
-sample_data$fraglen <- sample_data$width
-library(stringr)
-sample_data$GC <- (str_count(sample_data$seq,"G") + str_count(sample_data$seq,"G")) /
- length(sample_data$seq)
-sample_data$CpG_3 <- str_count(sample_data$seq,"CG")^(1/3)
-                          
-
-## Calculate molar amount (picomoles)
-sample_data_pmol <- predict_pmol(gaussian_glm, sample_data)
+# Predict pmol concentration
+# To select a genome other than hg38, use available.packages() to find valid BSgenome name
+sample_data_pmol <- predict_pmol(gaussian_glm, ssb_res,"BSgenome.Hsapiens.UCSC.hg38")
 
 ```
 
 # Adjusting molar amount to binned genomic windows
 For our analyses, we binned the genome into 300 bp non-overlapping windows. We then look overlap between fragments in our data with each of the 300 bp genomic windows. We adjust the molar amount (picomoles) by a multiplier. This multiplier is the proportion of overlap between our fragment and the 300 bp window. This is done for every fragment in our sample.
 
-### Input: sample_pmol_data
-  * BED file from the 'predict_pmol' function
-   * Columns: 
-    * chrom: string
-    * position start: numeric
-    * position end: numeric
-    * read counts: integer
-    * fragment length (bp): integer
-    * G+C content [0-1]: numeric
-    * CpG number: integer 
-    * pmol: numeric
+### Input: output dataframe produced from predict_pmol
+   * Example: sample_pmol_data as produced in previous step
   
 ### Output: sample_binned_data
-  * BED file
-   * Columns: 
+  * Data frame
+  * Columns: 
     * chrom: string
-    * position start: numeric
-    * position end: numeric
+    * bin position start: numeric
+    * bin position end: numeric
+    * read counts: coverage of bin
     * fragment length (bp): integer
     * G+C content [0-1]: numeric
-    * CpG number: integer 
+    * CpG number: numeric 
     * pmol: numeric
+    * adjusted pmol: numeric
   
 ### Example
 ```{r eval=FALSE}
