@@ -34,10 +34,17 @@ Imports:
     BiocParallel,
     GenomicRanges,
     GenomicAlignments,
-    SummarizedExperiment
+    SummarizedExperiment,
+    rtracklayer,
+    GenomeInfoDb,
+    BSgenome,
+    methods,
+    S4Vectors
 Suggests:
     covr,
     testthat,
-    equatiomatic
+    equatiomatic,
+    knitr
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
