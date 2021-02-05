@@ -25,3 +25,26 @@ create seqinfo (and thus a standard chromosome filter) from a BAM/CRAM header
 \details{
 Setting std=TRUE on a spike-in CRAM or BAM will produce an empty result.
 }
+\examples{
+
+  library(Rsamtools)
+  fl <- system.file("extdata", "ex1.bam", package="Rsamtools", mustWork=TRUE)
+
+  hdr <- scanBamHeader(BamFile(fl))
+  si <- seqinfo_from_header(hdr)
+  gr <- seqinfo_from_header(fl, ret="gr")
+  stopifnot(identical(gr, as(si, "GRanges")))
+
+  std_si <- seqinfo_from_header(fl, std=TRUE)
+  seqlevels(std_si)
+
+  # for comparison with below
+  data(spike, package="spiky") 
+  spike 
+
+  # FIXME: add an example with a CRAM instead 
+  sp <- system.file("extdata", "example.spike.bam", package="spiky")
+  sp_gr <- seqinfo_from_header(sp, ret="granges")
+  sp_gr 
+
+}
