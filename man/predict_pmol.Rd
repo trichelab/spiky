@@ -4,23 +4,23 @@
 \alias{predict_pmol}
 \title{predict picomoles of DNA from a fit and readcounts}
 \usage{
-predict_pmol(fit, x = NULL)
+predict_pmol(fit, ssb_res = NULL, genome = "BSgenome.Hsapiens.UCSC.hg38")
 }
 \arguments{
 \item{fit}{result of model_glm_pmol}
 
-\item{x}{the data / new data}
+\item{ssb_res}{the data / new data}
 }
 \value{
-x, but with predictions
+data, a dataframe with sequence, read count, fragment length, GC\% CpG cube rooted, and concentration prediction.
 }
 \description{
 this seems to just wrap output from bin_pmol and model_glm_pmol... ?
 }
 \examples{
 
-data(spike_read_counts)
-fit <- model_glm_pmol(spike_read_counts) 
-pred <- predict_pmol(fit) 
+data(ssb_res)
+fit <- model_glm_pmol(covg_to_df(ssb_res)) 
+pred <- predict_pmol(fit,ssb_res) 
 
 }
