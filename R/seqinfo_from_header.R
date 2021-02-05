@@ -30,7 +30,7 @@
 #'
 #'   # FIXME: add an example with a CRAM instead 
 #'   sp <- system.file("extdata", "example.spike.bam", package="spiky")
-#'   sp_gr <- seqinfo_from_header(sp, ret="granges")
+#'   sp_gr <- seqinfo_from_header(sp, ret="gr")
 #'   sp_gr 
 #' 
 #' @import Rsamtools
