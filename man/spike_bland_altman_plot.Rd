@@ -18,8 +18,8 @@ Bland-Altman plot for cfMeDIP spike standards
 }
 \examples{
 
-data(spike_read_counts)
-fit <- model_glm_pmol(spike_read_counts) 
+data(ssb_res)
+fit <- model_glm_pmol(covg_to_df(ssb_res)) 
 spike_bland_altman_plot(fit) 
 
 }

@@ -47,5 +47,4 @@ Setting std=TRUE on a spike-in CRAM or BAM will produce an empty result.
   sp_gr <- seqinfo_from_header(sp, ret="granges")
   sp_gr 
 
-
 }
