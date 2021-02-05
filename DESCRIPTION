@@ -2,15 +2,15 @@ Package: spiky
 Type: Package
 Title: Spike-in calibration for cell-free MeDIP
 Description: Standardized model generation for cfMeDIP spike-in controls
-Version: 0.13.29
-Date: 2021-01-29
+Version: 0.14.05
+Date: 2021-02-05
 Authors@R: c(person("Samantha", "Wilson", role=c("aut")), 
              person("Lauren", "Harmon", role=c("aut")),
              person("Tim", "Triche", role=c("aut","cre"),
                     email="trichelab@gmail.com"))
 URL: https://github.com/trichelab/spiky
 BugReports: https://github.com/trichelab/spiky/issues
-License: file LICENSE
+License: GPL (>= 2)
 Depends:
     reshape2,
     R (>= 4.0.0)

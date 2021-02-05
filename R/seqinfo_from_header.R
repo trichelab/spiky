@@ -13,11 +13,12 @@
 #' 
 #' @examples 
 #' 
+#'   library(Rsamtools)
 #'   fl <- system.file("extdata", "ex1.bam", package="Rsamtools", mustWork=TRUE)
 #'
 #'   hdr <- scanBamHeader(BamFile(fl))
 #'   si <- seqinfo_from_header(hdr)
-#'   gr <- seqinfo_from_header(fl)
+#'   gr <- seqinfo_from_header(fl, ret="gr")
 #'   stopifnot(identical(gr, as(si, "GRanges")))
 #' 
 #'   std_si <- seqinfo_from_header(fl, std=TRUE)
