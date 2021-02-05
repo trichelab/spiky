@@ -12,3 +12,4 @@ inst/doc/*.html
 .*.sw*
 inst/extdata/chrom_22_with_spikes.bam
 inst/extdata/chrom_22_with_spikes.bam.bai
+inst/doc
