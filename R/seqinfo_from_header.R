@@ -11,30 +11,10 @@
 #' 
 #'   Setting std=TRUE on a spike-in CRAM or BAM will produce an empty result. 
 #' 
-#' @examples 
-#' 
-#'   fl <- system.file("extdata", "ex1.bam", package="Rsamtools", mustWork=TRUE)
-#'
-#'   hdr <- scanBamHeader(BamFile(fl))
-#'   si <- seqinfo_from_header(hdr)
-#'   gr <- seqinfo_from_header(fl)
-#'   stopifnot(identical(gr, as(si, "GRanges")))
-#' 
-#'   std_si <- seqinfo_from_header(fl, std=TRUE)
-#'   seqlevels(std_si)
-#'
-#'   # for comparison with below
-#'   data(spike, package="spiky") 
-#'   spike 
-#'
-#'   # FIXME: add an example with a CRAM instead 
-#'   sp <- system.file("extdata", "example.spike.bam", package="spiky")
-#'   sp_gr <- seqinfo_from_header(sp, ret="granges")
-#'   sp_gr 
-#' 
-#' 
 #' @import Rsamtools
 #' @import GenomeInfoDb 
+#' 
+#' 
 #' 
 #' @export 
 seqinfo_from_header <- function(x, gen=NA, std=FALSE, ret=c("si", "gr")) {
@@ -92,3 +72,27 @@ seqinfo_from_header <- function(x, gen=NA, std=FALSE, ret=c("si", "gr")) {
   return(res) 
 
 }
+
+
+#' 
+#' 
+#'   fl <- system.file("extdata", "ex1.bam", package="Rsamtools", mustWork=TRUE)
+#' 
+#'   hdr <- Rsamtools::scanBamHeader(Rsamtools::BamFile(fl))
+#'   si <- seqinfo_from_header(hdr)
+#'   gr <- seqinfo_from_header(fl)
+#'   stopifnot(identical(gr, as(si, "GRanges"))
+#'   
+#'   )
+#' 
+#'   std_si <- seqinfo_from_header(fl, std=TRUE)
+#'   seqlevels(std_si)
+#' 
+#'   # for comparison with below
+#'   data(spike, package="spiky")
+#'   spike
+#' 
+#'   # FIXME: add an example with a CRAM instead
+#'   sp <- system.file("extdata", "example.spike.bam", package="spiky")
+#'   sp_gr <- seqinfo_from_header(sp, ret="granges")
+#'   sp_gr
