@@ -33,7 +33,6 @@
 #'   sp_gr <- seqinfo_from_header(sp, ret="granges")
 #'   sp_gr 
 #' 
-#' 
 #' @import Rsamtools
 #' @import GenomeInfoDb 
 #' 
