@@ -3,8 +3,8 @@ title: "Spiky: Analysing cfMeDIP-seq data with spike-in controls"
 author: "Samantha L Wilson"
 date: "15/09/2020"
 output: rmarkdown::html_vignette
-bibliography: /Users/lauren.harmon/Desktop/Rotation_Tim_Triche/spiky/bibliography/references.bib 
-csl: /Users/lauren.harmon/Desktop/Rotation_Tim_Triche/spiky/bibliography/nature.csl
+bibliography: references.bib 
+csl: nature.csl
 link-citations: yes
 vignette: >
   %\VignetteIndexEntry{Spiky: Analysing cfMeDIP-seq data with spike-in controls}
