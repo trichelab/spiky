@@ -2,6 +2,7 @@
 #' 
 #' In a cfMeDIP experiment, the yield of methylated fragments should be >95% 
 #' (ideally 98-99%) due to the nature of the assay. 
+#' @param   ssb_res     output object from scan_spiked_bam
 #'
 #' @export
 methylation_specificity <- function(ssb_res, ...) { 

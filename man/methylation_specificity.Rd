@@ -6,6 +6,9 @@
 \usage{
 methylation_specificity(ssb_res, ...)
 }
+\arguments{
+\item{ssb_res}{output object from scan_spiked_bam}
+}
 \description{
 In a cfMeDIP experiment, the yield of methylated fragments should be >95\%
 (ideally 98-99\%) due to the nature of the assay.

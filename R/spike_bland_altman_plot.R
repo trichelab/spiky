@@ -12,24 +12,24 @@
 #' 
 #' data(ssb_res)
 #' fit <- model_glm_pmol(covg_to_df(ssb_res)) 
-#' spike_bland_altman_plot(fit) 
+#' ba_plot <- spike_bland_altman_plot(fit) 
 #' 
 #' @export 
 spike_bland_altman_plot <- function(fit) { 
 
   if (!is.data.frame(fit$x)) fit$x <- attr(fit, "data") 
-  if (!"pred_conc" %in% names(fit$x)) fit$x <- predict_pmol(fit) 
+  fit$x$pred_conc <- predict(fit, fit$x)
+
   fit$x$fraglen <- as.factor(paste0(fit$x$fraglen, "bp"))
-  
-  BA <- bland.altman.plot(fit$x$pred_conc,
+  BA <- bland.altman.plot(fit$x$conc,
                           fit$resid, 
                           conf.int = .95, 
                           col.points = fit$x$fraglen, 
                           pch = 19, 
                           graph.sys = "ggplot2")
 
-  BA + 
-    aes(color = fit$x$fraglen) + 
+  BA <- BA + 
+    aes(color = fit$x$fraglen,shape = fit$x$fraglen) + 
     theme_bw(base_line_size = 0.25) +
     scale_color_manual(values = c("80bp" = "black", 
                                   "160bp" = "darkgray",
@@ -44,5 +44,6 @@ spike_bland_altman_plot <- function(fit) {
           panel.grid.minor.x = element_blank()) +
     xlab("Mean of measurements (picomoles)") +
     ylab("Difference (picomoles)")
+  return(BA)
 
 }
