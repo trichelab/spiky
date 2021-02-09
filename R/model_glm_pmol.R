@@ -44,21 +44,19 @@ model_glm_pmol <- function(x, conc=NULL, ...) {
   # Gaussian model by default -- can alter with ... params 
   fit <- glm(formula = conc ~ read_count + fraglen + GC + CpG_3, data = x, ...)
   r2_gaussian= 1 - (fit$deviance / fit$null.deviance)
-  attr(fit, "r2_gaussian") <- r2_gaussian #  reprot in summary
+  attr(fit, "r2_gaussian") <- r2_gaussian #  report in summary
   attr(fit, "data") <- x
   return(fit) 
 }
 
-
-# helper function
 .getConcFromFraglen <- function(fraglen, concs = NULL) {
   
   if (is.null(concs)) concs <- c("80" = 0.004, "160" = 0.002, "320" = 0.001)
   res <- concs[as.character(fraglen)]
-
+  
   # essentially the fallthrough from ifelse
   res[is.na(res)] <- concs[length(concs)]
-
+  
   return(res)
-
+  
 }
