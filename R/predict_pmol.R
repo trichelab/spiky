@@ -4,6 +4,7 @@
 #' 
 #' @param   fit result of model_glm_pmol 
 #' @param   ssb_res   the data / new data 
+#' @param   genome BSgenome name
 #' 
 #' @return  data, a dataframe with sequence, read count, fragment length, GC% CpG cube rooted, and concentration prediction.
 #' 

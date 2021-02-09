@@ -10,6 +10,8 @@ predict_pmol(fit, ssb_res = NULL, genome = "BSgenome.Hsapiens.UCSC.hg38")
 \item{fit}{result of model_glm_pmol}
 
 \item{ssb_res}{the data / new data}
+
+\item{genome}{BSgenome name}
 }
 \value{
 data, a dataframe with sequence, read count, fragment length, GC\% CpG cube rooted, and concentration prediction.
