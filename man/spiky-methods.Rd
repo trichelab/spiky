@@ -2,9 +2,20 @@
 % Please edit documentation in R/generics.R
 \name{spiky-methods}
 \alias{spiky-methods}
+\alias{plot,Rle,ANY-method}
+\alias{plot,SimpleRleList,ANY-method}
 \title{A handful of methods that I've always felt were missing}
+\usage{
+\S4method{plot}{Rle,ANY}(x, y, ...)
+
+\S4method{plot}{SimpleRleList,ANY}(x, y, ...)
+}
 \arguments{
 \item{x}{an Rle or RleList, usually}
+
+\item{y}{not usedan Rle or RleList, usually}
+
+\item{...}{other params such as \code{ylim} passed to \code{barplot}}
 }
 \description{
 Particularly, simple methods to plot coverage results.

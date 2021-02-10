@@ -21,9 +21,9 @@ This started out as glue in some other functions and got refactored out.
 }
 \details{
 The indices have an attribute "mappings", which is a character vector
-such that attr(find_spike_contigs(x), "mappings")\link{original} == standardized
-where original is the name in the CRAM/BAM/whatever, and standardized is
-the rowname in \code{spike} that corresponds to that original contig name.
+such that attr(find_spike_contigs(x), "mappings") == standardized
+for all contig names in the CRAM/BAM/whatever, and standardized is
+the rowname in \code{spike} that corresponds to the original contig name.
 }
 \seealso{
 get_base_name

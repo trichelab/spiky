@@ -24,6 +24,7 @@
 #'
 #' @seealso seqinfo_from_header
 #' 
+#' @import IRanges
 #' @import GenomicRanges
 #' @import GenomeInfoDb
 #' @import Rsamtools 

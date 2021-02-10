@@ -31,7 +31,7 @@ covg_to_df <- function(res, meth=TRUE, ID=NULL) {
   spikes$id <- ID 
 
   if (meth) {
-    spikes <- subset(spikes, methylated == 1)
+    spikes <- subset(spikes, spikes$methylated == 1)
     spikes <- spikes[, c("stub", "id", "coverage")] 
     names(spikes) <- c("frag_grp", "id", "read_count")
   } else {
