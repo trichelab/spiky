@@ -3,16 +3,21 @@
 #' Particularly, simple methods to plot coverage results.
 #' 
 #' @param  x                an Rle or RleList, usually
+#' @param  y                not usedan Rle or RleList, usually
+#' @param  ...              other params such as `ylim` passed to `barplot`
 #' 
 #' @details
 #' selectMethod("plot", "Rle") and also
 #' selectMethod("plot", "RleList") too.
+#' 
+#' @importFrom graphics barplot par text title
 #' 
 #' @rdname spiky-methods
 #' @name   spiky-methods
 NULL
 
 
+#' @rdname spiky-methods
 #' @export 
 setMethod("plot", "Rle", 
           function(x, y, ...) {
@@ -23,6 +28,7 @@ setMethod("plot", "Rle",
           })
 
 
+#' @rdname spiky-methods
 #' @export 
 setMethod("plot", "SimpleRleList", 
           function(x, y, ...) {

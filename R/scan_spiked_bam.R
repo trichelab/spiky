@@ -11,14 +11,28 @@
 #' @param standard  restrict non-spike contigs to "standard" chromosomes? (TRUE)
 #' @param ...       additional arguments to pass to scanBamFlag() 
 #' 
-#' @return          base-level read pair coverage on chroms + spikes in the BAM
+#' @return          a CompressedGRangesList with bin- and spike-level coverage
 #' 
 #' @details
 #'   For example (not run), one might do something like:
 #'
-#'   data(spike, package="spiky")
-#'   bam <- "2021_ctl.hg38_withSpikes.bam" # a merged sorted BAM
-#'   spiked_covg <- scan_spiked_bam(bam, mapq=20, spikes=spike)
+#'   data(spike, package="spiky"); 
+#'   bam <- "2021_ctl.hg38_withSpikes.bam";
+#'   spiked_covg <- scan_spiked_bam(bam, mapq=20, spikes=spike);
+#' 
+#'   This results in a GRangesList object with 300bp-binned coverage on the 
+#'   standard (chr1-22, chrX, chrY, chrM) chromosomes (as determined by the
+#'   GenomeInfoDb::standardChromosomes() function against the assembly defined
+#'   in the BAM or CRAM file, by default; if desired, a user can scan all 
+#'   genomic contigs by setting standard=FALSE when calling the function). 
+#'   By default, the mean base-level coverage of genomic bins is reported, 
+#'   and the maximum spike-level coverage is reported, though this can also 
+#'   be adjusted as needed. The results then inform the reliability of
+#'   measurements from replicate samples in multiple labs, as well as the 
+#'   adjusted quantitative coverage in each bin once the absolute quantity
+#'   of captured cell-free methylated DNA has been fit by model_glm_pmol and 
+#'   predict_pmol. In some sense, this function converts BAMs/CRAMs into usable 
+#'   data structures for high-throughput standardized cfMeDIP experiments.
 #' 
 #' @seealso         GenomeInfoDb::keepStandardChromosomes
 #' @seealso         Rsamtools::ScanBamParam
