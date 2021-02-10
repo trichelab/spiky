@@ -4,51 +4,21 @@
 \alias{bin_pmol}
 \title{Binned estimation of picomoles of DNA present in cfMeDIP assays}
 \usage{
-bin_pmol(x, bins = NULL, width = 300, mapq = 20, ...)
+bin_pmol(x)
 }
 \arguments{
-\item{x}{a BAM or CRAM file (the latter requires a bioc-devel fork)}
-
-\item{bins}{the bins to overlap (generated if not provided; see Details)}
-
-\item{width}{width of the bins (default 300bp) to be generated if bins=NULL}
-
-\item{mapq}{minimum MAPQ value to be counted in coverage estimates (20)}
-
-\item{...}{additional arguments (e.g. \code{mapq}) for computing coverage}
+\item{x}{results from predict_pmol (a data.frame)}
 }
 \value{
-\preformatted{ a GRanges with average read coverage across 
+\preformatted{ the same data.frame, but with a column `adjusted_pred_con`
 }
 }
 \description{
-This task was originally handled by the following:
-}
-\details{
-bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
-
-The preceding translates to "Write the original A and B entries,
-plus the number of base pairs of overlap between the two features".
-This is essentially the same as a findOverlaps result (a Hits object),
-but with a score consisting of the base pairs overlapped for each hit.
-
-I wrote the \code{scan_spiked_bam} function to deal with this, and also count
-the number of reads that aligned to the spike-in contigs. (You're welcome.)
-Turning the preceding per-file results into a matrix then feeds \code{bin_pmol}.
-
-It turns out that the fastest way to do this in Bioconductor, at least when
-x is a BAM or CRAM file, is to use the \code{bamsignals} package. For GRanges or
-BED files, we are mostly stuck with the usual disjoin/overlap loop, but this
-can be partly automated with bam_to_bin/bed_to_bin (using seqinfo) or just
-seqinfo_from_header(x). Regardless, if you want to look at a subset of bins
-(as opposed to all contigs or standard chromosomes), it's best to provide
-your own \code{bins} GRanges. Similarly, if you want to tally a LOT of BAM/CRAM
-files over specific regions, it is a good idea to generate \code{bins} once, then
-pass it in, although bamsignals has a convenience function that makes it
-less important to do so (at least for speed considerations).
+Given the results of model_glm_pmol and predict_pmol, adjust the predictions
+to reflect picomoles of captured DNA overlapping a given bin in the genome.
 }
 \seealso{
-seqinfo_from_header
+model_glm_pmol
 
-scan_spiked_bam
+predict_pmol
 }

@@ -1,10 +1,11 @@
 Package: spiky
 Type: Package
 Title: Spike-in calibration for cell-free MeDIP
-Description: Standardized model generation for cfMeDIP spike-in controls
-Version: 0.14.08
-Date: 2021-02-08
+Description: Methods and model generation for cfMeDIP spike-in controls.
+Version: 0.14.09
+Date: 2021-02-09
 Authors@R: c(person("Samantha", "Wilson", role=c("aut")), 
+             person("Jordan", "Veldboom", role=c("ctb")),
              person("Lauren", "Harmon", role=c("aut")),
              person("Tim", "Triche", role=c("aut","cre"),
                     email="trichelab@gmail.com"))
@@ -12,34 +13,22 @@ URL: https://github.com/trichelab/spiky
 BugReports: https://github.com/trichelab/spiky/issues
 License: GPL-2
 Depends:
-    reshape2,
     R (>= 4.0.0)
 Imports:
-    BlandAltmanLeh,
-    boot,
-    dplyr,
-    forcats,
-    ggplot2,
-    plyr,
-    purrr,
-    rmarkdown,
     scales,
-    stringi,
-    stringr,
-    tidyverse,
+    methods,
     tools,
-    varhandle,
+    IRanges,
     Rsamtools,
     Biostrings,
-    BiocParallel,
     GenomicRanges,
     GenomicAlignments,
-    SummarizedExperiment,
-    rtracklayer,
+    BlandAltmanLeh,
     GenomeInfoDb,
     BSgenome,
-    methods,
-    S4Vectors
+    S4Vectors,
+    ggplot2,
+    utils
 Suggests:
     covr,
     testthat,

@@ -33,6 +33,7 @@
 #'   sp_gr <- seqinfo_from_header(sp, ret="gr")
 #'   sp_gr 
 #' 
+#' @import methods
 #' @import Rsamtools
 #' @import GenomeInfoDb 
 #' 
