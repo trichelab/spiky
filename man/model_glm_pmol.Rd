@@ -7,7 +7,7 @@
 model_glm_pmol(x, conc = NULL, ...)
 }
 \arguments{
-\item{x}{the data, with (at minimum) frag_grp, id, read_count}
+\item{x}{data w/frag_grp, id, and read_count; or scan_spiked_bam result}
 
 \item{conc}{concentration for each spike (will be referenced if NULL)}
 
@@ -20,13 +20,7 @@ model_glm_pmol(x, conc = NULL, ...)
 \description{
 formerly '2020_model_glm_fmol'.  Note that everything in x can be had from
 a BAM/CRAM with spike contigs named as frag_grp (len_CpGs_GC) in the index
-FIXME: is reshape2 even used anymore?
-}
-\details{
-\preformatted{  The format of 'data' is important, yet poorly documented
-           apparently column 2 is fragment length as a character 
-           somewhere we find the number of CpGs as an integer
-}
+and in fact that is what scan_spiked_bam now does.
 }
 \examples{
 
@@ -34,6 +28,6 @@ data(spike_read_counts)
 fit1 <- model_glm_pmol(spike_read_counts) 
 
 data(ssb_res) # scan_spiked_bam result
-fit2 <- model_glm_pmol(covg_to_df(ssb_res))
+fit2 <- model_glm_pmol(ssb_res)
 
 }
