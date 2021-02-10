@@ -10,6 +10,10 @@
 #' 
 #' @return          the data.frame x, augmented with fraglen, CpG, and GC cols
 #' 
+#' @examples 
+#' data(spike_read_counts) 
+#' add_frag_info(spike_read_counts)
+#'
 #' @export 
 add_frag_info <- function(x, frag_grp="frag_grp") { 
 
