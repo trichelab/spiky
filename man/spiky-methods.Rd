@@ -17,6 +17,10 @@
 
 \item{...}{other params such as \code{ylim} passed to \code{barplot}}
 }
+\value{
+\preformatted{             invisibly, the plot details
+}
+}
 \description{
 Particularly, simple methods to plot coverage results.
 }
