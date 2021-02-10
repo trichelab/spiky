@@ -19,8 +19,8 @@
 #' and keep better track of the FASTA reference against which you compress!
 #' 
 #' @param x         a CRAM file, hopefully with an index
-#' @param fasta     the filename for the resulting FASTA ("spikes.fa")
 #' @param assembly  optional BSgenome or seqinfo with reference contigs (NULL)
+#' @param fasta     the filename for the resulting FASTA ("spikes.fa")
 #' 
 #' @return          invisibly, a DNAStringSet as exported to `fasta` 
 #'
@@ -59,6 +59,7 @@ generate_spike_fasta <- function(x, assembly=NULL , fasta="spike_contigs.fa") {
 # helper fn 
 .get_base_name <- function(contig_names, sep="_") {
 
-  sapply(lapply(strsplit(contig_names, sep), `[`, 1:3), paste, collapse=sep)
+  vapply(lapply(strsplit(contig_names, sep), `[`, 1:3), 
+         paste, character(1), collapse=sep)
 
 }
