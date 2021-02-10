@@ -22,20 +22,22 @@ bam_to_bins(x, width = 300, param = NULL, which = IRangesList(), ...)
 }
 }
 \description{
-This function is meant to allow something like the following:
+This function replaces a bedtools call:
 bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
 }
 \details{
-where wao means:
--wao	Write the original A and B entries plus the number of base
-pairs of overlap between the two features.
-
 The idea is to skip the BED creation step for most runs, and just do it once.
 In order to count reads in bins, we need bins.
 In order to have bins, we need to know how long the chromosomes are.
 In order to have a BAM or CRAM file, we need to have those same lengths.
 This function takes advantage of all of the above to create binned ranges.
 Note that a very recent branch of Rsamtools is required for CRAM file bins.
+}
+\examples{
+library(Rsamtools) 
+fl <- system.file("extdata", "ex1.bam", package="Rsamtools", mustWork=TRUE)
+bam_to_bins(fl) 
+
 }
 \seealso{
 seqinfo_from_header

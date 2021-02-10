@@ -6,6 +6,8 @@
 #' @param  y                not usedan Rle or RleList, usually
 #' @param  ...              other params such as `ylim` passed to `barplot`
 #' 
+#' @return                  invisibly, the plot details
+#' 
 #' @details
 #' selectMethod("plot", "Rle") and also
 #' selectMethod("plot", "RleList") too.
