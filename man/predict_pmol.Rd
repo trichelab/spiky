@@ -2,27 +2,36 @@
 % Please edit documentation in R/predict_pmol.R
 \name{predict_pmol}
 \alias{predict_pmol}
-\title{predict picomoles of DNA from a fit and readcounts}
+\title{predict picomoles of DNA from a fit and read counts (coverage)}
 \usage{
-predict_pmol(fit, ssb_res = NULL, genome = "BSgenome.Hsapiens.UCSC.hg38")
+predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("df", "gr"))
 }
 \arguments{
 \item{fit}{result of model_glm_pmol}
 
 \item{ssb_res}{the data / new data}
 
-\item{genome}{BSgenome name}
+\item{bsgenome}{BSgenome name (if null, will guess from ssb_res)}
+
+\item{ret}{return a data.frame ("df") or GRanges ("gr")?  ("gr")}
 }
 \value{
-data, a dataframe with sequence, read count, fragment length, GC\% CpG cube rooted, and concentration prediction.
+object with read count, fraglen, GC\%, CpG**(1/3), and concentration
 }
 \description{
-this seems to just wrap output from bin_pmol and model_glm_pmol... ?
+FIXME: this could be made MUCH faster by precomputing CpG/GC stats per bin
+}
+\details{
+Using GRanges as the return value is (perhaps counterintuitively) \emph{much}
+faster than the data.frame, since the sequence of the bins gets converted
+from a BSgenome representation to characters in the latter (it is implied
+by the bin start, stop, and genome when left as a GRanges).
 }
 \examples{
 
 data(ssb_res)
 fit <- model_glm_pmol(covg_to_df(ssb_res)) 
-pred <- predict_pmol(fit,ssb_res) 
+preddf <- predict_pmol(fit, ssb_res, ret="df") 
+predgr <- predict_pmol(fit, ssb_res, ret="gr") 
 
 }

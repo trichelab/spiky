@@ -26,7 +26,7 @@ rename_spikes <- function(x, spike) {
   if (!is.null(orphans)) {
     message("Orphan contigs found:")
     message(paste(orphans, collapse=", ")) 
-    message("Only a subset of sequences will be represented in ", fasta)
+    message("Only a subset of sequences will be represented in output!")
   }
 
   newspikes <- spike[true_contigs, ] 
