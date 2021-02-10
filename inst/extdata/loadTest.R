@@ -6,7 +6,7 @@
 # 6548 is another 
 #
 testfile <- system.file("extdata","2020_Human0.01_test.csv.gz",package="spiky")
-test <- read.table(testfile, sep=" ", head=T) # bit mysterious, see above
+test <- read.table(testfile, sep=" ", head=TRUE) # bit mysterious, see above
 # really only need UMI, pos, seq, read_count for each subject/UMI combo
 testGR <- parse_spike_UMI(test$UMI, pos=test$pos, seqs=test$seq) 
 # how can we make it so that spiky:::.addFragInfo() works on this? 
