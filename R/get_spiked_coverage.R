@@ -15,7 +15,7 @@
 #' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
 #'                   mustWork=TRUE)
 #' si <- seqinfo_from_header(sb) 
-#' genome(si) <- "spike")
+#' genome(si) <- "spike"
 #' mgr <- get_merged_gr(si)
 #'
 #' fl <- scanBamFlag(isDuplicate=FALSE, isPaired=TRUE, isProperPair=TRUE)
