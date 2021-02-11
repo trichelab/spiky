@@ -1,7 +1,7 @@
 ---
 title: "Spiky: Analysing cfMeDIP-seq data with spike-in controls"
-author: "Samantha L Wilson"
-date: "15/09/2020"
+author: "Samantha L Wilson and Lauren M Harmon"
+date: "February 8, 2021"
 output: rmarkdown::html_vignette
 bibliography: references.bib 
 csl: nature.csl
@@ -28,13 +28,12 @@ To meet the need for a reference control in cell-free methylated DNA immunopreci
 
 # Installation
 Install the spiky package from github.
-```{r eval = FALSE}
-install.packages("remotes")
-install.packages("BiocManager")
-BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
+```{r eval = TRUE,message=FALSE}
+#install.packages("remotes")
+#install.packages("BiocManager")
+#BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
 
-#library(spiky)
-load_all("./")
+library(spiky)
 ```
 
 # Process the BAM file
@@ -54,7 +53,7 @@ load_all("./")
   * genomic - A GRanges object showing the genomic coverage of the BAM reads
   * spikes - A GRanges object showing the coverage of the spikes.
   
-```{r}
+```{r eval=TRUE}
 spike_path <- system.file("data", "spike.rda", package = "spiky")
 load(spike_path)
 #Load in your bam file using scan_spiked_bam
@@ -76,7 +75,7 @@ This calculation is done by the 'methylation_specificity' function.
   * Mean and median of the percent of methylated sequences for each spike-in after cfMeDIP-seq has been performed
 
 ### Example
-```{r eval=FALSE}
+```{r eval=TRUE}
 ##Calculate methylation specificity
 methyl_spec <- methylation_specificity(ssb_res)
 print(methyl_spec)
@@ -92,7 +91,7 @@ For each batch of samples, the coefficients used in the Gaussian generalized lin
   * Gaussian generalized linear model with coefficients specific to samples used in input data; .rda file
 
 ### Example
-```{r eval=FALSE}
+```{r eval=TRUE}
 ## Build the Gaussian generalized linear model on the spike-in control data
 gaussian_glm <- model_glm_pmol(covg_to_df(ssb_res))
 summary(gaussian_glm)
@@ -117,10 +116,11 @@ For the samples in which the Gaussian generalized linear model was built, we wil
     * pmol: numeric
   
 ### Example
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Predict pmol concentration
 # To select a genome other than hg38, use available.packages() to find valid BSgenome name
-sample_data_pmol <- predict_pmol(gaussian_glm, ssb_res,"BSgenome.Hsapiens.UCSC.hg38")
+sample_data_pmol <- predict_pmol(gaussian_glm, ssb_res,bsgenome="BSgenome.Hsapiens.UCSC.hg38",ret="df")
+head(sample_data_pmol,n=1)
 
 ```
 
@@ -144,8 +144,9 @@ For our analyses, we binned the genome into 300 bp non-overlapping windows. We t
     * adjusted pmol: numeric
   
 ### Example
-```{r eval=FALSE}
+```{r eval=TRUE}
 sample_binned_data <- bin_pmol(sample_data_pmol)
+head(sample_binned_data,n=1)
 ```
 
 
