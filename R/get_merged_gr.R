@@ -7,6 +7,21 @@
 #' 
 #' @return          GRanges with two genomes: the organism assembly and "spike"
 #'
+#' @examples
+#' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+#'                   mustWork=TRUE) 
+#' si <- seqinfo_from_header(sb) 
+#' genome(si) <- "spike" # no genomic contigs
+#' get_merged_gr(si) # note canonicalized spikes
+#' 
+#' @details
+#' By default, get_merged_gr will return a GRanges with "standardized" 
+#' genomic and spike contig names (i.e. genomic chr1-22, X, Y, M, and 
+#' the canonical spike names in data(spike, package="spiky")).
+#' 
+#' The constraint to "standard" chromosomes on genomic contigs can be 
+#' removed by setting `standard` to FALSE in the function arguments.
+#'
 #' @import          GenomeInfoDb
 #' 
 #' @export
