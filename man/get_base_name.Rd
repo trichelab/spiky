@@ -12,7 +12,7 @@ get_base_name(contig_names, sep = "_")
 \item{sep}{separator character in contig names ("_")}
 }
 \value{
-\preformatted{               a vector of atoms 1:3 from each contig name 
+\preformatted{               a vector of elements 1:3 from each contig name 
 }
 }
 \description{
@@ -20,4 +20,12 @@ A common task between generate_spike_fasta, rename_spikes, and
 rename_spike_seqlevels is to determine what the largest common subset of
 characters between existing contig names and stored standardized contigs
 might be. This function eases that task.
+}
+\examples{
+sb <- system.file("extdata", "example.spike.bam", package="spiky",
+                  mustWork=TRUE) 
+bh <- scanBamHeader(BamFile(sb))
+orig_contigs <- names(bh$targets)
+get_base_name(orig_contigs)
+
 }

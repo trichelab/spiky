@@ -16,7 +16,7 @@ get_spike_depth <- function(covg, spike_gr, how=c("max", "mean"), spike=NULL) {
   canon <- names(spike_gr)
   
   message("Summarizing spike-in counts...", appendLF=FALSE)
-  spike_depth <- sapply(covg[seqlevels(spike_gr)], how, na.rm=TRUE)
+  spike_depth <- vapply(covg[seqlevels(spike_gr)], how, numeric(1), na.rm=TRUE)
   for (nm in cols) mcols(spike_gr)[[nm]] <- spike[canon, nm]
   spike_gr$coverage <- spike_depth[as.character(seqnames(spike_gr))]
   message("Done.") 
