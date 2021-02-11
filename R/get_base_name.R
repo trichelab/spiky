@@ -8,11 +8,20 @@
 #' @param     contig_names    the names of contigs
 #' @param     sep             separator character in contig names ("_")
 #' 
-#' @return                    a vector of atoms 1:3 from each contig name 
+#' @examples
+#' sb <- system.file("extdata", "example.spike.bam", package="spiky",
+#'                   mustWork=TRUE) 
+#' bh <- scanBamHeader(BamFile(sb))
+#' orig_contigs <- names(bh$targets)
+#' get_base_name(orig_contigs)
+#' 
+#' @return                    a vector of elements 1:3 from each contig name 
 #' 
 #' @export
 get_base_name <- function(contig_names, sep="_") {
 
-  sapply(lapply(strsplit(contig_names, sep), `[`, 1:3), paste, collapse=sep)
+  elts <- seq_len(3)
+  vapply(lapply(strsplit(contig_names, sep), `[`, elts), paste, 
+         character(1), collapse=sep)
 
 }

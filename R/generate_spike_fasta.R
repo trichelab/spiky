@@ -59,7 +59,7 @@ generate_spike_fasta <- function(x, assembly=NULL , fasta="spike_contigs.fa") {
 # helper fn 
 .get_base_name <- function(contig_names, sep="_") {
 
-  vapply(lapply(strsplit(contig_names, sep), `[`, 1:3), 
+  vapply(lapply(strsplit(contig_names, sep), `[`, seq_len(3)), 
          paste, character(1), collapse=sep)
 
 }
