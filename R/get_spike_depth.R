@@ -7,6 +7,20 @@
 #' 
 #' @return          a GRanges with summarized coverage and features for each
 #' 
+#' @examples
+#' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+#'                   mustWork=TRUE)
+#' si <- seqinfo_from_header(sb) 
+#' genome(si) <- "spike"
+#' mgr <- get_merged_gr(si)
+#'
+#' fl <- scanBamFlag(isDuplicate=FALSE, isPaired=TRUE, isProperPair=TRUE)
+#' bp <- ScanBamParam(flag=fl)
+#' bamMapqFilter(bp) <- 20
+#' 
+#' covg <- get_spiked_coverage(sb, bp=bp, gr=mgr)
+#' get_spike_depth(covg, spike_gr=mgr)
+#'
 #' @export
 get_spike_depth <- function(covg, spike_gr, how=c("max", "mean"), spike=NULL) {
 
