@@ -25,6 +25,13 @@ such that attr(find_spike_contigs(x), "mappings") == standardized
 for all contig names in the CRAM/BAM/whatever, and standardized is
 the rowname in \code{spike} that corresponds to the original contig name.
 }
+\examples{
+sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+                  mustWork=TRUE)
+si <- seqinfo_from_header(sb) 
+find_spike_contigs(si)
+
+}
 \seealso{
 get_base_name
 

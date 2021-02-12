@@ -18,3 +18,13 @@ tile_bins(gr, binwidth = 300L)
 \description{
 refactored out of scan_spiked_bam for more explicit information flow
 }
+\examples{
+
+bam <- system.file("extdata", "ex1.bam", package="Rsamtools",
+                   mustWork=TRUE)
+gr <- as(seqinfo_from_header(bam), "GRanges")
+genome(gr) <- "notspike"
+tile_bins(gr)
+
+
+}

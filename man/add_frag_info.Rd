@@ -21,3 +21,8 @@ lengthInBp_numberOfCpGs_GCpercent, pull them apart into a data.frame,
 add those columns to the source data.frame (whence \code{frag_grp} or similar),
 and return the updated data.frame.
 }
+\examples{
+data(spike_read_counts) 
+add_frag_info(spike_read_counts)
+
+}

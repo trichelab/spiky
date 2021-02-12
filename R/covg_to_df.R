@@ -26,7 +26,7 @@ covg_to_df <- function(res, meth=TRUE, ID=NULL) {
     data(spike, package="spiky") 
     spikes$methylated <- spike[names(spikes), "methylated"]
   }
-  spikes$stub <- sapply(strsplit(names(spikes), "\\-"), `[`, 1)
+  spikes$stub <- vapply(strsplit(names(spikes), "\\-"), `[`, character(1), 1)
   spikes <- as.data.frame(mcols(spikes[, c("stub","coverage","methylated")]))
   spikes$id <- ID 
 

@@ -1,9 +1,9 @@
 Package: spiky
 Type: Package
 Title: Spike-in calibration for cell-free MeDIP
-Description: Methods and model generation for cfMeDIP spike-in controls.
-Version: 0.14.09
-Date: 2021-02-09
+Description: spiky implements methods and model generation for cfMeDIP (cell-free methylated DNA immunoprecipitation) with spike-in controls. CfMeDIP is an enrichment protocol which avoids destructive conversion of scarce template, making it ideal as a "liquid biopsy," but creating certain challenges in comparing results across specimens, subjects, and experiments. The use of synthetic spike-in standard oligos allows diagnostics performed with cfMeDIP to quantitatively compare samples across subjects, experiments, and time points in both relative and absolute terms.
+Version: 0.99.12
+Date: 2021-02-12
 Authors@R: c(person("Samantha", "Wilson", role=c("aut")), 
              person("Jordan", "Veldboom", role=c("ctb")),
              person("Lauren", "Harmon", role=c("aut")),
@@ -14,20 +14,22 @@ URL: https://github.com/trichelab/spiky
 BugReports: https://github.com/trichelab/spiky/issues
 License: GPL-2
 Depends:
+    Rsamtools,
+    GenomicRanges,
     R (>= 4.0.0)
 Imports:
+    stats,
     scales,
     methods,
     tools,
     IRanges,
-    Rsamtools,
     Biostrings,
-    GenomicRanges,
     GenomicAlignments,
     BlandAltmanLeh,
     GenomeInfoDb,
     BSgenome,
     S4Vectors,
+    graphics,
     ggplot2,
     utils
 Suggests:

@@ -7,6 +7,10 @@
 #'
 #' @return              list with median and mean coverage across spike contigs
 #'
+#' @examples
+#' data(ssb_res) 
+#' methylation_specificity(ssb_res)
+#' 
 #' @export
 methylation_specificity <- function(ssb_res) { 
   methreads <- covg_to_df(ssb_res, meth=TRUE)$read_count

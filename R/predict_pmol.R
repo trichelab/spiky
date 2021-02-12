@@ -26,10 +26,11 @@
 #' data(ssb_res)
 #' fit <- model_glm_pmol(covg_to_df(ssb_res)) 
 #' preddf <- predict_pmol(fit, ssb_res, ret="df") 
-#' predgr <- predict_pmol(fit, ssb_res, ret="gr") 
+#' pred <- predict_pmol(fit, ssb_res, ret="gr") 
+#' bin_pmol(pred)
 #' 
 #' @export 
-predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("df", "gr")) {
+predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df")) {
 
   # what shall be returned?  (eventually it would be nice to pass GRs around)
   ret <- match.arg(ret)
