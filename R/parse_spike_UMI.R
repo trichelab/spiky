@@ -13,8 +13,8 @@
 parse_spike_UMI <- function(UMI, pos=NULL, seqs=NULL) { 
   nch <- nchar(UMI)
   UMIs <- strsplit(substr(UMI, nch - 10, nch), "_")
-  x <- data.frame(UMI1 = DNAStringSet(sapply(UMIs, `[`, 1)),
-                  UMI2 = DNAStringSet(sapply(UMIs, `[`, 2)),
+  x <- data.frame(UMI1 = DNAStringSet(vapply(UMIs, `[`, character(1), 1)),
+                  UMI2 = DNAStringSet(vapply(UMIs, `[`, character(1), 2)),
                   chrom = substr(UMI, 1, nch - 11))
 
   x$chromStart <- 1

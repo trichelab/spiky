@@ -4,7 +4,7 @@
 \alias{predict_pmol}
 \title{predict picomoles of DNA from a fit and read counts (coverage)}
 \usage{
-predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("df", "gr"))
+predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("gr", "df"))
 }
 \arguments{
 \item{fit}{result of model_glm_pmol}
@@ -32,6 +32,7 @@ by the bin start, stop, and genome when left as a GRanges).
 data(ssb_res)
 fit <- model_glm_pmol(covg_to_df(ssb_res)) 
 preddf <- predict_pmol(fit, ssb_res, ret="df") 
-predgr <- predict_pmol(fit, ssb_res, ret="gr") 
+pred <- predict_pmol(fit, ssb_res, ret="gr") 
+bin_pmol(pred)
 
 }
