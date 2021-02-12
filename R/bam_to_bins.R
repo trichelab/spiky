@@ -1,12 +1,8 @@
 #' create a tiled representation of a genome from the BAM/CRAM file
 #' 
-#' This function is meant to allow something like the following:
+#' This function replaces a bedtools call: 
 #' bedtools intersect -wao -a fragments.bed -b hg38_300bp_windows.bed > data.bed
 #' 
-#' where wao means:
-#' 	-wao	Write the original A and B entries plus the number of base
-#'        pairs of overlap between the two features.
-#'
 #' The idea is to skip the BED creation step for most runs, and just do it once.
 #' In order to count reads in bins, we need bins.  
 #' In order to have bins, we need to know how long the chromosomes are. 
@@ -21,6 +17,11 @@
 #' @param ...     additional arguments to pass on to seqinfo_from_header
 #' 
 #' @return        a GRangesList with y-base-pair-wide bins tiled across it
+#'
+#' @examples
+#' library(Rsamtools) 
+#' fl <- system.file("extdata", "ex1.bam", package="Rsamtools", mustWork=TRUE)
+#' bam_to_bins(fl) 
 #'
 #' @seealso seqinfo_from_header
 #' 
