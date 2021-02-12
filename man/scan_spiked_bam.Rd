@@ -74,6 +74,7 @@ The data extract used in other examples is the same as the full version,
 with the sole difference being that genomic bins are limited to chr22.
 }
 \examples{
+library(GenomicRanges)
 sb <- system.file("extdata", "example.spike.bam", package="spiky", 
                   mustWork=TRUE)
 res <- scan_spiked_bam(sb, bins=GRanges())

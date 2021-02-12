@@ -14,6 +14,7 @@
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
 #' 
 #' @examples
+#' library(GenomicRanges)
 #' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
 #'                   mustWork=TRUE)
 #' res <- scan_spiked_bam(sb, bins=GRanges())

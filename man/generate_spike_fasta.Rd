@@ -37,6 +37,10 @@ will only attempt to generate a FASTA for the spike contigs, not reference.
 If your reference contigs are screwed up, talk to your sequencing people,
 and keep better track of the FASTA reference against which you compress!
 }
+\examples{
+
+ 
+}
 \seealso{
 \preformatted{    rename_contigs
 }
