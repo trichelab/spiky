@@ -7,6 +7,15 @@
 #' 
 #' @return            a GRanges of bins
 #'
+#' @examples
+#' 
+#' bam <- system.file("extdata", "ex1.bam", package="Rsamtools",
+#'                    mustWork=TRUE)
+#' gr <- as(seqinfo_from_header(bam), "GRanges")
+#' genome(gr) <- "notspike"
+#' tile_bins(gr)
+#' 
+#' 
 #' @export
 tile_bins <- function(gr, binwidth=300L) {
  

@@ -24,6 +24,9 @@
 #' 
 #' @return          invisibly, a DNAStringSet as exported to `fasta` 
 #'
+#' @examples 
+#'
+#'  
 #' @seealso         rename_contigs
 #' 
 #' @import          Biostrings 
