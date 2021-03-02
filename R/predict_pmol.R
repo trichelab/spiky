@@ -36,6 +36,7 @@ predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df")) {
   ret <- match.arg(ret)
 
   # guess the genome if not provided (it won't be)
+  assembly=bsgenome
   if (is.null(bsgenome)) {
     assembly <- grep("(hg|GRCh)", unique(genome(ssb_res)), value=TRUE)
     genomepattern <- paste0(assembly, "$")
