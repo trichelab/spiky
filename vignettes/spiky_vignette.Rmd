@@ -120,7 +120,8 @@ For the samples in which the Gaussian generalized linear model was built, we wil
 ### Example
 ```{r eval=TRUE}
 # Predict pmol concentration
-# To select a genome other than hg38, use available.packages() to find valid BSgenome name
+# To select a genome other than hg38, use BSgenome::available.packages() to find valid BSgenome name
+BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
 sample_data_pmol <- predict_pmol(gaussian_glm, ssb_res,bsgenome="BSgenome.Hsapiens.UCSC.hg38",ret="df")
 head(sample_data_pmol,n=1)
 
