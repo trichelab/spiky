@@ -31,7 +31,8 @@ Imports:
     S4Vectors,
     graphics,
     ggplot2,
-    utils
+    utils,
+    rmarkdown
 Suggests:
     covr,
     testthat,
@@ -39,4 +40,4 @@ Suggests:
     knitr
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr
+VignetteBuilder: rmarkdown
