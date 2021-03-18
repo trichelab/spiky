@@ -9,6 +9,7 @@
 #' using the CRAM headers to figure out which references are used for which. 
 #' At the moment, CRAM support in Rsamtools only exists in the GitHub branch:
 #' 
+#' BiocManager::install("Bioconductor/Rhtslib@enable-cram")
 #' BiocManager::install("Bioconductor/Rsamtools@cram") 
 #'
 #' Using other versions of Rsamtools will yield an error on CRAM files.
