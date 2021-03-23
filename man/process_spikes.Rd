@@ -7,7 +7,7 @@
 process_spikes(fasta, methylated = 0, ...)
 }
 \arguments{
-\item{fasta}{fasta file with new spike sequences}
+\item{fasta}{fasta file (or GRanges or DataFrame) w/spike sequences}
 
 \item{methylated}{whether CpGs in each are methylated (0 or 1, default 0)}
 
@@ -18,7 +18,7 @@ process_spikes(fasta, methylated = 0, ...)
 }
 }
 \description{
-Never trust anyone, least of all yourself
+Sequence feature verification: never trust anyone, least of all yourself.
 }
 \details{
 GCfrac is the GC content of spikes as a proportion instead of a percent.
@@ -29,10 +29,18 @@ OECpG is (observed/expected) CpGs (expectation is 25\% of GC dinucleotides).
 phages <- system.file("extdata", "phages.fa", package="spiky", mustWork=TRUE)
 process_spikes(phages)
 
+data(phage)
+identical(process_spikes(phage), phage)
+identical(phage, process_spikes(phages))
+
 data(spike)
 spikes <- system.file("extdata", "spikes.fa", package="spiky", mustWork=TRUE)
 spikemeth <- spike$methylated
 process_spikes(spikes, spikemeth)
+
+data(genbank_mito) 
+process_spikes(genbank_mito) # see also inst/extdata/genbank_mito.R 
+gb_mito <- system.file("extdata", "genbank_mito.R", package="spiky")
 
 # not run
 # library(kebabs)
