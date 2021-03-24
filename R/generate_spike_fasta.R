@@ -1,5 +1,9 @@
 #' for CRAM files, a FASTA reference is required to decode; this builds that
 #' 
+#' Update: a FASTA reference is *not* always needed, so long as .crai indices
+#' are available for all contigs in the CRAM. See `spike_counts` for a fast 
+#' and convenient alternative that extracts spike coverage from index stats.
+#'
 #' If the contigs in a CRAM have even slightly different names from those in
 #' the reference, decoding will fail.  In some cases there are multiple names
 #' for a given contig (which raises the question of whether to condense them),

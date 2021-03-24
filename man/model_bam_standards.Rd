@@ -28,7 +28,7 @@ library(bamlss)
 data(spike_cram_counts)
 scc <- add_frag_info(spike_cram_counts, spike=spike)
 scc$conc <- scc$conc * 0.9 # adjust for dilution
-scc$CpGs_3 <- scc$CpGs ** 3
+scc$CpGs_3 <- scc$CpGs ^ (1/3)
 fit0 <- model_bam_standards(scc, 
                             fm=conc ~ read_count + fraglen)
 fit1 <- model_bam_standards(scc,
