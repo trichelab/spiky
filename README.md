@@ -6,8 +6,9 @@
 
 # Spike-ins for everyone 
 
-Please note that `spiky` currently requires a *recent version of R (4.0 or newer)*.
-The restriction may be removed if our dependencies can tolerate that.
+Please note that `spiky` currently requires a recent version of R (4.0 or newer).
+
+This restriction may be removed if our dependencies can tolerate it.
 
 ## Installing
 
