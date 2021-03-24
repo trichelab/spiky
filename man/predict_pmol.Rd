@@ -4,7 +4,7 @@
 \alias{predict_pmol}
 \title{predict picomoles of DNA from a fit and read counts (coverage)}
 \usage{
-predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("gr", "df"))
+predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("gr", "df"), slide = FALSE)
 }
 \arguments{
 \item{fit}{result of model_glm_pmol}
@@ -14,6 +14,8 @@ predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("gr", "df"))
 \item{bsgenome}{BSgenome name (if null, will guess from ssb_res)}
 
 \item{ret}{return a data.frame ("df") or GRanges ("gr")?  ("gr")}
+
+\item{slide}{compute a sliding window estimate for GCfrac (1/3 width)?}
 }
 \value{
 object with read count, fraglen, GC\%, CpG**(1/3), and concentration
