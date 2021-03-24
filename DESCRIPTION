@@ -16,7 +16,7 @@ License: GPL-2
 Depends:
     Rsamtools,
     GenomicRanges,
-    R (>= 4.0.0)
+    R (>= 3.6.0)
 Imports:
     stats,
     scales,
