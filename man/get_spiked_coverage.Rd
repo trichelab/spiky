@@ -24,12 +24,13 @@ sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE)
 si <- seqinfo_from_header(sb) 
 genome(si) <- "spike"
-mgr <- get_merged_gr(si)
+
+data(spike, package="spiky")
+mgr <- get_merged_gr(si, spike=spike) # note canonicalized spikes
 
 fl <- scanBamFlag(isDuplicate=FALSE, isPaired=TRUE, isProperPair=TRUE)
 bp <- ScanBamParam(flag=fl)
 bamMapqFilter(bp) <- 20
-
 get_spiked_coverage(sb, bp=bp, gr=mgr)
 
 }
