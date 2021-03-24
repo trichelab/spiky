@@ -18,12 +18,16 @@ generate_spike_fasta(x, assembly = NULL, fasta = "spike_contigs.fa")
 }
 }
 \description{
+Update: a FASTA reference is \emph{not} always needed, so long as .crai indices
+are available for all contigs in the CRAM. See \code{spike_counts} for a fast
+and convenient alternative that extracts spike coverage from index stats.
+}
+\details{
 If the contigs in a CRAM have even slightly different names from those in
 the reference, decoding will fail.  In some cases there are multiple names
 for a given contig (which raises the question of whether to condense them),
 and thus the same reference sequence decodes multiple contig names.
-}
-\details{
+
 This function simply generates an appropriate spike reference for a CRAM,
 using the CRAM headers to figure out which references are used for which.
 At the moment, CRAM support in Rsamtools only exists in the GitHub branch:
