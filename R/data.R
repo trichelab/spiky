@@ -14,6 +14,36 @@
 "dedup"
 
 
+#' various mitochondrial genomes sometimes used as endogenous spike-ins
+#'
+#' A DataFrame with species, genome, accession, and sequence for GenBank
+#' mitochondrial genome depositions. No concentration provided; add if needed.
+#'
+#' @format A DataFrame object with 
+#' \describe{
+#'   \item{species}{the species whence the record came, as a character string}
+#'   \item{genome}{the genome assembly whence the mtDNA, as a character string}
+#'   \item{accession}{the genbank accession, as a character string}
+#'   \item{sequence}{genome sequence, as a DNAStringSet}
+#' }
+"genbank_mito"
+
+
+#' lambda and phiX phage sequences, sometimes used as spike-ins 
+#'
+#' A DataFrame with sequence, methylated, CpGs, GCfrac, and OECpG for phages
+#'
+#' @format A DataFrame object with 
+#' \describe{
+#'   \item{sequence}{genome sequence, as a DNAStringSet}
+#'   \item{methylated}{whether CpGs are methylated, as an integer}
+#'   \item{CpGs}{the number of CpGs in the phage genome, as an integer}
+#'   \item{GCfrac}{the GC fraction of the phage genome, as a numeric}
+#'   \item{OECpG}{the observed / expected CpG fraction, as a numeric}
+#' }
+"phage"
+
+
 #' spike-in contig properties for Sam's cfMeDIP spikes
 #'
 #' A DataFrame with sequence, concentration, and other properties of Sam's

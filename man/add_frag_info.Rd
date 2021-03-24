@@ -4,25 +4,31 @@
 \alias{add_frag_info}
 \title{decode fragment identifiers for spike-in standards}
 \usage{
-add_frag_info(x, frag_grp = "frag_grp")
+add_frag_info(x, frag_grp = "frag_grp", spike = NULL)
 }
 \arguments{
-\item{x}{data.frame with a column of frag_grp information (see above)}
+\item{x}{data.frame with a column of spike information (see above)}
 
-\item{frag_grp}{the column name for the frag_grp information (\code{frag_grp})}
+\item{frag_grp}{column name for the spike contig information (\code{frag_grp})}
+
+\item{spike}{optional database of spike-in properties (none)}
 }
 \value{
-\preformatted{     the data.frame x, augmented with fraglen, CpG, and GC cols
+\preformatted{     the data.frame x, augmented with metadata columns
 }
 }
 \description{
-given a vector of fragment identifiers like \verb{160_2_35}, encoded as
-lengthInBp_numberOfCpGs_GCpercent, pull them apart into a data.frame,
-add those columns to the source data.frame (whence \code{frag_grp} or similar),
-and return the updated data.frame.
+given a vector of fragment identifiers like \verb{160_2_35} or \verb{80b_1C_35G-2},
+encoded typically as lengthInBp_numberOfCpGs_GCpercent, and optionally a
+database of spike-in sequences corresponding to those fragments, add those
+columns to the source data (along with, if present in the database, other
+metadata such as standard concentrations, GC fraction, etc.) and return i
+an updated DataFrame.
 }
 \examples{
-data(spike_read_counts) 
-add_frag_info(spike_read_counts)
+data(spike) 
+data(spike_cram_counts) 
+spike <- subset(spike, methylated == 1)
+add_frag_info(spike_cram_counts, spike=spike)
 
 }
