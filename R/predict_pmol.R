@@ -6,6 +6,7 @@
 #' @param   ssb_res   the data / new data 
 #' @param   bsgenome  BSgenome name (if null, will guess from ssb_res)
 #' @param   ret       return a data.frame ("df") or GRanges ("gr")?  ("gr")
+#' @param   slide     compute a sliding window estimate for GCfrac (1/3 width)?
 #' 
 #' @details
 #' Using GRanges as the return value is (perhaps counterintuitively) *much* 
@@ -30,7 +31,7 @@
 #' bin_pmol(pred)
 #' 
 #' @export 
-predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df")) {
+predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df"), slide=FALSE) {
 
   # what shall be returned?  (eventually it would be nice to pass GRs around)
   ret <- match.arg(ret)
