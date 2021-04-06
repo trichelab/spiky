@@ -19,7 +19,7 @@
 #' 
 #' data(phage)
 #' identical(process_spikes(phage), phage)
-#' identical(phage, process_spikes(phages))
+#' identical(phage, process_spikes(phage))
 #'
 #' data(spike)
 #' spikes <- system.file("extdata", "spikes.fa", package="spiky", mustWork=TRUE)
