@@ -4,10 +4,12 @@
 \alias{covg_to_df}
 \title{reshape \code{scan_spiked_bam} results into data.frames for model_glm_pmol}
 \usage{
-covg_to_df(res, meth = TRUE, ID = NULL)
+covg_to_df(res, spike, meth = TRUE, ID = NULL)
 }
 \arguments{
 \item{res}{the result of running scan_spiked_bam}
+
+\item{spike}{spike database (as from data(spike, package="spiky"))}
 
 \item{meth}{only keep methylated spike reads? (TRUE; if FALSE, sum both)}
 
@@ -21,9 +23,10 @@ covg_to_df(res, meth = TRUE, ID = NULL)
 reshape \code{scan_spiked_bam} results into data.frames for model_glm_pmol
 }
 \examples{
+data(spike, package="spiky")
 data(ssb_res, package="spiky") 
-subsetted <- covg_to_df(ssb_res, meth=TRUE) 
-summed <- covg_to_df(ssb_res, meth=FALSE)
+subsetted <- covg_to_df(ssb_res, spike=spike, meth=TRUE) 
+summed <- covg_to_df(ssb_res, spike=spike, meth=FALSE)
 round((summed$read_count - subsetted$read_count) / summed$read_count, 3)
 
 }

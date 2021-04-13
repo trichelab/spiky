@@ -4,7 +4,7 @@
 #' This started out as glue in some other functions and got refactored out. 
 #' 
 #' @param x       something with seqlevels
-#' @param spike   a DataFrame with spike-in information, if not using defaults
+#' @param spike   a DataFrame with spike-in information
 #' 
 #' @return        indices of which contigs in seqlevels(x) are spike-in contigs
 #' 
@@ -18,18 +18,14 @@
 #' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
 #'                   mustWork=TRUE)
 #' si <- seqinfo_from_header(sb) 
-#' find_spike_contigs(si)
+#' data(spike, package="spiky")
+#' find_spike_contigs(si, spike=spike)
 #' 
 #' @seealso get_base_name
 #' @seealso rename_spike_seqlevels
 #' 
 #' @export
-find_spike_contigs <- function(x, spike=NULL) { 
-
-  if (is.null(spike)) {
-    rm(spike)
-    data(spike, package="spiky")
-  }
+find_spike_contigs <- function(x, spike) { 
 
   orig_contigs <- seqlevels(x)
   new_contigs <- get_base_name(seqlevels(x))

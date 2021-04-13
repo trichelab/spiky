@@ -4,14 +4,14 @@
 \alias{get_merged_gr}
 \title{get a GRanges of (by default, standard) chromosomes from seqinfo}
 \usage{
-get_merged_gr(si, standard = TRUE, spike = NULL)
+get_merged_gr(si, spike, standard = TRUE)
 }
 \arguments{
 \item{si}{seqinfo, usually from a BAM/CRAM file with spike contigs}
 
-\item{standard}{trim to standard chromosomes? (TRUE)}
-
 \item{spike}{database of spike-in standard sequence features (spike)}
+
+\item{standard}{trim to standard chromosomes? (TRUE)}
 }
 \value{
 \preformatted{     GRanges with two genomes: the organism assembly and "spike"
@@ -33,7 +33,7 @@ sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE) 
 si <- seqinfo_from_header(sb) 
 genome(si) <- "spike" # no genomic contigs
-data(spike) # will soon be required anyhow 
+data(spike, package="spiky")
 get_merged_gr(si, spike=spike) # note canonicalized spikes
 
 }

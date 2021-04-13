@@ -14,8 +14,8 @@
 #' @return          the data.frame x, augmented with metadata columns
 #' 
 #' @examples 
-#' data(spike) 
 #' data(spike_cram_counts) 
+#' data(spike, package="spiky") 
 #' spike <- subset(spike, methylated == 1)
 #' add_frag_info(spike_cram_counts, spike=spike)
 #'

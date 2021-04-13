@@ -15,6 +15,7 @@
 #' @export
 rename_spikes <- function(x, spike) { 
 
+  # FIXME: code duplication from previous generate_spike_fasta
   cram <- x 
   if (!is(cram, "BamFile")) cram <- BamFile(cram) 
   hdr <- scanBamHeader(cram) 

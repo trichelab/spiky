@@ -3,8 +3,8 @@
 #' refactored from scan_spiked_bam to clarify information flow
 #' 
 #' @param si        seqinfo, usually from a BAM/CRAM file with spike contigs
-#' @param standard  trim to standard chromosomes? (TRUE) 
 #' @param spike     database of spike-in standard sequence features (spike)
+#' @param standard  trim to standard chromosomes? (TRUE) 
 #' 
 #' @return          GRanges with two genomes: the organism assembly and "spike"
 #'
@@ -13,7 +13,7 @@
 #'                   mustWork=TRUE) 
 #' si <- seqinfo_from_header(sb) 
 #' genome(si) <- "spike" # no genomic contigs
-#' data(spike) # will soon be required anyhow 
+#' data(spike, package="spiky")
 #' get_merged_gr(si, spike=spike) # note canonicalized spikes
 #' 
 #' @details
@@ -27,7 +27,7 @@
 #' @import          GenomeInfoDb
 #' 
 #' @export
-get_merged_gr <- function(si, standard=TRUE, spike=NULL) { 
+get_merged_gr <- function(si, spike, standard=TRUE) { 
 
   # assembly contigs 
   if (standard) {
@@ -46,7 +46,6 @@ get_merged_gr <- function(si, standard=TRUE, spike=NULL) {
   gr <- as(merged_contigs, "GRanges")
 
   # use standardized element names, but keep the seqlevels found in the BAM:
-  if (is.null(spike)) data(spike)
   names(gr) <- as.character(seqnames(rename_spike_seqlevels(gr, spike=spike)))
   return(gr)
 

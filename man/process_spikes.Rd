@@ -26,27 +26,55 @@ OECpG is (observed/expected) CpGs (expectation is 25\% of GC dinucleotides).
 }
 \examples{
 
-phages <- system.file("extdata", "phages.fa", package="spiky", mustWork=TRUE)
-process_spikes(phages)
-
-data(phage)
-identical(process_spikes(phage), phage)
-identical(phage, process_spikes(phage))
-
 data(spike)
 spikes <- system.file("extdata", "spikes.fa", package="spiky", mustWork=TRUE)
 spikemeth <- spike$methylated
 process_spikes(spikes, spikemeth)
 
+usekernels <- FALSE
+if (usekernels) {
+  # not run
+  library(kebabs)
+  CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
+  mot <- motifKernel(CpGmotifs, normalized=FALSE)
+  km <- getKernelMatrix(mot, subset(phages, methylated == 0)$sequence)
+  heatmap(km, symm=TRUE)
+}
+
+data(phage)
+phages <- system.file("extdata", "phages.fa", package="spiky", mustWork=TRUE)
+identical(process_spikes(phage), phage)
+identical(phage, process_spikes(phage))
+
 data(genbank_mito) 
-process_spikes(genbank_mito) # see also inst/extdata/genbank_mito.R 
+(mt <- process_spikes(genbank_mito)) # see also genbank_mito.R 
 gb_mito <- system.file("extdata", "genbank_mito.R", package="spiky")
 
-# not run
-# library(kebabs)
-# CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
-# mot <- motifKernel(CpGmotifs, normalized=FALSE)
-# km <- getKernelMatrix(mot, subset(phages, methylated == 0)$sequence)
-# heatmap(km, symm=TRUE)
+usekernels <- FALSE
+if (usekernels) {
 
+  # refactor this out 
+  mtiles <- unlist(tileGenome(seqlengths(mt$sequence), tilewidth=100))
+  bymito <- split(mtiles, seqnames(mtiles))
+  binseqs <- getSeq(mt$sequence, bymito[["Homo sapiens"]])
+  rCRS6mers <- kmers(binseqs, k=6)
+  
+  # plot binned Pr(kmer):
+  library(ComplexHeatmap)
+  Heatmap(kmax(rCRS6mers), name="Pr(kmer)")
+
+  # not run
+  library(kebabs)
+  kernels <- list(
+    k6f=spectrumKernel(k=6, r=1),
+    k6r=spectrumKernel(k=6, r=1, revComp=TRUE)
+  )
+
+  kms <- lapply(kernels, getKernelMatrix, x=mt["Human", "sequence"])
+  library(ComplexHeatmap)
+}
+
+}
+\seealso{
+kmers
 }

@@ -1,10 +1,10 @@
 #' pretty much what it says: scan standard chroms + spike contigs from a BAM
 #' 
 #' @param bam       the BAM file  
+#' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param mapq      minimum mapq value to count a pair (20) 
 #' @param binwidth  width of the bins for chromosomal tiling (300) 
 #' @param bins      a pre-tiled GRanges for binning coverage (NULL)
-#' @param spike     the spike-in references, if not using the defaults (NULL) 
 #' @param how       how to record spike read coverage (max or mean)? (max)
 #' @param dupe      unique (FALSE), duplicte (TRUE), or all (NA) reads? (FALSE)
 #' @param paired    restrict coverage to that from properly paired reads? (TRUE)
@@ -15,9 +15,10 @@
 #' 
 #' @examples
 #' library(GenomicRanges)
+#' data(spike, package="spiky") 
 #' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
 #'                   mustWork=TRUE)
-#' res <- scan_spiked_bam(sb, bins=GRanges())
+#' res <- scan_spiked_bam(sb, spike=spike, bins=GRanges())
 #' summary(res$spikes$coverage)
 #' 
 #' @details
@@ -25,7 +26,7 @@
 #'
 #'   data(spike, package="spiky"); 
 #'   bam <- "2021_ctl.hg38_withSpikes.bam";
-#'   ssb_res <- scan_spiked_bam(bam, mapq=20, spikes=spike);
+#'   ssb_res <- scan_spiked_bam(bam, mapq=20, spike=spike);
 #' 
 #'   An extract from the resulting `ssb_res` object is available via
 #' 
@@ -56,7 +57,7 @@
 #' @import          Rsamtools
 #' 
 #' @export
-scan_spiked_bam <- function(bam, mapq=20, binwidth=300L, bins=NULL, spike=NULL, how=c("max", "mean"), dupe=FALSE, paired=TRUE, standard=TRUE, ...) { 
+scan_spiked_bam <- function(bam, spike, mapq=20, binwidth=300L, bins=NULL, how=c("max", "mean"), dupe=FALSE, paired=TRUE, standard=TRUE, ...) { 
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
