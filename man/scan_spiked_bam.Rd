@@ -6,10 +6,10 @@
 \usage{
 scan_spiked_bam(
   bam,
+  spike,
   mapq = 20,
   binwidth = 300L,
   bins = NULL,
-  spike = NULL,
   how = c("max", "mean"),
   dupe = FALSE,
   paired = TRUE,
@@ -20,13 +20,13 @@ scan_spiked_bam(
 \arguments{
 \item{bam}{the BAM file}
 
+\item{spike}{the spike-in reference database (e.g. data(spike))}
+
 \item{mapq}{minimum mapq value to count a pair (20)}
 
 \item{binwidth}{width of the bins for chromosomal tiling (300)}
 
 \item{bins}{a pre-tiled GRanges for binning coverage (NULL)}
-
-\item{spike}{the spike-in references, if not using the defaults (NULL)}
 
 \item{how}{how to record spike read coverage (max or mean)? (max)}
 
@@ -50,7 +50,7 @@ For a more realistic example (not run), one might do something like:
 
 data(spike, package="spiky");
 bam <- "2021_ctl.hg38_withSpikes.bam";
-ssb_res <- scan_spiked_bam(bam, mapq=20, spikes=spike);
+ssb_res <- scan_spiked_bam(bam, mapq=20, spike=spike);
 
 An extract from the resulting \code{ssb_res} object is available via
 
@@ -75,9 +75,10 @@ with the sole difference being that genomic bins are limited to chr22.
 }
 \examples{
 library(GenomicRanges)
+data(spike, package="spiky") 
 sb <- system.file("extdata", "example.spike.bam", package="spiky", 
                   mustWork=TRUE)
-res <- scan_spiked_bam(sb, bins=GRanges())
+res <- scan_spiked_bam(sb, spike=spike, bins=GRanges())
 summary(res$spikes$coverage)
 
 }

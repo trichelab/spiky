@@ -18,8 +18,9 @@ Given the results of model_glm_pmol and predict_pmol, adjust the predictions
 to reflect picomoles of captured DNA overlapping a given bin in the genome.
 }
 \examples{
-data(ssb_res)
-fit <- model_glm_pmol(covg_to_df(ssb_res)) 
+data(spike, package="spiky")
+data(ssb_res, package="spiky")
+fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike))
 pred <- predict_pmol(fit, ssb_res, ret="df") 
 bin_pmol(pred) 
 

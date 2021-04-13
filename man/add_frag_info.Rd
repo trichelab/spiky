@@ -26,8 +26,8 @@ metadata such as standard concentrations, GC fraction, etc.) and return i
 an updated DataFrame.
 }
 \examples{
-data(spike) 
 data(spike_cram_counts) 
+data(spike, package="spiky") 
 spike <- subset(spike, methylated == 1)
 add_frag_info(spike_cram_counts, spike=spike)
 

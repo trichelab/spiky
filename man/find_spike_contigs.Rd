@@ -4,12 +4,12 @@
 \alias{find_spike_contigs}
 \title{find spike-in seqlevels in an object \code{x}, where !is.null(seqinfo(x))}
 \usage{
-find_spike_contigs(x, spike = NULL)
+find_spike_contigs(x, spike)
 }
 \arguments{
 \item{x}{something with seqlevels}
 
-\item{spike}{a DataFrame with spike-in information, if not using defaults}
+\item{spike}{a DataFrame with spike-in information}
 }
 \value{
 \preformatted{   indices of which contigs in seqlevels(x) are spike-in contigs
@@ -29,7 +29,8 @@ the rowname in \code{spike} that corresponds to the original contig name.
 sb <- system.file("extdata", "example.spike.bam", package="spiky", 
                   mustWork=TRUE)
 si <- seqinfo_from_header(sb) 
-find_spike_contigs(si)
+data(spike, package="spiky")
+find_spike_contigs(si, spike=spike)
 
 }
 \seealso{

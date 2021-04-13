@@ -43,7 +43,7 @@ The argument \code{spike} has no default since we are attempting to refactor the
 spike-in databases into their own data packages and allow more general use.
 }
 \examples{
-data(spike)
+data(spike, package="spiky")
 sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE) 
 spike_counts(sb, spike=spike)

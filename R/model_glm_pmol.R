@@ -6,26 +6,29 @@
 #' 
 #' @param   x     data w/frag_grp, id, and read_count; or scan_spiked_bam result
 #' @param   conc  concentration for each spike (will be referenced if NULL)
+#' @param   spike spike database, e.g. `data(spike, package='spiky')`
 #' @param   ...   other arguments to pass to `glm` (e.g. `family`)
 #'
 #' @return        the model fit for the data
 #' 
 #' @examples 
 #' 
-#' data(spike_read_counts)
-#' fit1 <- model_glm_pmol(spike_read_counts) 
+#' data(spike, package="spiky")
+#'
+#' data(spike_read_counts, package="spiky")
+#' fit1 <- model_glm_pmol(spike_read_counts, spike=spike) 
 #' 
 #' data(ssb_res) # scan_spiked_bam result
-#' fit2 <- model_glm_pmol(ssb_res)
+#' fit2 <- model_glm_pmol(ssb_res, spike=spike)
 #' 
 #' @importFrom stats glm
 #'
 #' @export
-model_glm_pmol <- function(x, conc=NULL, ...) { 
+model_glm_pmol <- function(x, spike, conc=NULL, ...) { 
 
   if (!is(x, "data.frame")) {
     message("Converting x (a coverage result?) to a data.frame...")
-    x <- covg_to_df(x)
+    x <- covg_to_df(x, spike=spike)
   }
 
   cols <- c("frag_grp", "id", "read_count")
@@ -34,7 +37,7 @@ model_glm_pmol <- function(x, conc=NULL, ...) {
   } 
 
   x <- add_frag_info(x, "frag_grp") # now exported
-  x$conc <- .getConcFromFraglen(x$fraglen) # below
+  x$conc <- .getConcFromFraglen(x$fraglen, spike=spike) # below
 
   # Adjust for the 0.01ng dilution
   x$conc <- x$conc * 0.9
@@ -54,9 +57,19 @@ model_glm_pmol <- function(x, conc=NULL, ...) {
 
 
 # helper fn
-.getConcFromFraglen <- function(fraglen, concs = NULL) {
+.getConcFromFraglen <- function(fraglen, spike, concs=NULL) {
   
-  if (is.null(concs)) concs <- c("80" = 0.004, "160" = 0.002, "320" = 0.001)
+  # pull these from spike
+  if (is.null(concs)) {
+    tbl <- with(spike, table(width(sequence), conc))
+    concs <- as.numeric(colnames(tbl)[max.col(tbl)])
+    names(concs) <- rownames(tbl) 
+  }
+
+  # show(concs)
+  #    80   160   320 
+  # 0.004 0.002 0.001 
+
   res <- concs[as.character(fraglen)]
   
   # essentially the fallthrough from ifelse

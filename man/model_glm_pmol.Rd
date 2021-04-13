@@ -4,10 +4,12 @@
 \alias{model_glm_pmol}
 \title{Build a generalized linear model from spike-ins to correct bias in cfMeDIP}
 \usage{
-model_glm_pmol(x, conc = NULL, ...)
+model_glm_pmol(x, spike, conc = NULL, ...)
 }
 \arguments{
 \item{x}{data w/frag_grp, id, and read_count; or scan_spiked_bam result}
+
+\item{spike}{spike database, e.g. \code{data(spike, package='spiky')}}
 
 \item{conc}{concentration for each spike (will be referenced if NULL)}
 
@@ -24,10 +26,12 @@ and in fact that is what scan_spiked_bam now does.
 }
 \examples{
 
-data(spike_read_counts)
-fit1 <- model_glm_pmol(spike_read_counts) 
+data(spike, package="spiky")
+
+data(spike_read_counts, package="spiky")
+fit1 <- model_glm_pmol(spike_read_counts, spike=spike) 
 
 data(ssb_res) # scan_spiked_bam result
-fit2 <- model_glm_pmol(ssb_res)
+fit2 <- model_glm_pmol(ssb_res, spike=spike)
 
 }

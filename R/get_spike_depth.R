@@ -2,8 +2,8 @@
 #'
 #' @param covg      the coverage RleList
 #' @param spike_gr  the spike-in GRanges 
-#' @param how       how to summarize the per-spike coverage (max)
 #' @param spike     information about the spikes (default: load `spike`) 
+#' @param how       how to summarize the per-spike coverage (max)
 #' 
 #' @return          a GRanges with summarized coverage and features for each
 #' 
@@ -18,14 +18,15 @@
 #' bp <- ScanBamParam(flag=fl)
 #' bamMapqFilter(bp) <- 20
 #' 
+#' data(spike, package="spiky") 
 #' covg <- get_spiked_coverage(sb, bp=bp, gr=mgr)
-#' get_spike_depth(covg, spike_gr=mgr)
+#' get_spike_depth(covg, spike_gr=mgr, spike=spike)
 #'
 #' @export
-get_spike_depth <- function(covg, spike_gr, how=c("max", "mean"), spike=NULL) {
+get_spike_depth <- function(covg, spike_gr, spike, how=c("max", "mean")) {
 
   how <- match.fun(match.arg(how)) 
-  if (!is(spike, "DFrame")) data(spike)
+  if (!is(spike, "DFrame")) stop("Please provide a spike database")
   cols <- colnames(spike)[-1] 
   canon <- names(spike_gr)
   

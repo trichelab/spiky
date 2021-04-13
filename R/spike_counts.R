@@ -15,7 +15,7 @@
 #' @param     dump_idx        dump the renamed idxstats to aggregate? (FALSE)
 #' 
 #' @examples
-#' data(spike)
+#' data(spike, package="spiky")
 #' sb <- system.file("extdata", "example.spike.bam", package="spiky",
 #'                   mustWork=TRUE) 
 #' spike_counts(sb, spike=spike)

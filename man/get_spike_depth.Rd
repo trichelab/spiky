@@ -4,16 +4,16 @@
 \alias{get_spike_depth}
 \title{get the (max, median, or mean) coverage for spike-in contigs from a BAM/CRAM}
 \usage{
-get_spike_depth(covg, spike_gr, how = c("max", "mean"), spike = NULL)
+get_spike_depth(covg, spike_gr, spike, how = c("max", "mean"))
 }
 \arguments{
 \item{covg}{the coverage RleList}
 
 \item{spike_gr}{the spike-in GRanges}
 
-\item{how}{how to summarize the per-spike coverage (max)}
-
 \item{spike}{information about the spikes (default: load \code{spike})}
+
+\item{how}{how to summarize the per-spike coverage (max)}
 }
 \value{
 \preformatted{     a GRanges with summarized coverage and features for each
@@ -33,7 +33,8 @@ fl <- scanBamFlag(isDuplicate=FALSE, isPaired=TRUE, isProperPair=TRUE)
 bp <- ScanBamParam(flag=fl)
 bamMapqFilter(bp) <- 20
 
+data(spike, package="spiky") 
 covg <- get_spiked_coverage(sb, bp=bp, gr=mgr)
-get_spike_depth(covg, spike_gr=mgr)
+get_spike_depth(covg, spike_gr=mgr, spike=spike)
 
 }

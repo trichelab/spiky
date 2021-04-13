@@ -11,7 +11,8 @@
 #' @examples 
 #' 
 #' data(ssb_res)
-#' fit <- model_glm_pmol(covg_to_df(ssb_res)) 
+#' data(spike, package="spiky")
+#' fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike)) 
 #' ba_plot <- spike_bland_altman_plot(fit) 
 #' 
 #' @export 

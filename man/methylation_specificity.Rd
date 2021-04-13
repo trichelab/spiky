@@ -4,10 +4,12 @@
 \alias{methylation_specificity}
 \title{compute methylation specificity for spike-in standards}
 \usage{
-methylation_specificity(ssb_res)
+methylation_specificity(ssb_res, spike)
 }
 \arguments{
 \item{ssb_res}{output object from scan_spiked_bam}
+
+\item{spike}{spike contig database, if needed (e.g. data(spike))}
 }
 \value{
 \preformatted{         list with median and mean coverage across spike contigs
@@ -19,6 +21,7 @@ In a cfMeDIP experiment, the yield of methylated fragments should be >95\%
 }
 \examples{
 data(ssb_res) 
+data(spike, package="spiky")
 methylation_specificity(ssb_res)
 
 }
