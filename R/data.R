@@ -4,7 +4,7 @@
 #' This maps 1:1 onto `spike_read_counts` using reshape2::melt.
 #'
 #' @importFrom utils data
-#' @usage data(dedup)
+#'
 #' @format A data.frame object with 
 #' \describe{
 #'   \item{frag_grp}{the encoded spike contig name: basepairs_CpGs_GCpercent}
@@ -19,7 +19,6 @@
 #' A DataFrame with species, genome, accession, and sequence for GenBank
 #' mitochondrial genome depositions. No concentration provided; add if needed.
 #'
-#' @usage data(genbank_mito)
 #' @format A DataFrame object with 
 #' \describe{
 #'   \item{species}{the species whence the record came, as a character string}
@@ -34,7 +33,6 @@
 #'
 #' A DataFrame with sequence, methylated, CpGs, GCfrac, and OECpG for phages
 #'
-#' @usage data(phage)
 #' @format A DataFrame object with 
 #' \describe{
 #'   \item{sequence}{genome sequence, as a DNAStringSet}
@@ -52,7 +50,6 @@
 #' synthetic cfMeDIP spike-in controls. The row names redudantly encode some 
 #' of these properties, such as the number of CpGs in the spike-in sequence.
 #'
-#' @usage data(spike)
 #' @format A DataFrame object with 
 #' \describe{
 #'   \item{sequence}{contig sequence, as a DNAStringSet}
@@ -69,7 +66,6 @@
 #' A data.frame with spike-in results from control samples in the manuscript.
 #' This maps 1:1 onto `dedup` using reshape2::melt.
 #' 
-#' @usage data(spike_read_counts)
 #' @format A data.frame object with 
 #' \describe{
 #'   \item{frag_grp}{the encoded spike contig name: basepairs_CpGs_GCpercent}
@@ -77,19 +73,6 @@
 #'   \item{read_count}{read coverage for this spike in this subject (column 2)}
 #' }
 "spike_read_counts"
-
-#' spike-in counts, as a long data.frame
-#'
-#' A data.frame with spike-in results from CRAM files (generated from scan_spike_counts(CRAMs, spike=spike))
-#' 
-#' @usage data(spike_cram_counts)
-#' @format A data.frame object with 
-#' \describe{
-#'   \item{frag_grp}{the encoded spike contig name: basepairs_CpGs_GCpercent}
-#'   \item{id}{subject from whom cfMeDIP spike reads (column 3) were counted}
-#'   \item{read_count}{read coverage for this spike in this subject (column 2)}
-#' }
-"spike_cram_counts"
 
 
 #' scan_spiked_bam results from a merged cfMeDIP CRAM file (chr22 and spikes)
@@ -102,7 +85,6 @@
 #' most users will want to generate from their own merged BAMs or CRAMs, and 
 #' is used repeatedly in downstream examples throughout the package.
 #'
-#' @usage data(ssb_res)
 #' @format A CompressedGRangesList of coverage results, containing
 #' \describe{
 #'   \item{genomic}{a GRanges with one metadata column, `coverage`}
@@ -114,8 +96,7 @@
 #' a test GRanges with UMI'ed genomic sequences used as controls 
 #'
 #' Sources and overlap widths of various read sequences in a test CRAM.
-#' 
-#' @usage data(testGR)
+#'
 #' @format A GRanges object with an mcols() DataFrame containing
 #' \describe{
 #'   \item{UMI1}{the unique molecular identifier on the forward read}

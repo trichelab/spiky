@@ -79,7 +79,7 @@ This calculation is done by the 'methylation_specificity' function.
 ### Example
 ```{r eval=TRUE}
 ##Calculate methylation specificity
-methyl_spec <- methylation_specificity(ssb_res,spike=spike)
+methyl_spec <- methylation_specificity(ssb_res)
 print(methyl_spec)
 ```
 
@@ -95,7 +95,7 @@ For each batch of samples, the coefficients used in the Gaussian generalized lin
 ### Example
 ```{r eval=TRUE}
 ## Build the Gaussian generalized linear model on the spike-in control data
-gaussian_glm <- model_glm_pmol(covg_to_df(ssb_res,spike=spike),spike=spike)
+gaussian_glm <- model_glm_pmol(covg_to_df(ssb_res))
 summary(gaussian_glm)
 ```
 

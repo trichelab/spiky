@@ -11,7 +11,6 @@
 #' 
 #' library(bamlss)
 #' data(spike_cram_counts)
-#' data(spike)
 #' scc <- add_frag_info(spike_cram_counts, spike=spike)
 #' scc$conc <- scc$conc * 0.9 # adjust for dilution
 #' scc$CpGs_3 <- scc$CpGs ^ (1/3)

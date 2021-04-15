@@ -14,14 +14,14 @@
 #' using BAM/CRAM headers to figure out which references are used for which. 
 #' 
 #' At the moment, CRAM support in Rsamtools only exists in the GitHub branch:
-#'
-#' BiocManager::install("Bioconductor/Rsamtools@cram")
+#' 
+#' BiocManager::install("Bioconductor/Rsamtools@cram") 
 #'
 #' Using other versions of Rsamtools will yield an error on CRAM files.
-#'
-#' Note that for merged genomic + spike reference BAMs/CRAMs, this function
+#' 
+#' Note that for merged genomic + spike reference BAMs/CRAMs, this function 
 #' will only attempt to generate a FASTA for the spike contigs, not reference.
-#' If your reference contigs are screwed up, talk to your sequencing people,
+#' If your reference contigs are screwed up, talk to your sequencing people, 
 #' and keep better track of the FASTA reference against which you compress!
 #' 
 #' @param bam       a BAM or CRAM file, hopefully with an index
@@ -31,6 +31,7 @@
 #' 
 #' @return          invisibly, a DNAStringSet as exported to `fa` 
 #'
+#' @examples 
 #'
 #' library(GenomicRanges)
 #' data(spike, package="spiky")
@@ -39,10 +40,10 @@
 #' show(generate_spike_fasta(sb, spike=spike))
 #'  
 #' @seealso         rename_contigs
-#'
-#' @import          Biostrings
-#' @import          Rsamtools
-#'
+#' 
+#' @import          Biostrings 
+#' @import          Rsamtools 
+#' 
 #' @export
 generate_spike_fasta <- function(bam, spike, assembly=NULL, fa="spike_contigs.fa"){
 
@@ -62,14 +63,14 @@ generate_spike_fasta <- function(bam, spike, assembly=NULL, fa="spike_contigs.fa
   writeXStringSet(contigs, fa)
   message("Wrote ", fa) 
   invisible(contigs)
+   
+} 
 
-}
 
-
-# helper fn
+# helper fn 
 .get_base_name <- function(contig_names, sep="_") {
 
-  vapply(lapply(strsplit(contig_names, sep), `[`, seq_len(3)),
+  vapply(lapply(strsplit(contig_names, sep), `[`, seq_len(3)), 
          paste, character(1), collapse=sep)
 
 }
