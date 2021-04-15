@@ -14,7 +14,7 @@ A DataFrame object with
 }
 }
 \usage{
-genbank_mito
+data(genbank_mito)
 }
 \description{
 A DataFrame with species, genome, accession, and sequence for GenBank

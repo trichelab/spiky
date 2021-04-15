@@ -29,7 +29,7 @@ and in fact that is what scan_spiked_bam now does.
 data(spike, package="spiky")
 
 data(spike_read_counts, package="spiky")
-fit1 <- model_glm_pmol(spike_read_counts, spike=spike) 
+fit1 <- model_glm_pmol(spike_read_counts, spike=spike)
 
 data(ssb_res) # scan_spiked_bam result
 fit2 <- model_glm_pmol(ssb_res, spike=spike)

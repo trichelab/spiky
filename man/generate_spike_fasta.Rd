@@ -16,7 +16,7 @@ generate_spike_fasta(bam, spike, assembly = NULL, fa = "spike_contigs.fa")
 \item{fa}{the filename for the resulting FASTA ("spikes.fa")}
 }
 \value{
-\preformatted{     invisibly, a DNAStringSet as exported to `fa` 
+\preformatted{     invisibly, a DNAStringSet as exported to `fa`
 }
 }
 \description{
@@ -49,10 +49,11 @@ and keep better track of the FASTA reference against which you compress!
 
 library(GenomicRanges)
 data(spike, package="spiky")
-sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE)
-show(generate_spike_fasta(sb, spike=spike))
- 
+outFasta <- paste(system.file("extdata", package="spiky", mustWork=TRUE),"/spike_contigs.fa",sep="")
+show(generate_spike_fasta(sb, spike=spike,fa=outFasta))
+
 }
 \seealso{
 \preformatted{    rename_contigs

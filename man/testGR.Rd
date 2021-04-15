@@ -15,7 +15,7 @@ A GRanges object with an mcols() DataFrame containing
 }
 }
 \usage{
-testGR
+data(testGR)
 }
 \description{
 Sources and overlap widths of various read sequences in a test CRAM.

@@ -20,7 +20,7 @@ Bland-Altman plot for cfMeDIP spike standards
 
 data(ssb_res)
 data(spike, package="spiky")
-fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike)) 
-ba_plot <- spike_bland_altman_plot(fit) 
+fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
+ba_plot <- spike_bland_altman_plot(fit)
 
 }

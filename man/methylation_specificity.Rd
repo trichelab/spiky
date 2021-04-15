@@ -20,8 +20,8 @@ In a cfMeDIP experiment, the yield of methylated fragments should be >95\%
 (ideally 98-99\%) due to the nature of the assay.
 }
 \examples{
-data(ssb_res) 
+data(ssb_res)
 data(spike, package="spiky")
-methylation_specificity(ssb_res)
+methylation_specificity(ssb_res,spike=spike)
 
 }
