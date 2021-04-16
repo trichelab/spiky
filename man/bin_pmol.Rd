@@ -20,9 +20,9 @@ to reflect picomoles of captured DNA overlapping a given bin in the genome.
 \examples{
 data(spike, package="spiky")
 data(ssb_res, package="spiky")
-fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike))
-pred <- predict_pmol(fit, ssb_res, ret="df") 
-bin_pmol(pred) 
+fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
+pred <- predict_pmol(fit, ssb_res, ret="df")
+bin_pmol(pred)
 
 }
 \seealso{

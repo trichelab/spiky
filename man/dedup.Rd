@@ -13,7 +13,7 @@ A data.frame object with
 }
 }
 \usage{
-dedup
+data(dedup)
 }
 \description{
 A data.frame with spike-in results from control samples in the manuscript.

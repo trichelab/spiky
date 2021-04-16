@@ -15,7 +15,7 @@ A DataFrame object with
 }
 }
 \usage{
-phage
+data(phage)
 }
 \description{
 A DataFrame with sequence, methylated, CpGs, GCfrac, and OECpG for phages

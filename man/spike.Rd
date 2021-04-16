@@ -15,7 +15,7 @@ A DataFrame object with
 }
 }
 \usage{
-spike
+data(spike)
 }
 \description{
 A DataFrame with sequence, concentration, and other properties of Sam's

@@ -4,12 +4,14 @@
 \alias{scan_spike_counts}
 \title{run spike_counts on BAM/CRAM files and shape the results for model_glm_pmol}
 \usage{
-scan_spike_counts(files, spike, sep = "_")
+scan_spike_counts(files, spike, methylated = 1, sep = "_")
 }
 \arguments{
 \item{files}{a vector of BAM/CRAM file names}
 
 \item{spike}{a spike-in database}
+
+\item{methylated}{a logical (0/1) to include only methylated fragments}
 
 \item{sep}{the separator for spike-in contig names ("_")}
 }
@@ -23,11 +25,11 @@ This function eases this task by merging the output of spike_counts into
 a data.frame that model_glm_pmol can directly fit.
 }
 \examples{
-data(spike) 
+data(spike)
 library(GenomicRanges)
-sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE)
 scan_spike_counts(sb, spike=spike)
-fit <- model_glm_pmol(scan_spike_counts(sb, spike=spike)) 
+fit <- model_glm_pmol(scan_spike_counts(sb, spike=spike),spike=spike)
 
 }

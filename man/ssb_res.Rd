@@ -12,7 +12,7 @@ A CompressedGRangesList of coverage results, containing
 }
 }
 \usage{
-ssb_res
+data(ssb_res)
 }
 \description{
 A CompressedGRangesList object with \code{genomic} (chr22) and \code{spikes} coverage,

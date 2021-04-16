@@ -33,9 +33,9 @@ by the bin start, stop, and genome when left as a GRanges).
 
 data(ssb_res)
 data(spike, package="spiky")
-fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike)) 
-preddf <- predict_pmol(fit, ssb_res, ret="df") 
-pred <- predict_pmol(fit, ssb_res, ret="gr") 
+fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
+preddf <- predict_pmol(fit, ssb_res, ret="df")
+pred <- predict_pmol(fit, ssb_res, ret="gr")
 bin_pmol(pred)
 
 }
