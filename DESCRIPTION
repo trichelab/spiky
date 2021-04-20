@@ -32,8 +32,7 @@ Imports:
     S4Vectors,
     graphics,
     ggplot2,
-    utils,
-    rmarkdown
+    utils
 Suggests:
     covr,
     testthat,
@@ -41,11 +40,12 @@ Suggests:
     universalmotif,
     kebabs,
     ComplexHeatmap,
+    rmarkdown,
     knitr,
     devtools,
     BiocManager
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-LazyData: TRUE 
 Encoding: UTF-8
+biocViews: Coverage, Alignment, DataImport,Sequencing, QualityControl
