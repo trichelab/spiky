@@ -48,4 +48,3 @@ RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Encoding: UTF-8
-biocViews: Coverage, Alignment, DataImport,Sequencing, QualityControl
