@@ -1,5 +1,7 @@
 #' tabulate coverage across assembly and spike contig subset in natural order
 #'
+#' FIXME: this is wicked slow, ask Herve if a faster version exists 
+#' 
 #' Refactored from scan_spiked_bam, this is a very simple wrapper
 #'
 #' @param bf  the BamFile object 
@@ -16,7 +18,7 @@
 #'                   mustWork=TRUE)
 #' si <- seqinfo_from_header(sb) 
 #' genome(si) <- "spike"
-#'
+#
 #' data(spike, package="spiky")
 #' mgr <- get_merged_gr(si, spike=spike) # note canonicalized spikes
 #'
