@@ -5,29 +5,35 @@
 #' 1. Identify and quantify the spike-in contigs in an experiment.
 #' 2. Fit a model for sequence-based abundance artifacts using the spike-ins.
 #' 3. Quantify raw fragment abundance on genomic contigs, and adjust per step 2.
-#'
-#' scan_genomic_contigs addresses the first half of step 3. The assumption is
-#' that anything which
-#'
+#' 
+#' scan_genomic_contigs addresses the first half of step 3. The assumption is 
+#' that anything which isn't a spike contig, is a genomic contig.  This isn't 
+#' necessarily true, so the user can also supply a ScanBamParam object for the
+#' `param` argument and restrict scanning to whatever contigs they wish, which
+#' also allows for non-default MAPQ, pairing, and quality filters. 
+#' 
 #' @param bam       the BAM or CRAM file
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object specifying which reads to count (NULL)
-#' @param ...       additional arguments to pass to scanBamParam()
+#' @param ...       additional arguments to pass to scanBamFlag()
 #'
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
 #'
 #' @examples
-#' library(GenomicRanges)
+#'
+#' library(Rsamtools)
 #' data(spike, package="spiky")
+#'
+#' fl <- system.file("extdata", "ex1.bam", package="Rsamtools", 
+#'                   mustWork=TRUE)
+#' scan_genomic_contigs(fl, spike=spike) # will warn user about spike contigs
+#'
 #' sb <- system.file("extdata", "example.spike.bam", package="spiky",
-#'                   mustWork=TRUE) # swap for a CRAM
-#' res <- scan_genomic_contigs(sb, spike=spike, bins=GRanges())
-#'
-#' @seealso         GenomeInfoDb::keepStandardChromosomes
+#'                   mustWork=TRUE)
+#' scan_genomic_contigs(sb, spike=spike) # will warn user about genomic contigs
+#' 
 #' @seealso         Rsamtools::ScanBamParam
-#'
 #' @import          GenomicAlignments
-#' @import          GenomeInfoDb
 #' @import          Rsamtools
 #'
 #' @export
@@ -35,32 +41,33 @@ scan_genomic_contigs <- function(bam, spike, param=NULL, ...) {
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
-  spike_contigs <- names(attr(find_spike_contigs(si, spike=spike), "mapping"))
-  genomic_contigs <- setdiff(seqlevels(si), spike_contigs)
-  if (length(genomic_contigs) == 0) {
-    warning(bam, " doesn't appear to have any genomic contigs.")
-    return()
+  mappings <- attr(find_spike_contigs(si, spike=spike), "mapping")
+  spike_contigs <- names(mappings)
+  genomic_contigs <- seqlevels(si) 
+  if (length(spike_contigs) > 0) {
+    genomic_contigs <- setdiff(genomic_contigs, spike_contigs)
   }
 
-  # properly indexed
-  bf <- BamFile(bam)
+  if (length(genomic_contigs) == 0) {
+    # empty coverage list
+    warning(bam, " doesn't appear to have any genomic contigs.")
+    return(as(S4Vectors::SimpleList(), "SimpleRleList"))
+  }
 
-  # create appropriate filters for coverage tabulation if param=NULL
-  if (is.null(param)) {
-    fl <- scanBamFlag(isDuplicate=FALSE,
-                      isPaired=TRUE,
+  bf <- BamFile(bam)
+  if (is.null(param)) { 
+    fl <- scanBamFlag(isDuplicate=FALSE, 
+                      isPaired=TRUE, 
                       isProperPair=TRUE, ...)
     param <- ScanBamParam(flag=fl)
     bamMapqFilter(param) <- 20
   }
 
-  # rationalize the contigs
+  # rationalize the contigs (but do not replace user-supplied Ranges)
   gr <- as(sortSeqlevels(si[genomic_contigs]), "GRanges") # kludgey
-
-  # restrict to only these contigs
-  bamWhich(param) <- gr
+  if (length(bamWhich(param)) == 0) bamWhich(param) <- gr
 
   # assess coverage on these contigs (bin later)
-  GenomicAlignments::coverage(BamFile(bam), param=param)
+  return(GenomicAlignments::coverage(BamFile(bam), param=param))
 
 }

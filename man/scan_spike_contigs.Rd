@@ -2,12 +2,12 @@
 % Please edit documentation in R/scan_spike_contigs.R
 \name{scan_spike_contigs}
 \alias{scan_spike_contigs}
-\title{pretty much what it says: scan standard chroms + spike contigs from a BAM}
+\title{pretty much what it says: scan spike contigs from a BAM or CRAM file}
 \usage{
 scan_spike_contigs(bam, spike, param = NULL, ...)
 }
 \arguments{
-\item{bam}{the BAM file}
+\item{bam}{the BAM or CRAM file}
 
 \item{spike}{the spike-in reference database (e.g. data(spike))}
 
@@ -20,9 +20,7 @@ scan_spike_contigs(bam, spike, param = NULL, ...)
 }
 }
 \description{
-Note: behind the scenes, this is being refactored into scan_spike_contigs
-and scan_genomic_contigs. Once that is done, perhaps before release, the
-default workflow will switch to
+default workflow is
 }
 \details{
 \enumerate{
@@ -31,9 +29,7 @@ default workflow will switch to
 \item scan and adjust binned fragment tallies along genomic contigs per above.
 }
 
-This approach decouples binning schemes from model generation (using spikes)
-and model-based adjustment (using genomic fragment counts), decreasing code
-complexity while increasing the opportunities for caching & parallelization.
+scan_spike_contigs implements step 1.
 
 add CRAM example here -- tested & works with reheadered spike CRAMs.
 Slower than one might like however.
