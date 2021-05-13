@@ -1,10 +1,12 @@
-library(rtracklayer) 
+# This script turns a bunch of BED files into a GRanges with a matrix hanging off of it.
 
-# in conjunction with tabixToGRanges, this can reduce arbitrarily many BEDs 
+library(rtracklayer)
+
+# in conjunction with tabixToGRanges, this can reduce arbitrarily many BEDs
 mergeMcols <- function(x, y) {
   stopifnot (identical(granges(x), granges(y)))
   mcols(x)[, names(mcols(y))] <- mcols(y)
-  return(x)   
+  return(x)
 }
 
 BEDs <- list.files(patt="bed.gz$")

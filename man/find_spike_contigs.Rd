@@ -26,9 +26,9 @@ for all contig names in the CRAM/BAM/whatever, and standardized is
 the rowname in \code{spike} that corresponds to the original contig name.
 }
 \examples{
-sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE)
-si <- seqinfo_from_header(sb) 
+si <- seqinfo_from_header(sb)
 data(spike, package="spiky")
 find_spike_contigs(si, spike=spike)
 

@@ -12,6 +12,10 @@ A data.frame object with
 \item{read_count}{read coverage for this spike in this subject (column 2)}
 }
 }
+\source{
+Generated from scan_spike_counts(CRAMs, spike=spike) using example CRAMs
+containing spike contigs
+}
 \usage{
 data(spike_cram_counts)
 }

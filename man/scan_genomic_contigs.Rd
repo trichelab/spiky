@@ -36,9 +36,8 @@ that anything which
 library(GenomicRanges)
 data(spike, package="spiky")
 sb <- system.file("extdata", "example.spike.bam", package="spiky",
-                  mustWork=TRUE) # swap for a CRAM 
+                  mustWork=TRUE) # swap for a CRAM
 res <- scan_genomic_contigs(sb, spike=spike, bins=GRanges())
-res
 
 }
 \seealso{

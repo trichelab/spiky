@@ -12,11 +12,12 @@ This restriction may be removed if our dependencies can tolerate it.
 
 ## Installing
 
-The pre-release version of the package can be pulled from GitHub using the [BiocManager](https://cran.r-project.org/package/BiocManager) package:
+To install this package, start R (version "3.6" or later) and enter:
 
-    # install.packages("remotes")
-    # install.packages("BiocManager")
-    BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
+  #if (!requireNamespace("BiocManager", quietly = TRUE))
+  #  install.packages("BiocManager")
+  #
+  #BiocManager::install("spiky")
 
 ## For developers
 

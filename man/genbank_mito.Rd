@@ -13,6 +13,9 @@ A DataFrame object with
 \item{sequence}{genome sequence, as a DNAStringSet}
 }
 }
+\source{
+www.ncbi.nlm.nih.gov/genbank/
+}
 \usage{
 data(genbank_mito)
 }

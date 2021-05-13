@@ -14,6 +14,9 @@ A GRanges object with an mcols() DataFrame containing
 \item{score}{whether the fragment passes filters (always 1)}
 }
 }
+\source{
+Generated using inst/script/loadTest.R
+}
 \usage{
 data(testGR)
 }

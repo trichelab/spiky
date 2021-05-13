@@ -29,11 +29,13 @@ To meet the need for a reference control in cell-free methylated DNA immunopreci
 * Adjust molar amount and bin the fragments into genomic windows used in analyses
 
 # Installation
-Install the spiky package from github.
+Install and load the spiky package from Bioconductor.
 ```{r eval = FALSE,message=FALSE}
-#install.packages("remotes")
-#install.packages("BiocManager")
-#BiocManager::install("trichelab/spiky", build_vignettes=TRUE)
+#To install this package, start R (version "3.6" or later) and enter:
+  #if (!requireNamespace("BiocManager", quietly = TRUE))
+  #  install.packages("BiocManager")
+  #
+  #BiocManager::install("spiky")
 
 library(spiky)
 ```
@@ -121,7 +123,7 @@ For the samples in which the Gaussian generalized linear model was built, we wil
 ```{r eval=TRUE}
 # Predict pmol concentration
 # To select a genome other than hg38, use BSgenome::available.packages() to find valid BSgenome name
-BiocManager::install("BSgenome.Hsapiens.UCSC.hg38")
+#library("BSgenome.Hsapiens.UCSC.hg38")
 sample_data_pmol <- predict_pmol(gaussian_glm, ssb_res,bsgenome="BSgenome.Hsapiens.UCSC.hg38",ret="df")
 head(sample_data_pmol,n=1)
 

@@ -25,7 +25,7 @@ get_base_name <- function(contig_names, sep="_") {
   res <- vapply(lapply(strsplit(contig_names, sep), `[`, elts),
                 paste, character(1), collapse=sep)
   names(res) <- contig_names
-  #keep <- grep("NA", res, invert=TRUE)
-  #res[keep]
 
+  keep <- grep("NA", res, invert=TRUE)
+  res[keep]
 }

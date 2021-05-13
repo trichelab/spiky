@@ -1,5 +1,7 @@
-data("genbank_mito", package="spiky") 
-show(genbank_mito) 
+# This script is used to retrieve mitochondrial gene sequences from GenBank.
+
+data("genbank_mito", package="spiky")
+show(genbank_mito)
 
 library(genbankr)
 get_gbas <- function(y) lapply(lapply(y, GBAccession), readGenBank)
@@ -8,7 +10,7 @@ names(GBAs) <- vapply(GBAs, function(gba) seqnames(seqinfo(gba)), character(1))
 
 get_seqs <- function(x) DNAStringSet(lapply(lapply(x, getSeq), `[[`, 1))
 genbank_mito$sequence <- get_seqs(GBAs)
-mtSpikes <- process_spikes(genbank_mito) 
+mtSpikes <- process_spikes(genbank_mito)
 
 mtTxDbs <- lapply(GBAs, makeTxDbFromGenBank)
 mtGenes <- lapply(mtTxDbs, genes)

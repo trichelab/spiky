@@ -19,16 +19,6 @@
 #' spikemeth <- spike$methylated
 #' process_spikes(spikes, spikemeth)
 #'
-#' usekernels <- FALSE
-#' if (usekernels) {
-#'   # not run
-#'   library(kebabs)
-#'   CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
-#'   mot <- motifKernel(CpGmotifs, normalized=FALSE)
-#'   km <- getKernelMatrix(mot, subset(phage, methylated == 0)$sequence)
-#'   heatmap(km, symm=TRUE)
-#' }
-#'
 #' data(phage)
 #' phages <- system.file("extdata", "phages.fa", package="spiky", mustWork=TRUE)
 #' identical(process_spikes(phage), phage)
@@ -38,10 +28,14 @@
 #' (mt <- process_spikes(genbank_mito)) # see also genbank_mito.R
 #' gb_mito <- system.file("extdata", "genbank_mito.R", package="spiky")
 #'
-#' usekernels <- FALSE
-#' if (usekernels) {
+#' \donttest{
+#'   library(kebabs)
+#'   CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
+#'   mot <- motifKernel(CpGmotifs, normalized=FALSE)
+#'   km <- getKernelMatrix(mot, subset(phage, methylated == 0)$sequence)
+#'   heatmap(km, symm=TRUE)
 #'
-#'   # refactor this out 
+#'   #'   # refactor this out
 #'   mt <- process_spikes(genbank_mito)
 #'   mtiles <- unlist(tileGenome(seqlengths(mt$sequence), tilewidth=100))
 #'   bymito <- split(mtiles, seqnames(mtiles))
@@ -62,6 +56,7 @@
 #'   kms <- lapply(kernels, getKernelMatrix, x=mt["Human", "sequence"])
 #'   library(ComplexHeatmap)
 #' }
+#'
 #'
 #' @import Biostrings
 #' @import S4Vectors
