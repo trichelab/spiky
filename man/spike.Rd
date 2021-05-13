@@ -14,6 +14,9 @@ A DataFrame object with
 \item{molmass}{molar mass of spike-in sequence}
 }
 }
+\source{
+https://doi.org/10.1101/2021.02.12.430289
+}
 \usage{
 data(spike)
 }

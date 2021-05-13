@@ -12,6 +12,9 @@ A data.frame object with
 \item{read_count_6548}{read coverage for this spike in sample 6548}
 }
 }
+\source{
+This data was created using inst/script/loadDedup.R
+}
 \usage{
 data(dedup)
 }

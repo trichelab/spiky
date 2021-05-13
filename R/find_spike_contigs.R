@@ -1,13 +1,13 @@
 #' find spike-in seqlevels in an object `x`, where !is.null(seqinfo(x))
-#' 
+#'
 #' Find the spike-like contigs in a BAM with both natural and spiked contigs.
-#' This started out as glue in some other functions and got refactored out. 
-#' 
+#' This started out as glue in some other functions and got refactored out.
+#'
 #' @param x       something with seqlevels
 #' @param spike   a DataFrame with spike-in information
-#' 
+#'
 #' @return        indices of which contigs in seqlevels(x) are spike-in contigs
-#' 
+#'
 #' @details
 #' The indices have an attribute "mappings", which is a character vector
 #' such that attr(find_spike_contigs(x), "mappings") == standardized
@@ -15,17 +15,17 @@
 #' the rowname in `spike` that corresponds to the original contig name.
 #'
 #' @examples
-#' sb <- system.file("extdata", "example.spike.bam", package="spiky", 
+#' sb <- system.file("extdata", "example.spike.bam", package="spiky",
 #'                   mustWork=TRUE)
-#' si <- seqinfo_from_header(sb) 
+#' si <- seqinfo_from_header(sb)
 #' data(spike, package="spiky")
 #' find_spike_contigs(si, spike=spike)
-#' 
+#'
 #' @seealso get_base_name
 #' @seealso rename_spike_seqlevels
-#' 
+#'
 #' @export
-find_spike_contigs <- function(x, spike) { 
+find_spike_contigs <- function(x, spike) {
 
   orig_contigs <- seqlevels(x)
   new_contigs <- get_base_name(seqlevels(x))
@@ -34,6 +34,6 @@ find_spike_contigs <- function(x, spike) {
   mappings <- new_contigs
   names(mappings) <- orig_contigs
   attr(res, "mappings") <- mappings[res]
-  return(res) 
+  return(res)
 
 }
