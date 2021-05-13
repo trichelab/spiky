@@ -17,6 +17,9 @@ get_spiked_coverage(bf, bp, gr)
 a list of Rles
 }
 \description{
+FIXME: this is wicked slow, ask Herve if a faster version exists
+}
+\details{
 Refactored from scan_spiked_bam, this is a very simple wrapper
 }
 \examples{
@@ -24,7 +27,6 @@ sb <- system.file("extdata", "example.spike.bam", package="spiky",
                   mustWork=TRUE)
 si <- seqinfo_from_header(sb) 
 genome(si) <- "spike"
-
 data(spike, package="spiky")
 mgr <- get_merged_gr(si, spike=spike) # note canonicalized spikes
 

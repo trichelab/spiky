@@ -43,9 +43,21 @@ scan_spiked_bam(
 }
 }
 \description{
-pretty much what it says: scan standard chroms + spike contigs from a BAM
+Note: behind the scenes, this is being refactored into scan_spike_contigs
+and scan_genomic_contigs. Once that is done, perhaps before release, the
+default workflow will switch to
 }
 \details{
+\enumerate{
+\item scan spike contigs and count fragments per contig or per bin.
+\item fit the appropriate model for adjusting genomic contigs based on spikes.
+\item scan and adjust binned fragment tallies along genomic contigs per above.
+}
+
+This approach decouples binning schemes from model generation (using spikes)
+and model-based adjustment (using genomic fragment counts), decreasing code
+complexity while increasing the opportunities for caching & parallelization.
+
 For a more realistic example (not run), one might do something like:
 
 data(spike, package="spiky");

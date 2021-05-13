@@ -42,6 +42,7 @@
 #' if (usekernels) {
 #'
 #'   # refactor this out 
+#'   mt <- process_spikes(genbank_mito)
 #'   mtiles <- unlist(tileGenome(seqlengths(mt$sequence), tilewidth=100))
 #'   bymito <- split(mtiles, seqnames(mtiles))
 #'   binseqs <- getSeq(mt$sequence, bymito[["Homo sapiens"]])
