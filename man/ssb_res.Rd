@@ -11,6 +11,10 @@ A CompressedGRangesList of coverage results, containing
 \item{spikes}{a GRanges with one metadata column, \code{coverage}}
 }
 }
+\source{
+Generated using scan_spiked_bam on an example bam
+containing chr22 and spike contigs.
+}
 \usage{
 data(ssb_res)
 }

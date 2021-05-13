@@ -39,6 +39,7 @@ also allows for non-default MAPQ, pairing, and quality filters.
 
 library(Rsamtools)
 data(spike, package="spiky")
+
 fl <- system.file("extdata", "ex1.bam", package="Rsamtools", 
                   mustWork=TRUE)
 scan_genomic_contigs(fl, spike=spike) # will warn user about spike contigs

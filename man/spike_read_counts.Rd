@@ -12,6 +12,9 @@ A data.frame object with
 \item{read_count}{read coverage for this spike in this subject (column 2)}
 }
 }
+\source{
+This data was created using inst/script/loadDedup.R
+}
 \usage{
 data(spike_read_counts)
 }

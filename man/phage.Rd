@@ -14,6 +14,9 @@ A DataFrame object with
 \item{OECpG}{the observed / expected CpG fraction, as a numeric}
 }
 }
+\source{
+www.ncbi.nlm.nih.gov/genbank/
+}
 \usage{
 data(phage)
 }

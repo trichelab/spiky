@@ -1,7 +1,7 @@
 #' scan genomic contigs in a BAM/CRAM file
 #'
 #' The default workflow for spiky is roughly as follows:
-#' 
+#'
 #' 1. Identify and quantify the spike-in contigs in an experiment.
 #' 2. Fit a model for sequence-based abundance artifacts using the spike-ins.
 #' 3. Quantify raw fragment abundance on genomic contigs, and adjust per step 2.
@@ -23,6 +23,7 @@
 #'
 #' library(Rsamtools)
 #' data(spike, package="spiky")
+#'
 #' fl <- system.file("extdata", "ex1.bam", package="Rsamtools", 
 #'                   mustWork=TRUE)
 #' scan_genomic_contigs(fl, spike=spike) # will warn user about spike contigs
@@ -36,7 +37,7 @@
 #' @import          Rsamtools
 #'
 #' @export
-scan_genomic_contigs <- function(bam, spike, param=NULL, ...) { 
+scan_genomic_contigs <- function(bam, spike, param=NULL, ...) {
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)

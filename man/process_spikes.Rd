@@ -14,7 +14,7 @@ process_spikes(fasta, methylated = 0, ...)
 \item{...}{additional arguments, e.g. kernels (currently unused)}
 }
 \value{
-\preformatted{         a DataFrame suitable for downstream processing 
+\preformatted{         a DataFrame suitable for downstream processing
 }
 }
 \description{
@@ -31,35 +31,29 @@ spikes <- system.file("extdata", "spikes.fa", package="spiky", mustWork=TRUE)
 spikemeth <- spike$methylated
 process_spikes(spikes, spikemeth)
 
-usekernels <- FALSE
-if (usekernels) {
-  # not run
-  library(kebabs)
-  CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
-  mot <- motifKernel(CpGmotifs, normalized=FALSE)
-  km <- getKernelMatrix(mot, subset(phages, methylated == 0)$sequence)
-  heatmap(km, symm=TRUE)
-}
-
 data(phage)
 phages <- system.file("extdata", "phages.fa", package="spiky", mustWork=TRUE)
 identical(process_spikes(phage), phage)
 identical(phage, process_spikes(phage))
 
-data(genbank_mito) 
-(mt <- process_spikes(genbank_mito)) # see also genbank_mito.R 
+data(genbank_mito)
+(mt <- process_spikes(genbank_mito)) # see also genbank_mito.R
 gb_mito <- system.file("extdata", "genbank_mito.R", package="spiky")
 
-usekernels <- FALSE
-if (usekernels) {
+\donttest{
+  library(kebabs)
+  CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
+  mot <- motifKernel(CpGmotifs, normalized=FALSE)
+  km <- getKernelMatrix(mot, subset(phage, methylated == 0)$sequence)
+  heatmap(km, symm=TRUE)
 
-  # refactor this out 
+  #'   # refactor this out
   mt <- process_spikes(genbank_mito)
   mtiles <- unlist(tileGenome(seqlengths(mt$sequence), tilewidth=100))
   bymito <- split(mtiles, seqnames(mtiles))
   binseqs <- getSeq(mt$sequence, bymito[["Homo sapiens"]])
   rCRS6mers <- kmers(binseqs, k=6)
-  
+
   # plot binned Pr(kmer):
   library(ComplexHeatmap)
   Heatmap(kmax(rCRS6mers), name="Pr(kmer)")
@@ -74,6 +68,7 @@ if (usekernels) {
   kms <- lapply(kernels, getKernelMatrix, x=mt["Human", "sequence"])
   library(ComplexHeatmap)
 }
+
 
 }
 \seealso{

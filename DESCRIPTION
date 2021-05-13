@@ -41,8 +41,11 @@ Suggests:
     kebabs,
     ComplexHeatmap,
     rmarkdown,
+    markdown,
     knitr,
     devtools,
+    BSgenome.Mmusculus.UCSC.mm10.masked,
+    BSgenome.Hsapiens.UCSC.hg38.masked,
     BiocManager
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
