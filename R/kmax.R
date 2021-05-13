@@ -33,7 +33,7 @@
 #' hgmmphmtk6 <- rbind(hg38k6[paste0("hg38_chr", 1:22), ],
 #'                      mm10k6[paste0("mm10_chr", 1:19), ],
 #'                      phk6, mtk6)
-#'
+#' library(ComplexHeatmap)
 #' Heatmap(kmax(hgmmphmtk6), name="Pr(kmer)")
 #' }
 #'
