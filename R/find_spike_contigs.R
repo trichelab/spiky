@@ -36,18 +36,4 @@ find_spike_contigs <- function(x, spike) {
   attr(res, "mappings") <- mappings[res]
   return(res)
 
-  # orig_contigs <- seqlevels(x)
-  # new_contigs <- get_base_name(seqlevels(x))
-  # res <- which(new_contigs %in% rownames(spike))
-  #
-  #
-  # temp <- orig_contigs
-  # temp[res] <- new_contigs
-  # res_orig <- which(temp %in% rownames(spike))
-  #
-  # mappings <- new_contigs
-  # names(mappings) <- orig_contigs[res_orig]
-  # attr(res_orig, "mappings") <- orig_contigs[res_orig]
-  # return(res_orig)
-
 }
