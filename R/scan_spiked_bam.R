@@ -1,5 +1,17 @@
 #' pretty much what it says: scan standard chroms + spike contigs from a BAM
 #'
+#' Note: behind the scenes, this is being refactored into scan_spike_contigs 
+#' and scan_genomic_contigs. Once that is done, perhaps before release, the 
+#' default workflow will switch to 
+#' 
+#' 1. scan spike contigs and count fragments per contig or per bin.
+#' 2. fit the appropriate model for adjusting genomic contigs based on spikes.
+#' 3. scan and adjust binned fragment tallies along genomic contigs per above.
+#' 
+#' This approach decouples binning schemes from model generation (using spikes) 
+#' and model-based adjustment (using genomic fragment counts), decreasing code
+#' complexity while increasing the opportunities for caching & parallelization.
+#' 
 #' @param bam       the BAM file
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param mapq      minimum mapq value to count a pair (20)
@@ -85,6 +97,7 @@ scan_spiked_bam <- function(bam, spike, mapq=20, binwidth=300L, bins=NULL, how=c
   bamMapqFilter(bp) <- mapq
 
   # assess coverage on contigs we care about (bin the Rles later)
+  # FIXME: this is the bottleneck in the code 
   covg <- get_spiked_coverage(bf=bf, bp=bp, gr=gr)
 
   # bins for coverage

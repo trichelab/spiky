@@ -25,11 +25,12 @@ Build a Bayesian additive model from spike-ins to correct bias in *-seq
 \examples{
 
 library(bamlss)
-data(spike_cram_counts)
+data(spike_cram_counts,package="spiky")
+data(spike,package="spiky")
 scc <- add_frag_info(spike_cram_counts, spike=spike)
 scc$conc <- scc$conc * 0.9 # adjust for dilution
 scc$CpGs_3 <- scc$CpGs ^ (1/3)
-fit0 <- model_bam_standards(scc, 
+fit0 <- model_bam_standards(scc,
                             fm=conc ~ read_count + fraglen)
 fit1 <- model_bam_standards(scc,
                             fm=conc ~ read_count + fraglen + GCfrac + CpGs_3)
