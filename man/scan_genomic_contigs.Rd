@@ -13,7 +13,7 @@ scan_genomic_contigs(bam, spike, param = NULL, ...)
 
 \item{param}{a ScanBamParam object specifying which reads to count (NULL)}
 
-\item{...}{additional arguments to pass to scanBamParam()}
+\item{...}{additional arguments to pass to scanBamFlag()}
 }
 \value{
 \preformatted{     a CompressedGRangesList with bin- and spike-level coverage
@@ -30,21 +30,25 @@ The default workflow for spiky is roughly as follows:
 }
 
 scan_genomic_contigs addresses the first half of step 3. The assumption is
-that anything which
+that anything which isn't a spike contig, is a genomic contig.  This isn't
+necessarily true, so the user can also supply a ScanBamParam object for the
+\code{param} argument and restrict scanning to whatever contigs they wish, which
+also allows for non-default MAPQ, pairing, and quality filters.
 }
 \examples{
-library(GenomicRanges)
+
+library(Rsamtools)
 data(spike, package="spiky")
+fl <- system.file("extdata", "ex1.bam", package="Rsamtools", 
+                  mustWork=TRUE)
+scan_genomic_contigs(fl, spike=spike) # will warn user about spike contigs
+
 sb <- system.file("extdata", "example.spike.bam", package="spiky",
-                  mustWork=TRUE) # swap for a CRAM 
-res <- scan_genomic_contigs(sb, spike=spike, bins=GRanges())
-res
+                  mustWork=TRUE)
+scan_genomic_contigs(sb, spike=spike) # will warn user about genomic contigs
 
 }
 \seealso{
-\preformatted{    GenomeInfoDb::keepStandardChromosomes
-}
-
 \preformatted{    Rsamtools::ScanBamParam
 }
 }

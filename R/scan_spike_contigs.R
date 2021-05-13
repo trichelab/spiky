@@ -1,18 +1,14 @@
-#' pretty much what it says: scan standard chroms + spike contigs from a BAM
+#' pretty much what it says: scan spike contigs from a BAM or CRAM file
 #'
-#' Note: behind the scenes, this is being refactored into scan_spike_contigs 
-#' and scan_genomic_contigs. Once that is done, perhaps before release, the 
-#' default workflow will switch to 
+#' default workflow is 
 #' 
 #' 1. scan spike contigs and count fragments per contig or per bin.
 #' 2. fit the appropriate model for adjusting genomic contigs based on spikes.
 #' 3. scan and adjust binned fragment tallies along genomic contigs per above.
 #' 
-#' This approach decouples binning schemes from model generation (using spikes) 
-#' and model-based adjustment (using genomic fragment counts), decreasing code
-#' complexity while increasing the opportunities for caching & parallelization.
+#' scan_spike_contigs implements step 1.
 #' 
-#' @param bam       the BAM file
+#' @param bam       the BAM or CRAM file
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object, or NULL (will default to MAPQ=20 etc)
 #' @param ...       additional arguments to pass to scanBamFlag()
@@ -47,8 +43,6 @@ scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
     mappings <- attr(spikes, "mappings")
     attr(spikes, "mappings") <- NULL
     genome(si)[spikes] <- "spike"
-  } else {
-    stop(bam, " doesn't appear to have any spike-ins among its contigs.")
   }
 
   # create appropriate filters for coverage tabulation if param=NULL
@@ -60,14 +54,14 @@ scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
     bamMapqFilter(param) <- 20
   }
 
-  # rationalize the contigs 
   orig_spike_contigs <- subset(seqlevels(si), genome(si) == "spike")
-  gr <- as(sortSeqlevels(si[orig_spike_contigs]), "GRanges") # kludgey
-
-  # restrict to only the spike contigs
-  bamWhich(param) <- gr
-
-  # assess coverage on spike contigs (bin later)
-  GenomicAlignments::coverage(BamFile(bam), param=param)
-
+  if (length(orig_spike_contigs) == 0) {
+    # empty coverage list
+    return(as(S4Vectors::SimpleList(), "SimpleRleList"))
+  } else {
+    # rationalize the contigs but don't override user supplied bamWhich
+    gr <- as(sortSeqlevels(si[orig_spike_contigs]), "GRanges") # kludgey
+    if (length(bamWhich(param)) == 0) bamWhich(param) <- gr
+    return(GenomicAlignments::coverage(BamFile(bam), param=param))
+  }
 }

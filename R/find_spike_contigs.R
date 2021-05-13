@@ -32,7 +32,12 @@ find_spike_contigs <- function(x, spike) {
   res <- which(new_contigs %in% rownames(spike))
 
   mappings <- new_contigs
-  names(mappings) <- orig_contigs
+  if (length(new_contigs) == length(orig_contigs)) {
+    names(mappings) <- orig_contigs
+  } else {
+    warning("Cannot resolve contig name mismatches with spike database names. Your file may not have any spikes, or the spike database might not contain them.")
+  }
+
   attr(res, "mappings") <- mappings[res]
   return(res) 
 
