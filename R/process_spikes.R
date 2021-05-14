@@ -28,35 +28,6 @@
 #' (mt <- process_spikes(genbank_mito)) # see also genbank_mito.R
 #' gb_mito <- system.file("extdata", "genbank_mito.R", package="spiky")
 #'
-#' \donttest{
-#'   library(kebabs)
-#'   CpGmotifs <- c("[AT]CG[AT]","C[ATC]G", "CCGG", "CGCG")
-#'   mot <- motifKernel(CpGmotifs, normalized=FALSE)
-#'   km <- getKernelMatrix(mot, subset(phage, methylated == 0)$sequence)
-#'   heatmap(km, symm=TRUE)
-#'
-#'   #'   # refactor this out
-#'   mt <- process_spikes(genbank_mito)
-#'   mtiles <- unlist(tileGenome(seqlengths(mt$sequence), tilewidth=100))
-#'   bymito <- split(mtiles, seqnames(mtiles))
-#'   binseqs <- getSeq(mt$sequence, bymito[["Homo sapiens"]])
-#'   rCRS6mers <- kmers(binseqs, k=6)
-#'
-#'   # plot binned Pr(kmer):
-#'   library(ComplexHeatmap)
-#'   Heatmap(kmax(rCRS6mers), name="Pr(kmer)")
-#'
-#'   # not run
-#'   library(kebabs)
-#'   kernels <- list(
-#'     k6f=spectrumKernel(k=6, r=1),
-#'     k6r=spectrumKernel(k=6, r=1, revComp=TRUE)
-#'   )
-#'
-#'   kms <- lapply(kernels, getKernelMatrix, x=mt["Human", "sequence"])
-#'   library(ComplexHeatmap)
-#' }
-#'
 #'
 #' @import Biostrings
 #' @import S4Vectors
