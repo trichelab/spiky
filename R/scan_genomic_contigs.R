@@ -71,6 +71,9 @@ scan_genomic_contigs <- function(bam_files, spike, param=NULL, ...) {
   gr <- as(sortSeqlevels(si[genomic_contigs]), "GRanges") # kludgey
   if (length(bamWhich(param)) == 0) bamWhich(param) <- gr
 
+  # number of cores to use
+  mc.cores <- min(mc.cores, length(bam_files))
+
   # assess coverage on these contigs (bin later)
   return(mclapply(bam_files,FUN=function(x)
   {GenomicAlignments::coverage(BamFile(x), param=param)},mc.cores=mc.cores))
