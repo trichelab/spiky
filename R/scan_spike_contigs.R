@@ -1,16 +1,17 @@
 #' pretty much what it says: scan spike contigs from a BAM or CRAM file
 #'
-#' default workflow is 
-#' 
+#' default workflow is
+#'
 #' 1. scan spike contigs and count fragments per contig or per bin.
 #' 2. fit the appropriate model for adjusting genomic contigs based on spikes.
 #' 3. scan and adjust binned fragment tallies along genomic contigs per above.
-#' 
+#'
 #' scan_spike_contigs implements step 1.
-#' 
-#' @param bam       the BAM or CRAM file
+#'
+#' @param bam_files       the BAM or CRAM file, or list of BAMs/CRAMs with the same header
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object, or NULL (will default to MAPQ=20 etc)
+#' @param mc.cores  the number of cores to use (default is minimum of 16 and number of BAMs)
 #' @param ...       additional arguments to pass to scanBamFlag()
 #'
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
@@ -26,15 +27,18 @@
 #' @details
 #'   add CRAM example here -- tested & works with reheadered spike CRAMs.
 #'   Slower than one might like however.
-#' 
+#'
 #' @seealso         Rsamtools::ScanBamParam
 #'
 #' @import          GenomicAlignments
 #' @import          GenomeInfoDb
 #' @import          Rsamtools
 #'
-#' @export 
-scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
+#' @export
+scan_spike_contigs <- function(bam_files, spike, param=NULL, mc.cores=16,...) {
+
+  # Grab the first bam in the list
+  if (is.list(bam_files)){bam <- unlist(bam_files[1])}else{ bam<-bam_files }
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
@@ -46,9 +50,9 @@ scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
   }
 
   # create appropriate filters for coverage tabulation if param=NULL
-  if (is.null(param)) { 
-    fl <- scanBamFlag(isDuplicate=FALSE, 
-                      isPaired=TRUE, 
+  if (is.null(param)) {
+    fl <- scanBamFlag(isDuplicate=FALSE,
+                      isPaired=TRUE,
                       isProperPair=TRUE, ...)
     param <- ScanBamParam(flag=fl)
     bamMapqFilter(param) <- 20
@@ -62,6 +66,11 @@ scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
     # rationalize the contigs but don't override user supplied bamWhich
     gr <- as(sortSeqlevels(si[orig_spike_contigs]), "GRanges") # kludgey
     if (length(bamWhich(param)) == 0) bamWhich(param) <- gr
-    return(GenomicAlignments::coverage(BamFile(bam), param=param))
+
+    # number of cores to use
+    mc.cores <- min(mc.cores, length(bam_files))
+    # Multi-thread apply computes coverage on all bam files.
+    return(mclapply(bam_files,FUN=function(x)
+      {GenomicAlignments::coverage(BamFile(x), param=param)},mc.cores=mc.cores))
   }
 }
