@@ -18,7 +18,7 @@ To install this package, start R (version "3.6" or later) and enter:
 if (!requireNamespace("BiocManager", quietly = TRUE)) { 
   install.packages("BiocManager")
 }
-BiocManager::install("spiky")
+BiocManager::install("trichelab/spiky")
 ```
 
 ## For developers
