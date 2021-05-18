@@ -7,7 +7,7 @@
 scan_spike_contigs(bam, spike, param = NULL, ...)
 }
 \arguments{
-\item{bam}{the BAM or CRAM file}
+\item{bam}{the BAM or CRAM filename, or a vector of such filenames}
 
 \item{spike}{the spike-in reference database (e.g. data(spike))}
 
@@ -31,8 +31,8 @@ default workflow is
 
 scan_spike_contigs implements step 1.
 
-add CRAM example here -- tested & works with reheadered spike CRAMs.
-Slower than one might like however.
+If multiple BAM or CRAM filenames are provided, all indices will be
+checked before attempting to run through any of the files.
 }
 \examples{
 library(GenomicRanges)

@@ -7,7 +7,7 @@
 scan_genomic_contigs(bam, spike, param = NULL, ...)
 }
 \arguments{
-\item{bam}{the BAM or CRAM file}
+\item{bam}{the BAM or CRAM filename, or a vector of them}
 
 \item{spike}{the spike-in reference database (e.g. data(spike))}
 
@@ -34,6 +34,9 @@ that anything which isn't a spike contig, is a genomic contig.  This isn't
 necessarily true, so the user can also supply a ScanBamParam object for the
 \code{param} argument and restrict scanning to whatever contigs they wish, which
 also allows for non-default MAPQ, pairing, and quality filters.
+
+If multiple BAM or CRAM filenames are provided, all indices will be
+checked before attempting to run through any of the files.
 }
 \examples{
 
