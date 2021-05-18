@@ -6,7 +6,7 @@
 
 # Spike-ins for everyone 
 
-Please note that `spiky` currently requires a recent version of R (4.0 or newer).
+Please note that `spiky` strongly suggests a recent version of R (4.0 or newer; 3.6 or newer is required).
 
 This restriction may be removed if our dependencies can tolerate it.
 
@@ -14,10 +14,12 @@ This restriction may be removed if our dependencies can tolerate it.
 
 To install this package, start R (version "3.6" or later) and enter:
 
-  #if (!requireNamespace("BiocManager", quietly = TRUE))
-  #  install.packages("BiocManager")
-  #
-  #BiocManager::install("spiky")
+```
+if (!requireNamespace("BiocManager", quietly = TRUE)) { 
+  install.packages("BiocManager")
+}
+BiocManager::install("trichelab/spiky")
+```
 
 ## For developers
 
