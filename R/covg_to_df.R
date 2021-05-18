@@ -23,7 +23,11 @@ covg_to_df <- function(res, spike, meth=TRUE, ID=NULL) {
     ID <- paste(toupper(sample(c(letters, 0:9), 4)), collapse="")
   }
 
-  spikes <- res$spikes
+  if ("spikes" %in% names(res)) {
+    spikes <- res$spikes
+  } else {
+    spikes <- res
+  }
   if (!"methylated" %in% names(mcols(spikes))) {
     if (is.null(spike)) {
       message("You need to provide a `spike` database to proceed.")

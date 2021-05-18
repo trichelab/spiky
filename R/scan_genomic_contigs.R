@@ -12,12 +12,16 @@
 #' `param` argument and restrict scanning to whatever contigs they wish, which
 #' also allows for non-default MAPQ, pairing, and quality filters. 
 #' 
-#' @param bam       the BAM or CRAM file
+#' @param bam       the BAM or CRAM filename, or a vector of them
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object specifying which reads to count (NULL)
 #' @param ...       additional arguments to pass to scanBamFlag()
 #'
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
+#'
+#' @details
+#' If multiple BAM or CRAM filenames are provided, all indices will be 
+#' checked before attempting to run through any of the files. 
 #'
 #' @examples
 #'
@@ -38,6 +42,19 @@
 #'
 #' @export
 scan_genomic_contigs <- function(bam, spike, param=NULL, ...) {
+
+  # can be smoother but:
+  if (length(bam) > 1) {
+    indices <- sub("bam$", "bam.bai", bam)
+    indices <- sub("cram$", "cram.crai", bam)
+    if (!all(file.exists(indices))) {
+      missed <- indices[!file.exists(indices)]
+      stop("Missing index files: ", paste(missed, collapse=", "))
+    } else {
+      if (is.null(names(bam))) names(bam) <- bam
+      return(lapply(bam, scan_genomic_contigs, spike=spike))
+    }
+  }
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)

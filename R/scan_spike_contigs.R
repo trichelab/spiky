@@ -8,11 +8,15 @@
 #' 
 #' scan_spike_contigs implements step 1.
 #' 
-#' @param bam       the BAM or CRAM file
+#' @param bam       the BAM or CRAM filename, or a vector of such filenames
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object, or NULL (will default to MAPQ=20 etc)
 #' @param ...       additional arguments to pass to scanBamFlag()
 #'
+#' @details
+#' If multiple BAM or CRAM filenames are provided, all indices will be 
+#' checked before attempting to run through any of the files. 
+#' 
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
 #'
 #' @examples
@@ -23,10 +27,6 @@
 #' res <- scan_spike_contigs(sb, spike=spike) # use default ScanBamParam
 #' summary(res)
 #'
-#' @details
-#'   add CRAM example here -- tested & works with reheadered spike CRAMs.
-#'   Slower than one might like however.
-#' 
 #' @seealso         Rsamtools::ScanBamParam
 #'
 #' @import          GenomicAlignments
@@ -35,6 +35,19 @@
 #'
 #' @export 
 scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
+
+  # can be smoother but:
+  if (length(bam) > 1) {
+    indices <- sub("bam$", "bam.bai", bam)
+    indices <- sub("cram$", "cram.crai", bam)
+    if (!all(file.exists(indices))) {
+      missed <- indices[!file.exists(indices)]
+      stop("Missing index files: ", paste(missed, collapse=", "))
+    } else {
+      if (is.null(names(bam))) names(bam) <- bam
+      return(lapply(bam, scan_spike_contigs, spike=spike))
+    }
+  }
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
