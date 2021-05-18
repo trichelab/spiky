@@ -14,10 +14,12 @@ This restriction may be removed if our dependencies can tolerate it.
 
 To install this package, start R (version "3.6" or later) and enter:
 
-  #  if (!requireNamespace("BiocManager", quietly = TRUE))
-  #  install.packages("BiocManager")
-  #
-  #  BiocManager::install("spiky")
+```
+if (!requireNamespace("BiocManager", quietly = TRUE)) { 
+  install.packages("BiocManager")
+}
+BiocManager::install("spiky")
+```
 
 ## For developers
 
