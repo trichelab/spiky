@@ -4,12 +4,12 @@
 \alias{get_spike_depth}
 \title{get the (max, median, or mean) coverage for spike-in contigs from a BAM/CRAM}
 \usage{
-get_spike_depth(covg, spike_gr, spike, how = c("max", "mean"))
+get_spike_depth(covg, spike_gr = NULL, spike = NULL, how = c("max", "mean"))
 }
 \arguments{
 \item{covg}{the coverage RleList}
 
-\item{spike_gr}{the spike-in GRanges}
+\item{spike_gr}{the spike-in GRanges (default: figure out from seqinfo)}
 
 \item{spike}{information about the spikes (default: load \code{spike})}
 

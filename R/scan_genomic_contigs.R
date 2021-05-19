@@ -10,15 +10,18 @@
 #' that anything which isn't a spike contig, is a genomic contig.  This isn't
 #' necessarily true, so the user can also supply a ScanBamParam object for the
 #' `param` argument and restrict scanning to whatever contigs they wish, which
-#' also allows for non-default MAPQ, pairing, and quality filters.
-#'
-#' @param bam_files       the BAM or CRAM file, or list of BAMs/CRAMs with the same header
+#' also allows for non-default MAPQ, pairing, and quality filters. 
+#' 
+#' @param bam       the BAM or CRAM filename, or a vector of them
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object specifying which reads to count (NULL)
-#' @param mc.cores  the number of cores to use (default is minimum of 16 and number of BAMs)
 #' @param ...       additional arguments to pass to scanBamFlag()
 #'
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
+#'
+#' @details
+#' If multiple BAM or CRAM filenames are provided, all indices will be 
+#' checked before attempting to run through any of the files. 
 #'
 #' @examples
 #'
@@ -40,8 +43,18 @@
 #' @export
 scan_genomic_contigs <- function(bam_files, spike, param=NULL, ...) {
 
-  # Grab the first bam in the list
-  if (is.list(bam_files)){bam <- unlist(bam_files[1])}else{ bam<-bam_files }
+  # can be smoother but:
+  if (length(bam) > 1) {
+    indices <- sub("bam$", "bam.bai", bam)
+    indices <- sub("cram$", "cram.crai", bam)
+    if (!all(file.exists(indices))) {
+      missed <- indices[!file.exists(indices)]
+      stop("Missing index files: ", paste(missed, collapse=", "))
+    } else {
+      if (is.null(names(bam))) names(bam) <- bam
+      return(lapply(bam, scan_genomic_contigs, spike=spike))
+    }
+  }
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
@@ -70,12 +83,6 @@ scan_genomic_contigs <- function(bam_files, spike, param=NULL, ...) {
   # rationalize the contigs (but do not replace user-supplied Ranges)
   gr <- as(sortSeqlevels(si[genomic_contigs]), "GRanges") # kludgey
   if (length(bamWhich(param)) == 0) bamWhich(param) <- gr
-
-  # number of cores to use
-  mc.cores <- min(mc.cores, length(bam_files))
-
   # assess coverage on these contigs (bin later)
-  return(mclapply(bam_files,FUN=function(x)
-  {GenomicAlignments::coverage(BamFile(x), param=param)},mc.cores=mc.cores))
-
+  return(GenomicAlignments::coverage(BamFile(bam), param=param))
 }

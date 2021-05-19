@@ -1,7 +1,7 @@
 #' get the (max, median, or mean) coverage for spike-in contigs from a BAM/CRAM
 #'
 #' @param covg      the coverage RleList
-#' @param spike_gr  the spike-in GRanges
+#' @param spike_gr  the spike-in GRanges (default: figure out from seqinfo)
 #' @param spike     information about the spikes (default: load `spike`)
 #' @param how       how to summarize the per-spike coverage (max)
 #'
@@ -23,11 +23,21 @@
 #' get_spike_depth(covg, spike_gr=mgr, spike=spike)
 #'
 #' @export
-get_spike_depth <- function(covg, spike_gr, spike, how=c("max", "mean")) {
+get_spike_depth <- function(covg, spike_gr=NULL, spike=NULL, 
+                            how=c("max", "mean")) {
 
   how <- match.fun(match.arg(how))
   if (!is(spike, "DFrame")) stop("Please provide a spike database")
   cols <- colnames(spike)[-1]
+
+  # as with scan_spike_contigs()
+  if (is.null(spike_gr)) {
+    si <- seqinfo(covg)
+    seqlengths(si) <- sapply(covg, length)
+    new_contigs <- attr(find_spike_contigs(covg, spike), "mapping")
+    spike_gr <- as(si, "GRanges")
+    names(spike_gr) <- new_contigs[names(spike_gr)]
+  }
   canon <- names(spike_gr)
 
   message("Summarizing spike-in counts...", appendLF=FALSE)
