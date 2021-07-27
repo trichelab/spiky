@@ -11,13 +11,14 @@
 #' @param bam       the BAM or CRAM filename, or a vector of such filenames
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object, or NULL (will default to MAPQ=20 etc)
+#' @param ret       return RleList ("rle"), data.frame ("df"), or signal ("sig")
 #' @param ...       additional arguments to pass to scanBamFlag()
 #'
 #' @details
 #' If multiple BAM or CRAM filenames are provided, all indices will be 
 #' checked before attempting to run through any of the files. 
 #' 
-#' @return          a CompressedGRangesList with bin- and spike-level coverage
+#' @return          an RleList, data.frame, or CountSignals object
 #'
 #' @examples
 #' library(GenomicRanges)
@@ -34,7 +35,7 @@
 #' @import          Rsamtools
 #'
 #' @export 
-scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
+scan_spike_contigs <- function(bam, spike, param=NULL, ret=c("rle","df","sig"), ...) {
 
   # can be smoother but:
   if (length(bam) > 1) {
@@ -45,9 +46,10 @@ scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
       stop("Missing index files: ", paste(missed, collapse=", "))
     } else {
       if (is.null(names(bam))) names(bam) <- bam
-      return(lapply(bam, scan_spike_contigs, spike=spike))
+      return(lapply(bam, scan_spike_contigs, spike=spike, param=param, ret=ret))
     }
   }
+
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
@@ -67,7 +69,10 @@ scan_spike_contigs <- function(bam, spike, param=NULL, ...) {
     bamMapqFilter(param) <- 20
   }
 
+  ret <- match.arg(ret)
   orig_spike_contigs <- subset(seqlevels(si), genome(si) == "spike")
+  format_coverage(bam=bam, param=param, contigs=contigs, ret=ret)
+
   if (length(orig_spike_contigs) == 0) {
     # empty coverage list
     return(as(S4Vectors::SimpleList(), "SimpleRleList"))

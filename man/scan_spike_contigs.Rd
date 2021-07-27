@@ -4,7 +4,7 @@
 \alias{scan_spike_contigs}
 \title{pretty much what it says: scan spike contigs from a BAM or CRAM file}
 \usage{
-scan_spike_contigs(bam, spike, param = NULL, ...)
+scan_spike_contigs(bam, spike, param = NULL, ret = c("rle", "df", "sig"), ...)
 }
 \arguments{
 \item{bam}{the BAM or CRAM filename, or a vector of such filenames}
@@ -13,10 +13,12 @@ scan_spike_contigs(bam, spike, param = NULL, ...)
 
 \item{param}{a ScanBamParam object, or NULL (will default to MAPQ=20 etc)}
 
+\item{ret}{return RleList ("rle"), data.frame ("df"), or signal ("sig")}
+
 \item{...}{additional arguments to pass to scanBamFlag()}
 }
 \value{
-\preformatted{     a CompressedGRangesList with bin- and spike-level coverage
+\preformatted{     an RleList, data.frame, or CountSignals object
 }
 }
 \description{
