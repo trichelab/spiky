@@ -1,12 +1,22 @@
 #' read a BEDPE file into Pairs of GRanges (as if a GAlignmentPairs or similar)
 #' 
 #' @param x         a Tabixed BEDPE file, or a TabixFile of one
-#' @param param     a GRanges of regions to read, or NULL (NULL)
-#' @param stranded  retain strand of GRanges in the resulting Pairs? (TRUE) 
+#' @param ...       additional arguments to pass to scanTabix internally
+#' @param stranded  is this BEDPE file stranded? (FALSE) 
+#' @param fraglen   compute the fragment length? (TRUE) 
 #' 
-#' @return          an S4Vectors::Pairs of GRanges with $score in mcols() 
+#' @return          a Pairs of GRanges, perhaps with $score or $fraglen
 #'
 #' @details         BEDPE import in R is a shambles. This is a bandaid on a GSW.
+#'                  if all(score(pe) == 1), mcols(pe)$score will be dropped.
+#' 
+#' @examples
+#' \dontrun{
+#'   bedpe <- "GSM5067076_2020_A64_bedpe.bed.gz"
+#'   WT1_hg38 <- GRanges("chr11", IRanges(32387775, 32435564), "-")
+#'   read_bedpe(bedpe, param=WT1_hg38)
+#'   # note that since all(score(bedpe) == 1, score is dropped)
+#' }
 #' 
 #' @seealso         bedpe_covg
 #'
@@ -14,7 +24,7 @@
 #' @import          S4Vectors
 #'
 #' @export
-read_bedpe <- function(x, param=NULL, stranded=TRUE) { 
+read_bedpe <- function(x, ..., stranded=FALSE, fraglen=TRUE) { 
 
   # mandatory for proper scanning and param support
   if (!is(x, "TabixFile")) x <- TabixFile(x)
@@ -30,53 +40,49 @@ read_bedpe <- function(x, param=NULL, stranded=TRUE) {
            strand2="character",
            score="numeric")
 
+  # drop strand fields if the BEDPE is not stranded 
+  if (!stranded) fmt <- fmt[!grepl("strand[12]", names(fmt))]
+
   # switch to scanTabix -> parsing 
   bits <- list(
     first=fmt[grep(1, names(fmt))],
     second=fmt[grep(2, names(fmt))],
     score=fmt[grep("score", names(fmt))]
   )
-  bits <- lapply(bits, .rename) # sanitize
 
   # switch to scanTabix? this is slow AF as implemented
-  res <- lapply(bits, 
-                .parse_tabix, 
-                param=param, 
-                stranded=stranded,
-                x=scanTabix(x, param=param))
+  tbx <- unlist(scanTabix(x, ...), use.names=FALSE)
+  res <- lapply(bits, .parse_tabix, fmt=fmt, tbx=tbx)
 
-  with(res,
-       Pairs(first=first, 
-             second=second, 
-             score=score))
+  # paired 
+  pe <- with(res,
+             Pairs(first=first, 
+                   second=second, 
+                   score=as.numeric(score)))
+  if (fraglen) mcols(pe)$fraglen <- (end(second(pe)) - start(first(pe)))
+  if (all(score(pe) == 1)) mcols(pe)$score <- NULL 
+  return(pe) 
 
 }
 
 
 # helper
-.parse_tabix <- function(x, fields, param=NULL, stranded=TRUE) {
+.parse_tabix <- function(bits, fmt, tbx) {
 
-  if (all(any(grepl("seqnames", names(fields))),
-          any(grepl("start", names(fields))),
-          any(grepl("end", names(fields))))) {
-  
-    # a GRanges is being requested
-    # drop the strand if !stranded
-    if (!stranded) fields <- fields[!grepl("strand", names(fields))]
+  # field positions
+  pos <- vapply(names(bits), grep, x=names(fmt), integer(1))
+  dat <- do.call(rbind, strsplit(tbx, "\t"))[, pos]
 
-    n <- length(fields)
-    res <- data.frame(t(vapply(strsplit(x, "\t"), `[`, character(n), fields)))
-    names(res) <- names(fields)
-
-  } else { 
-
-    # hard to say
-
+  if (length(bits) > 1) { 
+    colnames(dat) <- sub("[12]$", "", names(bits))
+    if (all(any(grepl("seqnames", names(bits))),
+            any(grepl("start", names(bits))),
+            any(grepl("end", names(bits))))) {
+      dat <- makeGRangesFromDataFrame(data.frame(dat))
+    }
   }
 
-  gr <- makeGRangesFromDataFrame(res, keep=TRUE) 
-  if (!stranded) gr <- unstrand(gr)
-  return(gr)
+  return(dat)
 
 }
 

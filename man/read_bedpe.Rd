@@ -4,17 +4,19 @@
 \alias{read_bedpe}
 \title{read a BEDPE file into Pairs of GRanges (as if a GAlignmentPairs or similar)}
 \usage{
-read_bedpe(x, param = NULL, stranded = TRUE)
+read_bedpe(x, ..., stranded = FALSE, fraglen = TRUE)
 }
 \arguments{
 \item{x}{a Tabixed BEDPE file, or a TabixFile of one}
 
-\item{param}{a GRanges of regions to read, or NULL (NULL)}
+\item{...}{additional arguments to pass to scanTabix internally}
 
-\item{stranded}{retain strand of GRanges in the resulting Pairs? (TRUE)}
+\item{stranded}{is this BEDPE file stranded? (FALSE)}
+
+\item{fraglen}{compute the fragment length? (TRUE)}
 }
 \value{
-\preformatted{     an S4Vectors::Pairs of GRanges with $score in mcols() 
+\preformatted{     a Pairs of GRanges, perhaps with $score or $fraglen
 }
 }
 \description{
@@ -22,7 +24,17 @@ read a BEDPE file into Pairs of GRanges (as if a GAlignmentPairs or similar)
 }
 \details{
 \preformatted{    BEDPE import in R is a shambles. This is a bandaid on a GSW.
+             if all(score(pe) == 1), mcols(pe)$score will be dropped.
 }
+}
+\examples{
+\dontrun{
+  bedpe <- "GSM5067076_2020_A64_bedpe.bed.gz"
+  WT1_hg38 <- GRanges("chr11", IRanges(32387775, 32435564), "-")
+  read_bedpe(bedpe, param=WT1_hg38)
+  # note that since all(score(bedpe) == 1, score is dropped)
+}
+
 }
 \seealso{
 \preformatted{    bedpe_covg

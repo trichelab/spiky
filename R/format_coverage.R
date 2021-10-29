@@ -20,8 +20,8 @@ format_coverage <- function(x, contigs, param=NULL, ret=c("rle", "df")) {
   } else {
     # return the raw Rle
   }
+
   # format_coverage(bam=bam, param=param, contigs=contigs, ret=ret)
   covg <- coverage(BamFile(bam), param=param)[contigs]
-
 
 }
