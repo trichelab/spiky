@@ -2,20 +2,28 @@
 #' 
 #' @param x         a Tabixed BEDPE file, or a TabixFile of one
 #' @param ...       additional arguments to pass to scanTabix internally
-#' @param stranded  is this BEDPE file stranded? (FALSE) 
+#' @param optional  scan the optional columns (namem, score, strand1)? (FALSE)
 #' @param fraglen   compute the fragment length? (TRUE) 
+#' @param keep      keep additional columns? (FALSE) 
 #' 
 #' @return          a Pairs of GRanges, perhaps with $score or $fraglen
 #'
 #' @details         BEDPE import in R is a shambles. This is a bandaid on a GSW.
-#'                  if all(score(pe) == 1), mcols(pe)$score will be dropped.
+#'                  See the \href{https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format}{BEDPE format definition} for full details.
+#'                  In short, for a pair of ranges 1 and 2, we have fields 
+#'                  chrom1, start1, end1, chrom2, start2, end2, and (optionally)
+#'                  name, score, strand1, strand2, plus any other user defined 
+#'                  fields that may be included (these are not yet supported
+#'                  by read_bedpe). For example, two valid BEDPE lines are:
+#' 
+#'                  chr1  100   200   chr5  5000  5100  bedpe_example1  30
+#'                  chr9  900  5000   chr9  3000  3800  bedpe_example2  99  +  -
 #' 
 #' @examples
 #' \dontrun{
 #'   bedpe <- "GSM5067076_2020_A64_bedpe.bed.gz"
 #'   WT1_hg38 <- GRanges("chr11", IRanges(32387775, 32435564), "-")
 #'   read_bedpe(bedpe, param=WT1_hg38)
-#'   # note that since all(score(bedpe) == 1, score is dropped)
 #' }
 #' 
 #' @seealso         bedpe_covg
@@ -24,8 +32,11 @@
 #' @import          S4Vectors
 #'
 #' @export
-read_bedpe <- function(x, ..., stranded=FALSE, fraglen=TRUE) { 
+read_bedpe <- function(x, ..., stranded=FALSE, fraglen=TRUE, extra=FALSE) { 
 
+  # no support yet for additional mcols, even though it's kind of easy
+  if (keep) message("Extra columns are not yet supported.")
+  
   # mandatory for proper scanning and param support
   if (!is(x, "TabixFile")) x <- TabixFile(x)
 
@@ -36,9 +47,10 @@ read_bedpe <- function(x, ..., stranded=FALSE, fraglen=TRUE) {
            seqnames2="character", 
            start2="integer", 
            end2="integer",
+           name="name",
+           score="numeric",
            strand1="character",
-           strand2="character",
-           score="numeric")
+           strand2="character")
 
   # drop strand fields if the BEDPE is not stranded 
   if (!stranded) fmt <- fmt[!grepl("strand[12]", names(fmt))]
@@ -53,14 +65,11 @@ read_bedpe <- function(x, ..., stranded=FALSE, fraglen=TRUE) {
   # switch to scanTabix? this is slow AF as implemented
   tbx <- unlist(scanTabix(x, ...), use.names=FALSE)
   res <- lapply(bits, .parse_tabix, fmt=fmt, tbx=tbx)
-
-  # paired 
-  pe <- with(res,
-             Pairs(first=first, 
-                   second=second, 
-                   score=as.numeric(score)))
+  pe <- .toPairs(res)
+  
   if (fraglen) mcols(pe)$fraglen <- (end(second(pe)) - start(first(pe)))
   if (all(score(pe) == 1)) mcols(pe)$score <- NULL 
+ 
   return(pe) 
 
 }
@@ -92,5 +101,28 @@ read_bedpe <- function(x, ..., stranded=FALSE, fraglen=TRUE) {
 
   names(x) <- sub(suffix, "", names(x))
   return(x) 
+
+}
+
+
+# bit of a hack utility
+.toGRs <- function(x) {
+
+  cols <- list(first=grep("(chrom|seqnames|start|end)1", colnames(x), val=TRUE),
+               second=grep("(chrom|seqnames|start|end)2", colnames(x),val=TRUE))
+  lapply(cols, function(y) makeGRangesFromDataFrame(.rename(x[, y])))
+
+}
+
+
+# helper
+.toPairs <- function(res) {
+
+  paired <- with(res, Pairs(first=first, second=second))
+  for (extracol in setdiff(names(res), c("first", "second"))) {
+    if (extracol == "score") mcols(paired)$score <- as.numeric(res$score)
+    else mcols(paired)[, extracol] <- res[[extracol]]
+  }
+  return(paired)
 
 }

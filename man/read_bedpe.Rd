@@ -4,16 +4,18 @@
 \alias{read_bedpe}
 \title{read a BEDPE file into Pairs of GRanges (as if a GAlignmentPairs or similar)}
 \usage{
-read_bedpe(x, ..., stranded = FALSE, fraglen = TRUE)
+read_bedpe(x, ..., stranded = FALSE, fraglen = TRUE, extra = FALSE)
 }
 \arguments{
 \item{x}{a Tabixed BEDPE file, or a TabixFile of one}
 
 \item{...}{additional arguments to pass to scanTabix internally}
 
-\item{stranded}{is this BEDPE file stranded? (FALSE)}
-
 \item{fraglen}{compute the fragment length? (TRUE)}
+
+\item{optional}{scan the optional columns (namem, score, strand1)? (FALSE)}
+
+\item{keep}{keep additional columns? (FALSE)}
 }
 \value{
 \preformatted{     a Pairs of GRanges, perhaps with $score or $fraglen
@@ -24,7 +26,15 @@ read a BEDPE file into Pairs of GRanges (as if a GAlignmentPairs or similar)
 }
 \details{
 \preformatted{    BEDPE import in R is a shambles. This is a bandaid on a GSW.
-             if all(score(pe) == 1), mcols(pe)$score will be dropped.
+             See the \\href\{https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format\}\{BEDPE format definition\} for full details.
+             In short, for a pair of ranges 1 and 2, we have fields 
+             chrom1, start1, end1, chrom2, start2, end2, and (optionally)
+             name, score, strand1, strand2, plus any other user defined 
+             fields that may be included (these are not yet supported
+             by read_bedpe). For example, two valid BEDPE lines are:
+
+             chr1  100   200   chr5  5000  5100  bedpe_example1  30
+             chr9  900  5000   chr9  3000  3800  bedpe_example2  99  +  -
 }
 }
 \examples{
@@ -32,7 +42,6 @@ read a BEDPE file into Pairs of GRanges (as if a GAlignmentPairs or similar)
   bedpe <- "GSM5067076_2020_A64_bedpe.bed.gz"
   WT1_hg38 <- GRanges("chr11", IRanges(32387775, 32435564), "-")
   read_bedpe(bedpe, param=WT1_hg38)
-  # note that since all(score(bedpe) == 1, score is dropped)
 }
 
 }
