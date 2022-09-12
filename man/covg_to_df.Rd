@@ -4,10 +4,10 @@
 \alias{covg_to_df}
 \title{reshape \code{scan_spiked_bam} results into data.frames for model_glm_pmol}
 \usage{
-covg_to_df(res, spike, meth = TRUE, ID = NULL)
+covg_to_df(spike_gr, spike, meth = TRUE, ID = NULL)
 }
 \arguments{
-\item{res}{the result of running scan_spiked_bam}
+\item{spike_gr}{GRanges of spike contigs (e.g. output object from scan_spiked_bam, scan_spike_contigs, or scan_spike_bedpe)}
 
 \item{spike}{spike database (as from data(spike, package="spiky"))}
 
@@ -16,21 +16,21 @@ covg_to_df(res, spike, meth = TRUE, ID = NULL)
 \item{ID}{an identifier for this sample, if running several (autogenerate)}
 }
 \value{
-\preformatted{ a data.frame with columns 'frag_grp', 'id', and 'read_count'
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ a data.frame with columns 'frag_grp', 'id', and 'read_count'
+}\if{html}{\out{</div>}}
 }
 \description{
 reshape \code{scan_spiked_bam} results into data.frames for model_glm_pmol
 }
 \examples{
 data(spike, package="spiky")
-data(ssb_res, package="spiky") 
-subsetted <- covg_to_df(ssb_res, spike=spike, meth=TRUE) 
-summed <- covg_to_df(ssb_res, spike=spike, meth=FALSE)
+data(spike_res, package="spiky")
+subsetted <- covg_to_df(spike_res, spike=spike, meth=TRUE)
+summed <- covg_to_df(spike_res, spike=spike, meth=FALSE)
 round((summed$read_count - subsetted$read_count) / summed$read_count, 3)
 
 }
 \seealso{
-\preformatted{scan_spiked_bam
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{scan_spiked_bam
+}\if{html}{\out{</div>}}
 }

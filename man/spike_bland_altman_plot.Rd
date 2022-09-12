@@ -10,17 +10,17 @@ spike_bland_altman_plot(fit)
 \item{fit}{a model fit, from predict_pmol (?)}
 }
 \value{
-\preformatted{             a ggplot2 object
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{             a ggplot2 object
+}\if{html}{\out{</div>}}
 }
 \description{
 Bland-Altman plot for cfMeDIP spike standards
 }
 \examples{
 
-data(ssb_res)
+data(spike_res)
 data(spike, package="spiky")
-fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
+fit <- model_glm_pmol(covg_to_df(spike_res, spike=spike),spike=spike)
 ba_plot <- spike_bland_altman_plot(fit)
 
 }

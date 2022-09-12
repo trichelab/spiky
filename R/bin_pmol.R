@@ -9,9 +9,10 @@
 #'
 #' @examples
 #' data(spike, package="spiky")
-#' data(ssb_res, package="spiky")
-#' fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
-#' pred <- predict_pmol(fit, ssb_res, ret="df")
+#' data(spike_res, package="spiky")
+#' data(genomic_res,package="spiky")
+#' fit <- model_glm_pmol(covg_to_df(spike_res, spike=spike),spike=spike)
+#' pred <- predict_pmol(fit, genomic_res, ret="df")
 #' bin_pmol(pred)
 #'
 #' @seealso model_glm_pmol

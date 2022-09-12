@@ -18,8 +18,8 @@ bam_to_bins(x, width = 300, param = NULL, which = IRangesList(), ...)
 \item{...}{additional arguments to pass on to seqinfo_from_header}
 }
 \value{
-\preformatted{   a GRangesList with y-base-pair-wide bins tiled across it
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a GRangesList with y-base-pair-wide bins tiled across it
+}\if{html}{\out{</div>}}
 }
 \description{
 This function replaces a bedtools call:

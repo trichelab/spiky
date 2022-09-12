@@ -16,8 +16,8 @@ model_bam_standards(x, conc = NULL, fm = NULL, ...)
 \item{...}{other arguments to pass to \code{bamlss}}
 }
 \value{
-\preformatted{   the model fit for the data
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   the model fit for the data
+}\if{html}{\out{</div>}}
 }
 \description{
 Build a Bayesian additive model from spike-ins to correct bias in *-seq

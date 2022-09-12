@@ -29,13 +29,14 @@ find_spike_contigs <- function(x, spike) {
 
   orig_contigs <- seqlevels(x)
   new_contigs <- get_base_name(seqlevels(x))
+  #new_contigs <- orig_contigs
   res <- which(new_contigs %in% rownames(spike))
 
   mappings <- new_contigs
   if (length(new_contigs) == length(orig_contigs)) {
     names(mappings) <- orig_contigs
   } else {
-    warning("Cannot resolve contig name mismatches with spike database names. Your file may not have any spikes, or the spike database might not contain them.")
+    warning("Cannot resolve contig name mismatches with spike database names. Your file may not have any spikes, or the spike database might not contain them.\n")
   }
 
   attr(res, "mappings") <- mappings[res]

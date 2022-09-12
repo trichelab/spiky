@@ -39,8 +39,8 @@ scan_spiked_bam(
 \item{...}{additional arguments to pass to scanBamFlag()}
 }
 \value{
-\preformatted{     a CompressedGRangesList with bin- and spike-level coverage
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     a CompressedGRangesList with bin- and spike-level coverage
+}\if{html}{\out{</div>}}
 }
 \description{
 Note: behind the scenes, this is being refactored into scan_spike_contigs
@@ -95,9 +95,9 @@ summary(res$spikes$coverage)
 
 }
 \seealso{
-\preformatted{    GenomeInfoDb::keepStandardChromosomes
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    GenomeInfoDb::keepStandardChromosomes
+}\if{html}{\out{</div>}}
 
-\preformatted{    Rsamtools::ScanBamParam
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    Rsamtools::ScanBamParam
+}\if{html}{\out{</div>}}
 }

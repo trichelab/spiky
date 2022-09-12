@@ -47,7 +47,8 @@ Suggests:
     BSgenome.Mmusculus.UCSC.mm10.masked,
     BSgenome.Hsapiens.UCSC.hg38.masked,
     BiocManager
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Encoding: UTF-8
+LazyData: true

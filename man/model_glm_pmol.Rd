@@ -16,8 +16,8 @@ model_glm_pmol(x, spike, conc = NULL, ...)
 \item{...}{other arguments to pass to \code{glm} (e.g. \code{family})}
 }
 \value{
-\preformatted{   the model fit for the data
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   the model fit for the data
+}\if{html}{\out{</div>}}
 }
 \description{
 formerly '2020_model_glm_fmol'.  Note that everything in x can be had from
@@ -31,7 +31,7 @@ data(spike, package="spiky")
 data(spike_read_counts, package="spiky")
 fit1 <- model_glm_pmol(spike_read_counts, spike=spike)
 
-data(ssb_res) # scan_spiked_bam result
-fit2 <- model_glm_pmol(ssb_res, spike=spike)
+data(spike_res) # scan_spiked_bam result
+fit2 <- model_glm_pmol(spike_res, spike=spike)
 
 }

@@ -12,8 +12,8 @@ rename_spikes(x, spike)
 \item{spike}{a DataFrame where spike$sequence is a DNAStringSet}
 }
 \value{
-\preformatted{     a DataFrame with renamed contigs (rows)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     a DataFrame with renamed contigs (rows)
+}\if{html}{\out{</div>}}
 }
 \description{
 This function does that.

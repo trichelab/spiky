@@ -10,8 +10,8 @@ bin_pmol(x)
 \item{x}{results from predict_pmol (a data.frame or GRanges)}
 }
 \value{
-\preformatted{ the same object, but with a column `adjusted_pred_con`
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ the same object, but with a column `adjusted_pred_con`
+}\if{html}{\out{</div>}}
 }
 \description{
 Given the results of model_glm_pmol and predict_pmol, adjust the predictions
@@ -19,9 +19,10 @@ to reflect picomoles of captured DNA overlapping a given bin in the genome.
 }
 \examples{
 data(spike, package="spiky")
-data(ssb_res, package="spiky")
-fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
-pred <- predict_pmol(fit, ssb_res, ret="df")
+data(spike_res, package="spiky")
+data(genomic_res,package="spiky")
+fit <- model_glm_pmol(covg_to_df(spike_res, spike=spike),spike=spike)
+pred <- predict_pmol(fit, genomic_res, ret="df")
 bin_pmol(pred)
 
 }

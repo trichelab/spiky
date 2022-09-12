@@ -18,8 +18,8 @@
 \item{...}{other params such as \code{ylim} passed to \code{barplot}}
 }
 \value{
-\preformatted{             invisibly, the plot details
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{             invisibly, the plot details
+}\if{html}{\out{</div>}}
 }
 \description{
 Particularly, simple methods to plot coverage results.

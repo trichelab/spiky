@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/trichelab/spiky.png?branch=master)](https://travis-ci.org/trichelab/spiky)  [![codecov](https://codecov.io/gh/trichelab/spiky/branch/master/graph/badge.svg)](https://codecov.io/gh/trichelab/spiky)
 
 # Spike-ins for everyone 
+Analysis of cfMeDIP-seq data with spike-in control sequences. For more information, see Wilson, et. al, Sensitive and reproducible cell-free methylome quantification with synthetic spike-in controls, Cell Reports Methods, 2022. (https://www.sciencedirect.com/science/article/pii/S266723752200176X?via%3Dihub)
 
 Please note that `spiky` strongly suggests a recent version of R (4.0 or newer; 3.6 or newer is required).
 

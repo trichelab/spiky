@@ -16,8 +16,8 @@ generate_spike_fasta(bam, spike, assembly = NULL, fa = "spike_contigs.fa")
 \item{fa}{the filename for the resulting FASTA ("spikes.fa")}
 }
 \value{
-\preformatted{     invisibly, a DNAStringSet as exported to `fa`
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     invisibly, a DNAStringSet as exported to `fa`
+}\if{html}{\out{</div>}}
 }
 \description{
 A FASTA reference is \emph{not} always needed, so long as .crai indices
@@ -56,6 +56,6 @@ show(generate_spike_fasta(sb, spike=spike,fa=outFasta))
 
 }
 \seealso{
-\preformatted{    rename_contigs
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    rename_contigs
+}\if{html}{\out{</div>}}
 }

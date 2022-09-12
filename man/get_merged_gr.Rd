@@ -14,8 +14,8 @@ get_merged_gr(si, spike, standard = TRUE)
 \item{standard}{trim to standard chromosomes? (TRUE)}
 }
 \value{
-\preformatted{     GRanges with two genomes: the organism assembly and "spike"
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     GRanges with two genomes: the organism assembly and "spike"
+}\if{html}{\out{</div>}}
 }
 \description{
 refactored from scan_spiked_bam to clarify information flow

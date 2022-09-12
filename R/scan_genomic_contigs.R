@@ -10,18 +10,23 @@
 #' that anything which isn't a spike contig, is a genomic contig.  This isn't
 #' necessarily true, so the user can also supply a ScanBamParam object for the
 #' `param` argument and restrict scanning to whatever contigs they wish, which
-#' also allows for non-default MAPQ, pairing, and quality filters. 
-#' 
+#' also allows for non-default MAPQ, pairing, and quality filters.
+#'
 #' @param bam       the BAM or CRAM filename, or a vector of them
 #' @param spike     the spike-in reference database (e.g. data(spike))
 #' @param param     a ScanBamParam object specifying which reads to count (NULL)
+#' @param bin       Bin reads? (TRUE)
+#' @param binwidth  width of the bins for chromosomal tiling (300)
+#' @param bins      a pre-tiled GRanges for binning coverage (NULL)
+#' @param standard  restrict non-spike contigs to "standard" chromosomes? (TRUE)
+#' @param genome    Name of genome (default hg38)
 #' @param ...       additional arguments to pass to scanBamFlag()
 #'
 #' @return          a CompressedGRangesList with bin- and spike-level coverage
 #'
 #' @details
-#' If multiple BAM or CRAM filenames are provided, all indices will be 
-#' checked before attempting to run through any of the files. 
+#' If multiple BAM or CRAM filenames are provided, all indices will be
+#' checked before attempting to run through any of the files.
 #'
 #' @examples
 #'
@@ -30,9 +35,9 @@
 #'
 #' fl <- system.file("extdata", "ex1.bam", package="Rsamtools",
 #'                   mustWork=TRUE)
-#' scan_genomic_contigs(fl, spike=spike) # will warn user about spike contigs
+#' scan_genomic_contigs(fl, spike=spike,standard=FALSE) # will warn user about spike contigs
 #'
-#' sb <- system.file("extdata", "example.spike.bam", package="spiky",
+#' sb <- system.file("extdata", "example_chr21.bam", package="spiky",
 #'                   mustWork=TRUE)
 #' scan_genomic_contigs(sb, spike=spike) # will warn user about genomic contigs
 #'
@@ -41,7 +46,7 @@
 #' @import          Rsamtools
 #'
 #' @export
-scan_genomic_contigs <- function(bam_files, spike, param=NULL, ...) {
+scan_genomic_contigs <- function(bam, spike, param=NULL,bin=TRUE, binwidth=300L, bins=NULL, standard=TRUE,genome="hg38", ...) {
 
   # can be smoother but:
   if (length(bam) > 1) {
@@ -58,24 +63,21 @@ scan_genomic_contigs <- function(bam_files, spike, param=NULL, ...) {
 
   # scan the BAM (or CRAM if supported) to determine which reads to import
   si <- seqinfo_from_header(bam)
+  if (standard) seqlevels(si) <- seqlevels(keepStandardChromosomes(si))
   mappings <- attr(find_spike_contigs(si, spike=spike), "mapping")
   spike_contigs <- names(mappings)
   genomic_contigs <- seqlevels(si)
   if (length(spike_contigs) > 0) {
     genomic_contigs <- setdiff(genomic_contigs, spike_contigs)
   }
-
   if (length(genomic_contigs) == 0) {
-    # empty coverage list
-    warning(bam, " doesn't appear to have any genomic contigs.")
-    return(as(S4Vectors::SimpleList(), "SimpleRleList"))
+    stop(bam, " doesn't appear to have any genomic contigs.")
   }
 
   bf <- BamFile(bam)
   if (is.null(param)) {
     fl <- scanBamFlag(isDuplicate=FALSE,
-                      isPaired=TRUE,
-                      isProperPair=TRUE, ...)
+                      isPaired=TRUE, ...)
     param <- ScanBamParam(flag=fl)
     bamMapqFilter(param) <- 20
   }
@@ -84,5 +86,23 @@ scan_genomic_contigs <- function(bam_files, spike, param=NULL, ...) {
   gr <- as(sortSeqlevels(si[genomic_contigs]), "GRanges") # kludgey
   if (length(bamWhich(param)) == 0) bamWhich(param) <- gr
   # assess coverage on these contigs (bin later)
-  return(GenomicAlignments::coverage(BamFile(bam), param=param))
+  g_covg <- GenomicAlignments::coverage(BamFile(bam), param=param)
+  genome(gr) <- genome
+  if (is.null(bins)) bins <- tile_bins(gr=gr, binwidth=binwidth)
+
+  if (bin){
+    # genomic coverage is averaged across each bin
+    if (length(bins) > 0) {
+      message("Binning genomic coverage...")
+      binned <- get_binned_coverage(bins, g_covg)
+      message("Done.")
+    } else {
+      message("Empty bins provided, skipping genomic binning.")
+      binned <- bins
+    }
+  } else {binned <- bins}
+
+  genomic_gr <- as(binned,"GRanges")
+  names(genomic_gr) <- seqnames(genomic_gr)
+  return(genomic_gr)
 }

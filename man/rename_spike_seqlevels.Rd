@@ -12,8 +12,8 @@ rename_spike_seqlevels(x, spike = NULL)
 \item{spike}{a DataFrame where spike$sequence is a DNAStringSet (or NULL)}
 }
 \value{
-\preformatted{     x, but with standardized spike seqlevels and genomes
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     x, but with standardized spike seqlevels and genomes
+}\if{html}{\out{</div>}}
 }
 \description{
 This function is essentially the opposite of rename_spikes, except that
@@ -22,6 +22,6 @@ If spike contigs are found, it will assign genome='spike' to those, while
 changing the seqlevels to standardized names that match rownames(spike).
 }
 \seealso{
-\preformatted{    rename_spikes
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    rename_spikes
+}\if{html}{\out{</div>}}
 }

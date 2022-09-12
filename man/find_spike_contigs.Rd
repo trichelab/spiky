@@ -12,8 +12,8 @@ find_spike_contigs(x, spike)
 \item{spike}{a DataFrame with spike-in information}
 }
 \value{
-\preformatted{   indices of which contigs in seqlevels(x) are spike-in contigs
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   indices of which contigs in seqlevels(x) are spike-in contigs
+}\if{html}{\out{</div>}}
 }
 \description{
 Find the spike-like contigs in a BAM with both natural and spiked contigs.
