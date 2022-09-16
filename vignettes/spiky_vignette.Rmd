@@ -21,7 +21,7 @@ load_all("./")
 
 # Introduction
 
-To meet the need for a reference control in cell-free methylated DNA immunoprecipitation-sequencing (cfMeDIP-seq)[@shen2018sensitive; @shen2019preparation] experiments, we designed spike-in controls and ligated unique molecular indexes (UMI) to adjust for PCR bias, and immunoprecipitation bias caused by the fragment length, G+C content, and CpG density of the DNA fragments that are immunoprecipitated. This enables absolute quantification of methylated DNA in picomoles, while retaining epigenomic information that allows for sensitive, tissue-specific detection as well as comparable results between different experiments. We designed DNA fragments with 2x3x3x3=54 combinations of methylation status (methylated and unmethylated), fragment length in basepair (bp) (80 bp, 160 bp, 320 bp), G+C content (35%, 50%, 65%), and fraction of CpGs within a fragment (1 CpG/ 80 bp, 1 CpG/ 40 bp, 1 CpG/ 20 bp). Spiky was developed for analyzing DNA methylation of cell-free DNA obtained from cfMeDIP-seq method using reference 'spike-in' controls. This package will:
+To meet the need for a reference control in cell-free methylated DNA immunoprecipitation-sequencing (cfMeDIP-seq)[@shen2018sensitive; @shen2019preparation] experiments, we designed spike-in controls and ligated unique molecular indexes (UMI) to adjust for PCR bias, and immunoprecipitation bias caused by the fragment length, G+C content, and CpG density of the DNA fragments that are immunoprecipitated[@wilson2022spikeins]. This enables absolute quantification of methylated DNA in picomoles, while retaining epigenomic information that allows for sensitive, tissue-specific detection as well as comparable results between different experiments. We designed DNA fragments with 2x3x3x3=54 combinations of methylation status (methylated and unmethylated), fragment length in basepair (bp) (80 bp, 160 bp, 320 bp), G+C content (35%, 50%, 65%), and fraction of CpGs within a fragment (1 CpG/ 80 bp, 1 CpG/ 40 bp, 1 CpG/ 20 bp). Spiky was developed for analyzing DNA methylation of cell-free DNA obtained from cfMeDIP-seq method using reference 'spike-in' controls. This package will:
 
 * Assess methylation specificity in each sample
 * Using the spike-in control data, output a Gaussian generalized linear model to predict molar amount on DNA samples
@@ -40,40 +40,100 @@ Install and load the spiky package from Bioconductor.
 library(spiky)
 ```
 
-# Process the BAM file
+# Load spike database, or create your own with process_spikes().
 
-### Input: spikein_data
-  * BAM or BED file
+### Input: A Fasta file, GRanges, or dataframe of spike-in sequences, and a vector of booleans (0 or 1) describing whether each spike-in sequence is methylated. 
+
+### Output: The output contains a DataFrame with the following columns:
+  *sequence (DNAStringSet)
+  *methylated (boolean)
+  *CpGs (integer)
+  *fmol (numeric)
+  *molmass (numeric)
+  *GCfrac (numeric)
+  *OECpG (numeric)
+  *conc (numeric)
+  *frag_grp (character)
+  
+If you are using the same synthetic spike-in sequences as described in the manuscript, you may load the spike-in sequence database using: 
+```{r}
+data(spike)
+```
+
+If you are using custom spike-ins, you can create your own spike-in sequence database using the process_spikes() function, which accepts as input a Fasta file, GRanges, or dataframe, and a vector of booleans (0 or 1) describing whether each spike-in sequence is methylated. The input Fasta file can also be generated from BAM header info as follows:
+```{r}
+sb <- system.file("extdata", "example.spike.bam", package="spiky",              mustWork=TRUE)
+outFasta <- paste(system.file("extdata", package="spiky", mustWork=TRUE),"/spike_contigs.fa",sep="")
+show(generate_spike_fasta(sb, spike=spike,fa=outFasta))
+```
+
+The spike-in database can then be created with this input Fasta.
+```{r}
+spikes <- system.file("extdata", "spikes.fa", package="spiky", mustWork=TRUE)
+spikemeth <- spike$methylated
+process_spikes(spikes, spikemeth)
+```
+
+
+# Process the input files
+Spiky supports input files in either BAM or BEDPE format. 
+
+### BAM Input
+BAM file in standard format (For full details about the BAM format, see https://samtools.github.io/hts-specs/SAMv1.pdf). The BAM must also have an accompanying index file, which can be created using samtools index ${filename.bam}. (http://www.htslib.org/doc/samtools-index.html)
+
+# BAM required columns
+  * BAM file
   * Columns:
     * chrom/contig: string 
     * position start: numeric
     * position end: numeric
     * read counts: integer
     * fragment length (bp): integer
-    * G+C content [0-1]: numeric
-    * CpG number: Integer
-    
-### Output: The output contains objects that will be used downstream in the analysis, including
-  * genomic - A GRanges object showing the genomic coverage of the BAM reads
-  * spikes - A GRanges object showing the coverage of the spikes.
+
+### Output: The output objects will be used downstream in the analysis, including
+  * genomic_coverage - A GRanges object showing the genomic coverage of the BAM reads
+  * spikes_coverage - A GRanges object showing the coverage of the spikes.
   
 ```{r eval=TRUE}
-spike_path <- system.file("data", "spike.rda", package = "spiky")
-load(spike_path)
-#Load in your bam file using scan_spiked_bam
-#ssb_res <- scan_spiked_bam("bam/file/path",spike=spike)
-#Example result
-ssb_res_path <- system.file("data", "ssb_res.rda", package = "spiky")
-load(ssb_res_path)
+genomic_bam_path <- system.file("extdata", "example_chr21.bam", package="spiky", mustWork=TRUE)
+genomic_coverage <- scan_genomic_contigs(genomic_bam_path,spike=spike)
+spike_bam_path <- system.file("extdata", "example.spike.bam", package="spiky", mustWork=TRUE)
+spikes_coverage <- scan_spike_contigs(spike_bam_path,spike=spike)
+
 ```
 
+### BEDPE Input
+BEDPE file in standard format. For full details about the BEDPE format, see Bedtools documentation (https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format).  In short, for a pair of ranges 1 and 2, we have fields chrom1, start1, end1, chrom2, start2, end2, and (optionally) name, score, strand1, strand2, plus any other user defined fields that may be included (these are not yet supported by Spiky). For example, two valid BEDPE lines are: 
+
+chr1 100 200 chr5 5000 5100 bedpe_example1 30 
+
+chr9 900 5000 chr9 3000 3800 bedpe_example2 99 + - 
+
+The BEDPE must also have an accompanying index file, which can be created using Bedtools, as in the example shown below, where ${file} represents the name of a BEDPE file. 
+
+bedtools sort -i ${file} > sorted_${file} 
+bgzip sorted_${file} 
+tabix sorted_${file}.gz 
+
+### Output: The output objects will be used downstream in the analysis, including
+  * genomic_coverage - A GRanges object showing the genomic coverage of the BAM reads
+  * spikes_coverage - A GRanges object showing the coverage of the spikes.
+  
+```{r}
+genomic_bedpe_path <- system.file("extdata", "example_chr21_bedpe.bed.gz", package="spiky", mustWork=TRUE)
+genomic_coverage <- scan_genomic_bedpe(genomic_bedpe_path,genome="hg38")
+spike_bedpe_path <- system.file("extdata", "example_spike_bedpe.bed.gz", package="spiky", mustWork=TRUE)
+spikes_coverage <- scan_spike_bedpe(spike_bedpe_path,spike=spike)
+```
+  
 # Methylation specificity
 For each combination of parameters, we designed two distinct spike-in sequences. One to be methylated and one to be unmethylated. The allows us to assess non-specific binding of the monoclonal antibody on a sample-by-sample basis. To calculate methylation specificity we take the number of methylated reads divided by the total number of reads. It is our recommendation that if methylation specificity is <0.98, then the sample should be flagged or removed from analysis as the cfMeDIP performed inadequately. 
 
 This calculation is done by the 'methylation_specificity' function.
 
-### Input: The output of the 'scan_spiked_bam' function
-  * ssb_res as produced in the previous step
+### Input: The output of the 'scan_spike_contigs' or 'scan_spike_bedpe' functions
+  * spikes_coverage as produced previously
+  * spike database as produced previously
   
 ### Output: methylation specificity mean and median
   * Mean and median of the percent of methylated sequences for each spike-in after cfMeDIP-seq has been performed
@@ -81,15 +141,16 @@ This calculation is done by the 'methylation_specificity' function.
 ### Example
 ```{r eval=TRUE}
 ##Calculate methylation specificity
-methyl_spec <- methylation_specificity(ssb_res,spike=spike)
+methyl_spec <- methylation_specificity(spikes_coverage,spike=spike)
 print(methyl_spec)
 ```
 
 # Fit a Gaussian model to predict the molar amount of DNA sequences
 For each batch of samples, the coefficients used in the Gaussian generalized linear model will differ. The 'model_glm_pmol' will calculate these coefficients and output the model to be used to calculate molar amount (picomoles) on the user's DNA sequences of interest. We assume that all DNA sequences of interest are methylated after undergoing cfMeDIP-seq. As such, we build the Gaussian generalized linear model on only the methylated spike-in control fragments. A generated Bland-Altman plot will visualize how well the model performs.
 
-### Input: The output of the 'scan_spiked_bam' function
-  * Example: data(ssb_res)
+### Input: The output of the 'scan_spike_contigs' or 'scan_spike_bedpe' functions
+  * spikes_coverage as produced previously
+  * spike database as produced previously
 
 ### Output: 
   * Gaussian generalized linear model with coefficients specific to samples used in input data; .rda file
@@ -97,15 +158,16 @@ For each batch of samples, the coefficients used in the Gaussian generalized lin
 ### Example
 ```{r eval=TRUE}
 ## Build the Gaussian generalized linear model on the spike-in control data
-gaussian_glm <- model_glm_pmol(covg_to_df(ssb_res,spike=spike),spike=spike)
+gaussian_glm <- model_glm_pmol(spikes_coverage,spike=spike)
 summary(gaussian_glm)
 ```
 
 # Calculating molar amount on DNA sequences of interest
 For the samples in which the Gaussian generalized linear model was built, we will calculate the molar amount (picomoles) for each DNA sequence of interest.
 
-### Input: The output of the 'scan_spiked_bam' function
-  * Example: data(ssb_res)
+### Input: The output of the 'scan_genomic_contigs' or 'scan_genomic_bedpe' functions and the Gaussian generalized linear model
+  * genomic_coverage as produced previously
+  * gaussian_glm as produced previously
   
 ### Output: sample_pmol_data
   * Data frame
@@ -124,7 +186,7 @@ For the samples in which the Gaussian generalized linear model was built, we wil
 # Predict pmol concentration
 # To select a genome other than hg38, use BSgenome::available.packages() to find valid BSgenome name
 #library("BSgenome.Hsapiens.UCSC.hg38")
-sample_data_pmol <- predict_pmol(gaussian_glm, ssb_res,bsgenome="BSgenome.Hsapiens.UCSC.hg38",ret="df")
+sample_data_pmol <- predict_pmol(gaussian_glm, genomic_coverage,bsgenome="BSgenome.Hsapiens.UCSC.hg38",ret="df")
 head(sample_data_pmol,n=1)
 
 ```
@@ -152,6 +214,10 @@ For our analyses, we binned the genome into 300 bp non-overlapping windows. We t
 ```{r eval=TRUE}
 sample_binned_data <- bin_pmol(sample_data_pmol)
 head(sample_binned_data,n=1)
+```
+### Session Info
+```{r}
+sessionInfo()
 ```
 
 

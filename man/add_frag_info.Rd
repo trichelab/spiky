@@ -14,8 +14,8 @@ add_frag_info(x, frag_grp = "frag_grp", spike = NULL)
 \item{spike}{optional database of spike-in properties (none)}
 }
 \value{
-\preformatted{     the data.frame x, augmented with metadata columns
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     the data.frame x, augmented with metadata columns
+}\if{html}{\out{</div>}}
 }
 \description{
 given a vector of fragment identifiers like \verb{160_2_35} or \verb{80b_1C_35G-2},

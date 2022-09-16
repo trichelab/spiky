@@ -12,8 +12,8 @@ kmers(x, k = 6)
 \item{k}{the length of the kmers (default is 6)}
 }
 \value{
-\preformatted{       a matrix of contigs (rows) by kmer frequencies (columns)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       a matrix of contigs (rows) by kmer frequencies (columns)
+}\if{html}{\out{</div>}}
 }
 \description{
 oligonucleotideFrequency, but less letters and more convenient.
@@ -34,6 +34,6 @@ kmax(phk6)
 
 }
 \seealso{
-\preformatted{      kmax
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      kmax
+}\if{html}{\out{</div>}}
 }

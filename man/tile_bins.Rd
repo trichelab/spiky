@@ -12,8 +12,8 @@ tile_bins(gr, binwidth = 300L)
 \item{binwidth}{bin width to tile (default is 300)}
 }
 \value{
-\preformatted{       a GRanges of bins
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       a GRanges of bins
+}\if{html}{\out{</div>}}
 }
 \description{
 refactored out of scan_spiked_bam for more explicit information flow

@@ -12,8 +12,8 @@ get_base_name(contig_names, sep = "_")
 \item{sep}{separator character in contig names ("_")}
 }
 \value{
-\preformatted{               a vector of elements 1:3 from each contig name
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{               a vector of elements 1:3 from each contig name
+}\if{html}{\out{</div>}}
 }
 \description{
 A common task between generate_spike_fasta, rename_spikes, and

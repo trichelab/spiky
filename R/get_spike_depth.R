@@ -23,7 +23,7 @@
 #' get_spike_depth(covg, spike_gr=mgr, spike=spike)
 #'
 #' @export
-get_spike_depth <- function(covg, spike_gr=NULL, spike=NULL, 
+get_spike_depth <- function(covg, spike_gr=NULL, spike=NULL,
                             how=c("max", "mean")) {
 
   how <- match.fun(match.arg(how))

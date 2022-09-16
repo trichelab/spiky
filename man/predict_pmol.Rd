@@ -4,14 +4,20 @@
 \alias{predict_pmol}
 \title{predict picomoles of DNA from a fit and read counts (coverage)}
 \usage{
-predict_pmol(fit, ssb_res, bsgenome = NULL, ret = c("gr", "df"), slide = FALSE)
+predict_pmol(
+  fit,
+  genomic_gr,
+  bsgenome = NULL,
+  ret = c("gr", "df"),
+  slide = FALSE
+)
 }
 \arguments{
 \item{fit}{result of model_glm_pmol}
 
-\item{ssb_res}{the data / new data}
+\item{genomic_gr}{the genomic data / new data}
 
-\item{bsgenome}{BSgenome name (if null, will guess from ssb_res)}
+\item{bsgenome}{BSgenome name (if null, will guess from genomic_gr)}
 
 \item{ret}{return a data.frame ("df") or GRanges ("gr")?  ("gr")}
 
@@ -31,11 +37,12 @@ by the bin start, stop, and genome when left as a GRanges).
 }
 \examples{
 
-data(ssb_res)
+data(spike_res)
+data(genomic_res)
 data(spike, package="spiky")
-fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
-preddf <- predict_pmol(fit, ssb_res, ret="df")
-pred <- predict_pmol(fit, ssb_res, ret="gr")
+fit <- model_glm_pmol(covg_to_df(spike_res, spike=spike),spike=spike)
+preddf <- predict_pmol(fit, genomic_res, ret="df")
+pred <- predict_pmol(fit, genomic_res, ret="gr")
 bin_pmol(pred)
 
 }

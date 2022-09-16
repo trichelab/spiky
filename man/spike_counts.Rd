@@ -27,8 +27,8 @@ spike_counts(
 \item{dump_idx}{dump the renamed idxstats to aggregate? (FALSE)}
 }
 \value{
-\preformatted{               a GRanges of spike-in contig read counts
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{               a GRanges of spike-in contig read counts
+}\if{html}{\out{</div>}}
 }
 \description{
 It dawned on me one day that we don't even have to bother reading the file

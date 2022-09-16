@@ -119,6 +119,30 @@
 #' containing chr22 and spike contigs.
 "ssb_res"
 
+#' A Granges object with genomic coverage from chr21q22,
+#' binned every 300bp for the genomic contigs then averaged across the bin. (In other
+#' words, the default output of scan_genomic_contigs or scan_genomic_bedpe,
+#' restricted to a small enough set of genomic regions to be practical for examples.)
+#' This represents what most users will want to generate from their own genomic BAMs or BEDPEs, and
+#' is used repeatedly in downstream examples throughout the package.
+#'
+#' @usage data(genomic_res)
+#' @format A GRanges of coverage results with one metadata column, `coverage`
+#' @source Generated using scan_genomic_bedpe or scan_genomic_contigs on an example bedpe or bam
+#' containing chr21q22 contigs.
+"genomic_res"
+
+#' A Granges object with spike-in sequence coverage, and
+#' summarized for each spike contig as (the default) `max` coverage. (In other
+#' words, the default output of scan_spike_contigs or scan_spike_bedpe)
+#' This represents what most users will want to generate from their own spike-in BAMs or BEDPEs, and
+#' is used repeatedly in downstream examples throughout the package.
+#'
+#' @usage data(spike_res)
+#' @format A GRanges of coverage results with one metadata column, `coverage`
+#' @source Generated using scan_spike_bedpe or scan_spike_contigs on an example bedpe or bam
+#' containing spike contigs.
+"spike_res"
 
 #' a test GRanges with UMI'ed genomic sequences used as controls
 #'

@@ -4,20 +4,24 @@
 \alias{scan_spike_contigs}
 \title{pretty much what it says: scan spike contigs from a BAM or CRAM file}
 \usage{
-scan_spike_contigs(bam, spike, param = NULL, ...)
+scan_spike_contigs(bam, spike, how = "max", param = NULL, mc.cores = 16, ...)
 }
 \arguments{
 \item{bam}{the BAM or CRAM filename, or a vector of such filenames}
 
 \item{spike}{the spike-in reference database (e.g. data(spike))}
 
+\item{how}{how to summarize the per-spike coverage (max)}
+
 \item{param}{a ScanBamParam object, or NULL (will default to MAPQ=20 etc)}
+
+\item{mc.cores}{Number of cores to run on (default 16)}
 
 \item{...}{additional arguments to pass to scanBamFlag()}
 }
 \value{
-\preformatted{     a CompressedGRangesList with bin- and spike-level coverage
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     a CompressedGRangesList with bin- and spike-level coverage
+}\if{html}{\out{</div>}}
 }
 \description{
 default workflow is
@@ -44,6 +48,6 @@ summary(res)
 
 }
 \seealso{
-\preformatted{    Rsamtools::ScanBamParam
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    Rsamtools::ScanBamParam
+}\if{html}{\out{</div>}}
 }

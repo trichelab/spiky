@@ -14,8 +14,8 @@ scan_methylation_specificity(files, spike, sep = "_")
 \item{sep}{the separator for spike-in contig names ("_")}
 }
 \value{
-\preformatted{   a matrix with columns "mean" and "median"
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a matrix with columns "mean" and "median"
+}\if{html}{\out{</div>}}
 }
 \description{
 Methylation specificity is here defined as methylated_spike_covg/spike_covg

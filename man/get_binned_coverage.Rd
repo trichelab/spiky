@@ -12,8 +12,8 @@ get_binned_coverage(bins, covg)
 \item{covg}{the coverage result (an RleList)}
 }
 \value{
-\preformatted{   a GRanges of summarized coverage
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a GRanges of summarized coverage
+}\if{html}{\out{</div>}}
 }
 \description{
 refactored out of scan_spiked_bam
@@ -34,9 +34,9 @@ get_binned_coverage(bins=GRanges(), covg=covg)
 
 }
 \seealso{
-\preformatted{  get_spiked_coverage
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  get_spiked_coverage
+}\if{html}{\out{</div>}}
 
-\preformatted{  scan_spiked_bam
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  scan_spiked_bam
+}\if{html}{\out{</div>}}
 }

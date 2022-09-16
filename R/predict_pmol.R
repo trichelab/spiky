@@ -3,8 +3,8 @@
 #' FIXME: this could be made MUCH faster by precomputing CpG/GC stats per bin
 #'
 #' @param   fit       result of model_glm_pmol
-#' @param   ssb_res   the data / new data
-#' @param   bsgenome  BSgenome name (if null, will guess from ssb_res)
+#' @param   genomic_gr  the genomic data / new data
+#' @param   bsgenome  BSgenome name (if null, will guess from genomic_gr)
 #' @param   ret       return a data.frame ("df") or GRanges ("gr")?  ("gr")
 #' @param   slide     compute a sliding window estimate for GCfrac (1/3 width)?
 #'
@@ -24,15 +24,16 @@
 #'
 #' @examples
 #'
-#' data(ssb_res)
+#' data(spike_res)
+#' data(genomic_res)
 #' data(spike, package="spiky")
-#' fit <- model_glm_pmol(covg_to_df(ssb_res, spike=spike),spike=spike)
-#' preddf <- predict_pmol(fit, ssb_res, ret="df")
-#' pred <- predict_pmol(fit, ssb_res, ret="gr")
+#' fit <- model_glm_pmol(covg_to_df(spike_res, spike=spike),spike=spike)
+#' preddf <- predict_pmol(fit, genomic_res, ret="df")
+#' pred <- predict_pmol(fit, genomic_res, ret="gr")
 #' bin_pmol(pred)
 #'
 #' @export
-predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df"), slide=FALSE) {
+predict_pmol <- function(fit, genomic_gr, bsgenome=NULL, ret=c("gr", "df"), slide=FALSE) {
 
   # what shall be returned?  (eventually it would be nice to pass GRs around)
   ret <- match.arg(ret)
@@ -40,7 +41,7 @@ predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df"), slide=F
   # guess the genome if not provided (it won't be)
   assembly=bsgenome
   if (is.null(bsgenome)) {
-    assembly <- grep("(hg|GRCh)", unique(genome(ssb_res)), value=TRUE)
+    assembly <- grep("(hg|GRCh)", unique(genome(genomic_gr)), value=TRUE)
     genomepattern <- paste0(assembly, "$")
     bsgenome <- grep(genomepattern, available.genomes(), value=TRUE)
   }
@@ -54,14 +55,15 @@ predict_pmol <- function(fit, ssb_res, bsgenome=NULL, ret=c("gr", "df"), slide=F
   }
 
   # Get read_count, fraglen, GC, and CpG_3 from GRanges object
-  if (is.null(ssb_res)) ssb_res <- attr(fit, "data") # if feasible... ?
-  reads <- subset(ssb_res$genomic, coverage != 0) # is this sensible (bias)?
+  if (is.null(genomic_gr)) genomic_gr <- attr(fit, "data") # if feasible... ?
+  reads <- subset(as(genomic_gr,"GRanges"), coverage != 0) # is this sensible (bias)?
   names(mcols(reads)) <- sub("coverage", "read_count", names(mcols(reads)))
   reads$fraglen <- width(reads)
 
   # can this be made superfluous?
   message("Adjusting for bin-level biases...")
   myGenome <- .load_genome(bsgenome)
+  seqlengths(reads) <- seqlengths(myGenome)[names(genome(reads))]
   myBinSeqs <- Views(myGenome, reads)
   myBinGCs <- alphabetFrequency(myBinSeqs)[, c("G","C")]
   reads$GC <- rowSums(myBinGCs) / width(reads)

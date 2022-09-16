@@ -16,8 +16,8 @@ get_spike_depth(covg, spike_gr = NULL, spike = NULL, how = c("max", "mean"))
 \item{how}{how to summarize the per-spike coverage (max)}
 }
 \value{
-\preformatted{     a GRanges with summarized coverage and features for each
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     a GRanges with summarized coverage and features for each
+}\if{html}{\out{</div>}}
 }
 \description{
 get the (max, median, or mean) coverage for spike-in contigs from a BAM/CRAM

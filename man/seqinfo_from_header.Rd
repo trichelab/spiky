@@ -2,28 +2,28 @@
 % Please edit documentation in R/seqinfo_from_header.R
 \name{seqinfo_from_header}
 \alias{seqinfo_from_header}
-\title{create seqinfo (and thus a standard chromosome filter) from a BAM/CRAM header}
+\title{create seqinfo (and thus a standard chromosome filter) from a BAM header}
 \usage{
 seqinfo_from_header(x, gen = NA, std = FALSE, ret = c("si", "gr"))
 }
 \arguments{
-\item{x}{the BAM/CRAM file or its header}
+\item{x}{the BAM file or its header}
 
-\item{gen}{genome of the BAM/CRAM file, if known (NULL; autodetect)}
+\item{gen}{genome of the BAM file, if known (NULL; autodetect)}
 
 \item{std}{standard chromosomes only? (FALSE; will be empty if spikes)}
 
 \item{ret}{return Seqinfo ("si", the default) or GRanges ("gr")? ("si")}
 }
 \value{
-\preformatted{   Seqinfo object or GRanges (or `as(seqinfo, "GRanges")`)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   Seqinfo object or GRanges (or `as(seqinfo, "GRanges")`)
+}\if{html}{\out{</div>}}
 }
 \description{
-create seqinfo (and thus a standard chromosome filter) from a BAM/CRAM header
+create seqinfo (and thus a standard chromosome filter) from a BAM header
 }
 \details{
-Setting std=TRUE on a spike-in CRAM or BAM will produce an empty result.
+Setting std=TRUE on a spike-in BAM will produce an empty result.
 }
 \examples{
 
@@ -39,12 +39,11 @@ Setting std=TRUE on a spike-in CRAM or BAM will produce an empty result.
   seqlevels(std_si)
 
   # for comparison with below
-  data(spike, package="spiky") 
-  spike 
+  data(spike, package="spiky")
+  spike
 
-  # FIXME: add an example with a CRAM instead 
   sp <- system.file("extdata", "example.spike.bam", package="spiky")
   sp_gr <- seqinfo_from_header(sp, ret="gr")
-  sp_gr 
+  sp_gr
 
 }

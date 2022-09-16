@@ -16,8 +16,8 @@ scan_spike_counts(files, spike, methylated = 1, sep = "_")
 \item{sep}{the separator for spike-in contig names ("_")}
 }
 \value{
-\preformatted{   a data.frame with columns "frag_grp", "id", and "read_count"
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a data.frame with columns "frag_grp", "id", and "read_count"
+}\if{html}{\out{</div>}}
 }
 \description{
 Typically one will want to fit a correction model to multiple samples.
